@@ -1,0 +1,328 @@
+@extends('layouts.siswa')
+
+@section('title', 'Formulir Pendaftaran Siswa Baru')
+
+@section('content')
+<div class="max-w-4xl mx-auto space-y-6">
+
+        <!-- Page Header -->
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <a href="{{ route('siswa.dashboard') }}" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 mb-1">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Kembali ke Dashboard
+                </a>
+                <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Formulir Pendaftaran Siswa Baru</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Lengkapi data pribadi, pilihan jurusan, asal sekolah, dan orang tua/wali dengan benar.</p>
+            </div>
+
+            @if($pendaftar && !$pendaftar->is_locked)
+            <form action="{{ route('siswa.finalisasi') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin data sudah benar? Setelah difinalisasi, formulir akan terkunci dan tidak dapat diubah lagi.');">
+                @csrf
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                    <i data-lucide="lock" class="w-4 h-4"></i> Finalisasi & Kunci Data
+                </button>
+            </form>
+            @endif
+        </div>
+
+        @if($pendaftar && $pendaftar->is_locked)
+        <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs flex items-center gap-3">
+            <i data-lucide="lock" class="w-5 h-5 shrink-0 text-amber-600"></i>
+            <div>
+                <strong>Formulir Terkunci (Read-Only).</strong> Anda telah memfinalisasi data ini. Jika terdapat kesalahan pengisian nama atau jurusan, silakan hubungi Petugas TU di sekolah untuk membuka kunci.
+            </div>
+        </div>
+        @endif
+
+        <form action="{{ route('siswa.formulir.simpan') }}" method="POST" class="space-y-8">
+            @csrf
+
+            <!-- Section 1: Pilihan Jurusan & Jalur -->
+            <div class="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">1</div>
+                    <h2 class="text-base font-bold text-slate-900 dark:text-white">Pilihan Program Keahlian & Jalur PPDB</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_jurusan_1" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Pilihan Jurusan 1 (Prioritas Utama) <span class="text-rose-500">*</span></label>
+                        <select id="id_jurusan_1" name="id_jurusan_1" required onchange="handleJurusanChange()" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                            <option value="">-- Pilih Jurusan 1 --</option>
+                            @foreach($jurusan as $j)
+                            <option value="{{ $j->id_jurusan }}" {{ old('id_jurusan_1', $pendaftar ? $pendaftar->id_jurusan_1 : '') == $j->id_jurusan ? 'selected' : '' }}>
+                                {{ $j->nama_jurusan }} ({{ $j->kode_jurusan }})
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="id_jurusan_2" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Pilihan Jurusan 2 (Cadangan Limpahan)</label>
+                        <select id="id_jurusan_2" name="id_jurusan_2" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                            <option value="">-- Tidak Ada / Opsional --</option>
+                            @foreach($jurusan as $j)
+                            <option value="{{ $j->id_jurusan }}" {{ old('id_jurusan_2', $pendaftar ? $pendaftar->id_jurusan_2 : '') == $j->id_jurusan ? 'selected' : '' }}>
+                                {{ $j->nama_jurusan }} ({{ $j->kode_jurusan }})
+                            </option>
+                            @endforeach
+                        </select>
+                        <p class="text-[10px] text-slate-400 mt-1">Jurusan pilihan 2 tidak boleh sama dengan pilihan 1.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label for="jalur_pendaftaran" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Jalur Pendaftaran <span class="text-rose-500">*</span></label>
+                        <select id="jalur_pendaftaran" name="jalur_pendaftaran" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                            <option value="Reguler" {{ old('jalur_pendaftaran', $pendaftar ? $pendaftar->jalur_pendaftaran : '') == 'Reguler' ? 'selected' : '' }}>Reguler (Nilai Rapor)</option>
+                            <option value="Prestasi" {{ old('jalur_pendaftaran', $pendaftar ? $pendaftar->jalur_pendaftaran : '') == 'Prestasi' ? 'selected' : '' }}>Prestasi (Tahfiz/Seni/Olahraga)</option>
+                            <option value="Afirmasi" {{ old('jalur_pendaftaran', $pendaftar ? $pendaftar->jalur_pendaftaran : '') == 'Afirmasi' ? 'selected' : '' }}>Afirmasi (KIP / SKTM)</option>
+                            <option value="Zonasi" {{ old('jalur_pendaftaran', $pendaftar ? $pendaftar->jalur_pendaftaran : '') == 'Zonasi' ? 'selected' : '' }}>Zonasi (Domisili Metro)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="ukuran_seragam" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Ukuran Seragam Sekolah <span class="text-rose-500">*</span></label>
+                        <select id="ukuran_seragam" name="ukuran_seragam" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                            @foreach(['S', 'M', 'L', 'XL', 'XXL', 'Custom'] as $sz)
+                            <option value="{{ $sz }}" {{ old('ukuran_seragam', $pendaftar ? $pendaftar->ukuran_seragam : 'L') == $sz ? 'selected' : '' }}>Ukuran {{ $sz }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="ukuran_wearpack" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Ukuran Wearpack Praktek <span class="text-rose-500">*</span></label>
+                        <select id="ukuran_wearpack" name="ukuran_wearpack" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                            @foreach(['S', 'M', 'L', 'XL', 'XXL', 'Custom'] as $sz)
+                            <option value="{{ $sz }}" {{ old('ukuran_wearpack', $pendaftar ? $pendaftar->ukuran_wearpack : 'L') == $sz ? 'selected' : '' }}>Ukuran {{ $sz }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Peminatan Ekstrakurikuler (Boleh Pilih Lebih Dari Satu):</label>
+                    @php
+                        $chosenEkskul = $pendaftar && $pendaftar->pilihan_ekskul ? explode(',', $pendaftar->pilihan_ekskul) : [];
+                        $ekskulList = [
+                            'Tilawati Al-Qur\'an', 'Tafsir & Tahfiz Al-Qur\'an', 'Pramuka',
+                            'Paskibra', 'Karate', 'Gamelan Karawitan', 'Gamelan Tolak Balak'
+                        ];
+                    @endphp
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                        @foreach($ekskulList as $ek)
+                        <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 cursor-pointer hover:border-emerald-500">
+                            <input type="checkbox" name="pilihan_ekskul[]" value="{{ $ek }}" {{ in_array($ek, $chosenEkskul) ? 'checked' : '' }} class="rounded text-emerald-600 focus:ring-emerald-500">
+                            <span class="text-slate-700 dark:text-slate-300">{{ $ek }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Biodata Calon Siswa -->
+            <div class="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">2</div>
+                    <h2 class="text-base font-bold text-slate-900 dark:text-white">Biodata Pribadi Calon Siswa</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">NISN (Terkunci)</label>
+                        <input type="text" disabled value="{{ $user->nisn }}" class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-mono cursor-not-allowed">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Lengkap (Terkunci)</label>
+                        <input type="text" disabled value="{{ $user->nama }}" class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm cursor-not-allowed">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label for="tempat_lahir" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tempat Lahir <span class="text-rose-500">*</span></label>
+                        <input type="text" id="tempat_lahir" name="tempat_lahir" required value="{{ old('tempat_lahir', $pendaftar ? $pendaftar->tempat_lahir : '') }}" placeholder="Contoh: Kota Metro" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="tanggal_lahir" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tanggal Lahir <span class="text-rose-500">*</span></label>
+                        <input type="date" id="tanggal_lahir" name="tanggal_lahir" required value="{{ old('tanggal_lahir', $pendaftar && $pendaftar->tanggal_lahir ? $pendaftar->tanggal_lahir->format('Y-m-d') : '') }}" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="jenis_kelamin" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Jenis Kelamin <span class="text-rose-500">*</span></label>
+                        <select id="jenis_kelamin" name="jenis_kelamin" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                            <option value="Laki-laki" {{ old('jenis_kelamin', $pendaftar ? $pendaftar->jenis_kelamin : '') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('jenis_kelamin', $pendaftar ? $pendaftar->jenis_kelamin : '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div>
+                        <label for="agama" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Agama <span class="text-rose-500">*</span></label>
+                        <input type="text" id="agama" name="agama" required value="{{ old('agama', $pendaftar ? $pendaftar->agama : 'Islam') }}" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="anak_ke" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Anak Ke- <span class="text-rose-500">*</span></label>
+                        <input type="number" id="anak_ke" name="anak_ke" min="1" required value="{{ old('anak_ke', $pendaftar ? $pendaftar->anak_ke : '1') }}" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="jml_saudara" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Jumlah Saudara <span class="text-rose-500">*</span></label>
+                        <input type="number" id="jml_saudara" name="jml_saudara" min="0" required value="{{ old('jml_saudara', $pendaftar ? $pendaftar->jml_saudara : '0') }}" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="hp_siswa" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">No. WhatsApp Siswa <span class="text-rose-500">*</span></label>
+                        <input type="text" id="hp_siswa" name="hp_siswa" required value="{{ old('hp_siswa', $pendaftar ? $pendaftar->hp_siswa : '') }}" placeholder="0821xxxxxxxx" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label for="berat_badan" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Berat Badan (Kg) <span class="text-rose-500">*</span></label>
+                        <input type="text" id="berat_badan" name="berat_badan" required value="{{ old('berat_badan', $pendaftar ? $pendaftar->berat_badan : '50') }}" placeholder="Contoh: 52" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="tinggi_badan" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tinggi Badan (Cm) <span class="text-rose-500">*</span></label>
+                        <input type="text" id="tinggi_badan" name="tinggi_badan" required value="{{ old('tinggi_badan', $pendaftar ? $pendaftar->tinggi_badan : '160') }}" placeholder="Contoh: 165" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="golongan_darah" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Golongan Darah <span class="text-rose-500">*</span></label>
+                        <select id="golongan_darah" name="golongan_darah" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                            @foreach(['A', 'B', 'AB', 'O', '-'] as $gd)
+                            <option value="{{ $gd }}" {{ old('golongan_darah', $pendaftar ? $pendaftar->golongan_darah : 'O') == $gd ? 'selected' : '' }}>Golongan {{ $gd }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="almt_siswa" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Alamat Tempat Tinggal Lengkap <span class="text-rose-500">*</span></label>
+                    <textarea id="almt_siswa" name="almt_siswa" rows="2" required placeholder="Nama jalan, RT/RW, Kelurahan/Desa, Kecamatan, Kota/Kabupaten" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">{{ old('almt_siswa', $pendaftar ? $pendaftar->almt_siswa : '') }}</textarea>
+                </div>
+            </div>
+
+            <!-- Section 3: Data Asal Sekolah -->
+            <div class="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">3</div>
+                    <h2 class="text-base font-bold text-slate-900 dark:text-white">Data Asal Sekolah (SMP / MTs)</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="asal_sekolah" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama SMP / MTs Asal <span class="text-rose-500">*</span></label>
+                        <input type="text" id="asal_sekolah" name="asal_sekolah" required value="{{ old('asal_sekolah', $pendaftar ? $pendaftar->asal_sekolah : '') }}" placeholder="Contoh: SMP Negeri 1 Metro" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+
+                    <div>
+                        <label for="alamat_sekolah" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Alamat / Kota Asal Sekolah</label>
+                        <input type="text" id="alamat_sekolah" name="alamat_sekolah" value="{{ old('alamat_sekolah', $pendaftar ? $pendaftar->alamat_sekolah : '') }}" placeholder="Contoh: Jl. Raden Intan No. 12, Kota Metro" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Data Orang Tua / Wali -->
+            <div class="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">4</div>
+                    <h2 class="text-base font-bold text-slate-900 dark:text-white">Data Orang Tua / Wali Murid</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="nama_ayah" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Ayah Kandung <span class="text-rose-500">*</span></label>
+                        <input type="text" id="nama_ayah" name="nama_ayah" required value="{{ old('nama_ayah', $pendaftar ? $pendaftar->nama_ayah : '') }}" placeholder="Nama lengkap ayah" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="kerja_ayah" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Pekerjaan Ayah <span class="text-rose-500">*</span></label>
+                        <input type="text" id="kerja_ayah" name="kerja_ayah" required value="{{ old('kerja_ayah', $pendaftar ? $pendaftar->kerja_ayah : '') }}" placeholder="Contoh: Wiraswasta / PNS / Petani" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="nama_ibu" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Ibu Kandung <span class="text-rose-500">*</span></label>
+                        <input type="text" id="nama_ibu" name="nama_ibu" required value="{{ old('nama_ibu', $pendaftar ? $pendaftar->nama_ibu : '') }}" placeholder="Nama lengkap ibu" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="kerja_ibu" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Pekerjaan Ibu <span class="text-rose-500">*</span></label>
+                        <input type="text" id="kerja_ibu" name="kerja_ibu" required value="{{ old('kerja_ibu', $pendaftar ? $pendaftar->kerja_ibu : '') }}" placeholder="Contoh: Ibu Rumah Tangga / Guru / Pedagang" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label for="hp_ortu" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">No. WhatsApp Orang Tua <span class="text-rose-500">*</span></label>
+                        <input type="text" id="hp_ortu" name="hp_ortu" required value="{{ old('hp_ortu', $pendaftar ? $pendaftar->hp_ortu : '') }}" placeholder="0812xxxxxxxx" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="penghasilan_ortu" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Penghasilan Rata-rata Ortu <span class="text-rose-500">*</span></label>
+                        <select id="penghasilan_ortu" name="penghasilan_ortu" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                            <option value="< Rp 1.000.000" {{ old('penghasilan_ortu', $pendaftar ? $pendaftar->penghasilan_ortu : '') == '< Rp 1.000.000' ? 'selected' : '' }}>< Rp 1.000.000</option>
+                            <option value="Rp 1.000.000 - Rp 3.000.000" {{ old('penghasilan_ortu', $pendaftar ? $pendaftar->penghasilan_ortu : '') == 'Rp 1.000.000 - Rp 3.000.000' ? 'selected' : '' }}>Rp 1.000.000 - Rp 3.000.000</option>
+                            <option value="Rp 3.000.000 - Rp 5.000.000" {{ old('penghasilan_ortu', $pendaftar ? $pendaftar->penghasilan_ortu : '') == 'Rp 3.000.000 - Rp 5.000.000' ? 'selected' : '' }}>Rp 3.000.000 - Rp 5.000.000</option>
+                            <option value="> Rp 5.000.000" {{ old('penghasilan_ortu', $pendaftar ? $pendaftar->penghasilan_ortu : '') == '> Rp 5.000.000' ? 'selected' : '' }}>> Rp 5.000.000</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="tanggungan_anak" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Jumlah Tanggungan Anak <span class="text-rose-500">*</span></label>
+                        <input type="number" id="tanggungan_anak" name="tanggungan_anak" min="1" required value="{{ old('tanggungan_anak', $pendaftar ? $pendaftar->tanggungan_anak : '2') }}" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="almt_ortu" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Alamat Tempat Tinggal Orang Tua <span class="text-rose-500">*</span></label>
+                    <textarea id="almt_ortu" name="almt_ortu" rows="2" required placeholder="Alamat lengkap domisili orang tua" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">{{ old('almt_ortu', $pendaftar ? $pendaftar->almt_ortu : '') }}</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100 dark:border-slate-700">
+                    <div>
+                        <label for="nama_wali" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Wali (Opsional jika tinggal bersama wali)</label>
+                        <input type="text" id="nama_wali" name="nama_wali" value="{{ old('nama_wali', $pendaftar ? $pendaftar->nama_wali : '') }}" placeholder="Nama wali jika ada" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="kerja_wali" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Pekerjaan Wali (Opsional)</label>
+                        <input type="text" id="kerja_wali" name="kerja_wali" value="{{ old('kerja_wali', $pendaftar ? $pendaftar->kerja_wali : '') }}" placeholder="Pekerjaan wali jika ada" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button Bar -->
+            @if(!$pendaftar || !$pendaftar->is_locked)
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <a href="{{ route('siswa.dashboard') }}" class="px-5 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    Batal
+                </a>
+                <button type="submit" class="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/30 transition-all flex items-center gap-2">
+                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Data Formulir
+                </button>
+            </div>
+            @endif
+        </form>
+    </div>
+@endsection
+
+@push('scripts')
+<script>
+    function handleJurusanChange() {
+        const j1 = document.getElementById('id_jurusan_1').value;
+        const j2Select = document.getElementById('id_jurusan_2');
+
+        // Disable matching option in J2
+        Array.from(j2Select.options).forEach(opt => {
+            if (opt.value && opt.value === j1) {
+                opt.disabled = true;
+                if (j2Select.value === j1) {
+                    j2Select.value = '';
+                }
+            } else {
+                opt.disabled = false;
+            }
+        });
+    }
+
+    // Run on load to init disabled state
+    document.addEventListener('DOMContentLoaded', handleJurusanChange);
+</script>
+@endpush
+
