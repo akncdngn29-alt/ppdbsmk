@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Pendaftar;
 use App\Models\Jurusan;
@@ -118,29 +121,33 @@ class SiswaDashboardController extends Controller
         $jurusan1 = Jurusan::find($validated['id_jurusan_1']);
         $pilihanEkskulStr = !empty($validated['pilihan_ekskul']) ? implode(',', $validated['pilihan_ekskul']) : null;
 
-        if (!$pendaftar) {
-            $noPendaftaran = Pendaftar::generateNoPendaftaran($jurusan1->kode_jurusan);
-            $pendaftar = Pendaftar::create(array_merge($validated, [
-                'id_user' => $user->id_user,
-                'id_gelombang' => $gelombang->id_gelombang,
-                'no_pendaftaran' => $noPendaftaran,
-                'nisn' => $user->nisn,
-                'nama' => $user->nama,
-                'pilihan_ekskul' => $pilihanEkskulStr,
-                'status_pembayaran' => 'Pending',
-                'status_verifikasi' => 'Menunggu',
-                'status_kelulusan' => 'Diproses',
-                'status_daftar_ulang' => 'Belum',
-                'is_locked' => false,
-                'tgl_daftar' => Carbon::now(),
-            ]));
-            LogAktivitas::log('INSERT', 'Siswa mengisi formulir pendaftaran: ' . $noPendaftaran, 'pendaftar', $pendaftar->id_pendaftar);
-        } else {
-            $pendaftar->update(array_merge($validated, [
-                'pilihan_ekskul' => $pilihanEkskulStr,
-            ]));
-            LogAktivitas::log('UPDATE', 'Siswa memperbarui formulir pendaftaran', 'pendaftar', $pendaftar->id_pendaftar);
-        }
+        $pendaftar = DB::transaction(function () use ($pendaftar, $user, $gelombang, $jurusan1, $validated, $pilihanEkskulStr) {
+            if (!$pendaftar) {
+                $noPendaftaran = Pendaftar::generateNoPendaftaran($jurusan1->kode_jurusan);
+                $newPendaftar = Pendaftar::create(array_merge($validated, [
+                    'id_user' => $user->id_user,
+                    'id_gelombang' => $gelombang ? $gelombang->id_gelombang : 1,
+                    'no_pendaftaran' => $noPendaftaran,
+                    'nisn' => $user->nisn,
+                    'nama' => $user->nama,
+                    'pilihan_ekskul' => $pilihanEkskulStr,
+                    'status_pembayaran' => 'Pending',
+                    'status_verifikasi' => 'Menunggu',
+                    'status_kelulusan' => 'Diproses',
+                    'status_daftar_ulang' => 'Belum',
+                    'is_locked' => false,
+                    'tgl_daftar' => Carbon::now(),
+                ]));
+                LogAktivitas::log('INSERT', 'Siswa mengisi formulir pendaftaran: ' . $noPendaftaran, 'pendaftar', $newPendaftar->id_pendaftar);
+                return $newPendaftar;
+            } else {
+                $pendaftar->update(array_merge($validated, [
+                    'pilihan_ekskul' => $pilihanEkskulStr,
+                ]));
+                LogAktivitas::log('UPDATE', 'Siswa memperbarui formulir pendaftaran', 'pendaftar', $pendaftar->id_pendaftar);
+                return $pendaftar;
+            }
+        });
 
         return redirect()->route('siswa.dashboard')->with('success', 'Formulir berhasil disimpan. Anda dapat memeriksa berkas atau memfinalisasi pendaftaran.');
     }
@@ -180,15 +187,19 @@ class SiswaDashboardController extends Controller
 
         $request->validate([
             'jenis_berkas' => 'required|in:ijazah,kk,pasfoto,akta,lainnya',
-            'file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:3072',
+            'file' => 'required|file|mimes:jpg,jpeg,png,pdf|mimetypes:image/jpeg,image/png,application/pdf|max:3072',
         ], [
             'file.max' => 'Ukuran file maksimal adalah 3 MB.',
             'file.mimes' => 'Format file yang diperbolehkan hanya JPG, PNG, atau PDF.',
+            'file.mimetypes' => 'Tipe konten file tidak valid. Hanya gambar dan PDF yang diizinkan.',
         ]);
 
         $file = $request->file('file');
-        $filename = time() . '_' . $request->jenis_berkas . '_' . $pendaftar->nisn . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('berkas_pendaftar', $filename, 'public');
+        $ext = strtolower($file->getClientOriginalExtension());
+        // Simpan dengan nama acak/unguessable hash untuk privasi dokumen kependudukan (UU PDP)
+        $filename = $request->jenis_berkas . '_' . Str::random(32) . '.' . $ext;
+        // Simpan ke private disk (storage/app/private/berkas_pendaftar)
+        $path = $file->storeAs('berkas_pendaftar', $filename, 'local');
 
         // Check if existing file of this type exists
         $existing = BerkasPendaftar::where('id_pendaftar', $pendaftar->id_pendaftar)
@@ -196,7 +207,14 @@ class SiswaDashboardController extends Controller
             ->first();
 
         if ($existing) {
-            Storage::disk('public')->delete($existing->path_file);
+            // Hapus file lama dari private maupun public jika ada
+            if (Storage::disk('local')->exists($existing->path_file)) {
+                Storage::disk('local')->delete($existing->path_file);
+            }
+            if (Storage::disk('public')->exists($existing->path_file)) {
+                Storage::disk('public')->delete($existing->path_file);
+            }
+
             $existing->update([
                 'nama_file' => $file->getClientOriginalName(),
                 'path_file' => $path,
@@ -215,7 +233,7 @@ class SiswaDashboardController extends Controller
 
         LogAktivitas::log('INSERT', 'Siswa mengunggah berkas: ' . $request->jenis_berkas, 'berkas_pendaftar', $pendaftar->id_pendaftar);
 
-        return back()->with('success', 'Berkas ' . strtoupper($request->jenis_berkas) . ' berhasil diunggah.');
+        return back()->with('success', 'Berkas ' . strtoupper($request->jenis_berkas) . ' berhasil diunggah dengan aman.');
     }
 
     public function uploadPrestasi(Request $request)
@@ -232,12 +250,16 @@ class SiswaDashboardController extends Controller
             'peringkat' => 'required|string|max:50',
             'tahun' => 'required|integer|min:2020|max:' . date('Y'),
             'penyelenggara' => 'required|string|max:150',
-            'file_sertifikat' => 'required|file|mimes:jpg,jpeg,png,pdf|max:3072',
+            'file_sertifikat' => 'required|file|mimes:jpg,jpeg,png,pdf|mimetypes:image/jpeg,image/png,application/pdf|max:3072',
+        ], [
+            'file_sertifikat.max' => 'Ukuran file sertifikat maksimal adalah 3 MB.',
+            'file_sertifikat.mimes' => 'Format file yang diperbolehkan hanya JPG, PNG, atau PDF.',
         ]);
 
         $file = $request->file('file_sertifikat');
-        $filename = time() . '_prestasi_' . $pendaftar->nisn . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('prestasi_pendaftar', $filename, 'public');
+        $ext = strtolower($file->getClientOriginalExtension());
+        $filename = 'prestasi_' . Str::random(32) . '.' . $ext;
+        $path = $file->storeAs('prestasi_pendaftar', $filename, 'local');
 
         // Score estimation
         $skor = 10;
@@ -316,46 +338,57 @@ class SiswaDashboardController extends Controller
         }
 
         $gelombang = $pendaftar->gelombang ?: Gelombang::first();
-        $nominalAsli = $gelombang->biaya_pendaftaran;
-        $potongan = 0.00;
+        $nominalAsli = $gelombang ? $gelombang->biaya_pendaftaran : 100000.00;
         $metode = $request->input('metode_pembayaran', 'QRIS (Simulasi Midtrans)');
+        $kodeVoucherInput = $request->filled('kode_voucher') ? strtoupper(trim($request->kode_voucher)) : null;
 
-        // Validasi dan terapkan voucher jika disertakan
-        if ($request->filled('kode_voucher')) {
-            $voucher = \App\Models\VoucherPendaftaran::where('kode_voucher', strtoupper(trim($request->kode_voucher)))
-                ->where('status_aktif', true)
-                ->first();
-            if ($voucher && $voucher->kuota_terpakai < $voucher->kuota_voucher) {
-                if ($voucher->tipe === 'persen') {
-                    $potongan = $nominalAsli * ($voucher->nilai_potongan / 100);
-                } else {
-                    $potongan = min($nominalAsli, $voucher->nilai_potongan);
+        $pembayaran = DB::transaction(function () use ($pendaftar, $gelombang, $nominalAsli, $metode, $kodeVoucherInput) {
+            $potongan = 0.00;
+            $voucherId = null;
+
+            // Validasi kuota voucher dengan row locking mencegah race condition
+            if ($kodeVoucherInput) {
+                $voucher = \App\Models\VoucherPendaftaran::where('kode_voucher', $kodeVoucherInput)
+                    ->where('status_aktif', true)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($voucher && $voucher->kuota_terpakai < $voucher->kuota_voucher) {
+                    $voucherId = $voucher->id_voucher;
+                    if ($voucher->tipe === 'persen') {
+                        $potongan = $nominalAsli * ($voucher->nilai_potongan / 100);
+                    } else {
+                        $potongan = min($nominalAsli, $voucher->nilai_potongan);
+                    }
+                    $voucher->increment('kuota_terpakai');
                 }
-                $voucher->increment('kuota_terpakai');
             }
-        }
 
-        $totalBayar = max(0, $nominalAsli - $potongan);
-        $kodeTransaksi = Pembayaran::generateKodeTransaksi();
+            $totalBayar = max(0, $nominalAsli - $potongan);
+            $kodeTransaksi = Pembayaran::generateKodeTransaksi();
 
-        $pembayaran = Pembayaran::updateOrCreate(
-            ['id_pendaftar' => $pendaftar->id_pendaftar],
-            [
-                'id_gelombang' => $gelombang->id_gelombang,
-                'kode_transaksi' => $kodeTransaksi,
-                'nominal' => $nominalAsli,
-                'potongan' => $potongan,
-                'total_bayar' => $totalBayar,
-                'tipe_bayar' => 'midtrans',
-                'metode_pembayaran' => $metode,
-                'status_transaksi' => 'settlement',
-                'waktu_transaksi' => Carbon::now(),
-                'catatan' => 'Pembayaran instan terverifikasi via Midtrans Simulator (' . $metode . ').',
-            ]
-        );
+            $trx = Pembayaran::updateOrCreate(
+                ['id_pendaftar' => $pendaftar->id_pendaftar],
+                [
+                    'id_gelombang' => $gelombang ? $gelombang->id_gelombang : 1,
+                    'id_voucher' => $voucherId,
+                    'kode_transaksi' => $kodeTransaksi,
+                    'nominal' => $nominalAsli,
+                    'potongan' => $potongan,
+                    'total_bayar' => $totalBayar,
+                    'tipe_bayar' => 'midtrans',
+                    'metode_pembayaran' => $metode,
+                    'status_transaksi' => 'settlement',
+                    'waktu_transaksi' => Carbon::now(),
+                    'catatan' => 'Pembayaran instan terverifikasi via Midtrans Simulator (' . $metode . ').',
+                ]
+            );
 
-        $pendaftar->update(['status_pembayaran' => 'Paid']);
-        LogAktivitas::log('UPDATE', 'Pembayaran Midtrans (' . $metode . ') berhasil: ' . $kodeTransaksi, 'pembayaran', $pembayaran->id_pembayaran);
+            $pendaftar->update(['status_pembayaran' => 'Paid']);
+            LogAktivitas::log('UPDATE', 'Pembayaran Midtrans (' . $metode . ') berhasil: ' . $kodeTransaksi, 'pembayaran', $trx->id_pembayaran);
+
+            return $trx;
+        });
 
         return redirect()->route('siswa.pembayaran')->with('success', 'Pembayaran berhasil diselesaikan! Status Anda sekarang LUNAS.');
     }

@@ -125,7 +125,7 @@
                         <!-- Document Preview & Controls (Zoom & Rotate 90) -->
                         <div class="relative bg-slate-950 p-2 rounded-xl overflow-hidden flex flex-col items-center justify-center">
                             @php
-                                $fileUrl = asset('storage/' . $b->path_file);
+                                $fileUrl = route('dokumen.berkas', $b->id_berkas);
                                 $isImage = in_array(pathinfo($b->path_file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'webp']);
                             @endphp
 
@@ -169,6 +169,25 @@
                     @empty
                     <p class="text-xs text-slate-400 p-4 text-center">Calon siswa belum mengunggah dokumen persyaratan apa pun.</p>
                     @endforelse
+
+                    @if($pendaftar->prestasi->isNotEmpty())
+                    <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <i data-lucide="award" class="w-4 h-4 text-amber-500"></i> Sertifikat Piagam Prestasi
+                        </h4>
+                        @foreach($pendaftar->prestasi as $pr)
+                        <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-between text-xs">
+                            <div>
+                                <div class="font-bold text-slate-900 dark:text-white">{{ $pr->nama_prestasi }} ({{ $pr->peringkat }})</div>
+                                <div class="text-[11px] text-slate-500">Kategori: {{ $pr->kategori }} &bull; Tingkat: {{ $pr->tingkat }} &bull; Skor: +{{ $pr->skor_bobot }} Poin</div>
+                            </div>
+                            <a href="{{ route('dokumen.prestasi', $pr->id_prestasi) }}" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs inline-flex items-center gap-1">
+                                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Lihat Piagam
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

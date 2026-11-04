@@ -122,7 +122,14 @@ class Pendaftar extends Model
             $newNum = '001';
         }
 
-        return $prefix . $newNum;
+        $candidate = $prefix . $newNum;
+        $counter = (int)$newNum;
+        while (self::where('no_pendaftaran', $candidate)->exists()) {
+            $counter++;
+            $candidate = $prefix . str_pad($counter, 3, '0', STR_PAD_LEFT);
+        }
+
+        return $candidate;
     }
 }
 

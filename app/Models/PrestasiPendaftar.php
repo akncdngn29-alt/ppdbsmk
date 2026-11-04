@@ -29,5 +29,10 @@ class PrestasiPendaftar extends Model
     {
         return $this->belongsTo(Pendaftar::class, 'id_pendaftar', 'id_pendaftar');
     }
+
+    public function getFileUrlAttribute(): string
+    {
+        return route('dokumen.prestasi', $this->id_prestasi);
+    }
 }
 

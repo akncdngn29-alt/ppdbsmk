@@ -25,5 +25,10 @@ class BerkasPendaftar extends Model
     {
         return $this->belongsTo(Pendaftar::class, 'id_pendaftar', 'id_pendaftar');
     }
+
+    public function getFileUrlAttribute(): string
+    {
+        return route('dokumen.berkas', $this->id_berkas);
+    }
 }
 

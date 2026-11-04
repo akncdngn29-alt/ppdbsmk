@@ -6,11 +6,20 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\AdminTUController;
 use App\Http\Controllers\KepalaSekolahController;
+use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\MidtransWebhookController;
 
 // 1. Landing Page & Public Widgets
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::post('/cek-kelulusan', [LandingController::class, 'cekKelulusan'])->name('cek.kelulusan');
 Route::post('/check-voucher', [LandingController::class, 'checkVoucher'])->name('check.voucher');
+
+// Webhook Midtrans (Exempt CSRF)
+Route::post('/api/midtrans/notification', [MidtransWebhookController::class, 'handle'])->name('midtrans.notification');
+
+// Dokumen Pendaftar Berizin (Private Storage Protection - UU PDP)
+Route::get('/dokumen/berkas/{id}', [DokumenController::class, 'viewBerkas'])->name('dokumen.berkas');
+Route::get('/dokumen/prestasi/{id}', [DokumenController::class, 'viewPrestasi'])->name('dokumen.prestasi');
 
 // 2. Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -80,6 +89,7 @@ Route::middleware(['admin.role:tu'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/pengaturan', [AdminTUController::class, 'simpanPengaturanSekolah'])->name('pengaturan.simpan');
     
     Route::get('/ekspor/excel', [AdminTUController::class, 'eksporExcel'])->name('ekspor.excel');
+    Route::get('/ekspor/xlsx', [AdminTUController::class, 'eksporXlsx'])->name('ekspor.xlsx');
     Route::get('/ekspor/dapodik', [AdminTUController::class, 'eksporDapodik'])->name('ekspor.dapodik');
     Route::get('/laporan/rekap-pdf', [AdminTUController::class, 'cetakRekapPDF'])->name('laporan.rekap_pdf');
 });

@@ -14,6 +14,7 @@ use App\Models\NilaiSeleksi;
 use App\Models\Pengumuman;
 use App\Models\PengaturanSekolah;
 use App\Models\LogAktivitas;
+use App\Services\XlsxExportService;
 use Carbon\Carbon;
 
 class AdminTUController extends Controller
@@ -144,25 +145,26 @@ class AdminTUController extends Controller
         $pendaftar = Pendaftar::findOrFail($idPendaftar);
         $gelombang = $pendaftar->gelombang ?: Gelombang::first();
 
-        $pembayaran = Pembayaran::updateOrCreate(
-            ['id_pendaftar' => $pendaftar->id_pendaftar],
-            [
-                'id_gelombang' => $gelombang->id_gelombang,
-                'kode_transaksi' => Pembayaran::generateKodeTransaksi(),
-                'nominal' => $gelombang->biaya_pendaftaran,
-                'potongan' => 0.00,
-                'total_bayar' => $gelombang->biaya_pendaftaran,
-                'tipe_bayar' => 'tunai_tu',
-                'metode_pembayaran' => 'Loket TU (Tunai Kasir)',
-                'status_transaksi' => 'settlement',
-                'waktu_transaksi' => Carbon::now(),
-                'catatan' => 'Diverifikasi langsung oleh Petugas TU di loket sekolah.',
-            ]
-        );
+        DB::transaction(function () use ($pendaftar, $gelombang) {
+            $pembayaran = Pembayaran::updateOrCreate(
+                ['id_pendaftar' => $pendaftar->id_pendaftar],
+                [
+                    'id_gelombang' => $gelombang ? $gelombang->id_gelombang : 1,
+                    'kode_transaksi' => Pembayaran::generateKodeTransaksi(),
+                    'nominal' => $gelombang ? $gelombang->biaya_pendaftaran : 100000.00,
+                    'potongan' => 0.00,
+                    'total_bayar' => $gelombang ? $gelombang->biaya_pendaftaran : 100000.00,
+                    'tipe_bayar' => 'tunai_tu',
+                    'metode_pembayaran' => 'Loket TU (Tunai Kasir)',
+                    'status_transaksi' => 'settlement',
+                    'waktu_transaksi' => Carbon::now(),
+                    'catatan' => 'Diverifikasi langsung oleh Petugas TU di loket sekolah.',
+                ]
+            );
 
-        $pendaftar->update(['status_pembayaran' => 'Paid']);
-
-        LogAktivitas::log('UPDATE', "Admin TU memverifikasi lunas pembayaran tunai untuk {$pendaftar->nama}", 'pembayaran', $pembayaran->id_pembayaran);
+            $pendaftar->update(['status_pembayaran' => 'Paid']);
+            LogAktivitas::log('UPDATE', "Admin TU memverifikasi lunas pembayaran tunai untuk {$pendaftar->nama}", 'pembayaran', $pembayaran->id_pembayaran);
+        });
 
         return back()->with('success', "Pembayaran tunai {$pendaftar->nama} berhasil diverifikasi Lunas!");
     }
@@ -460,6 +462,62 @@ class AdminTUController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function eksporXlsx(Request $request, XlsxExportService $xlsxService)
+    {
+        $query = Pendaftar::with(['jurusan1', 'jurusan2', 'pembayaran', 'terima']);
+
+        if ($request->filled('jurusan')) {
+            $query->where('id_jurusan_1', $request->jurusan);
+        }
+        if ($request->filled('status_bayar')) {
+            $query->where('status_pembayaran', $request->status_bayar);
+        }
+        if ($request->filled('status_kelulusan')) {
+            $query->where('status_kelulusan', $request->status_kelulusan);
+        }
+
+        $pendaftar = $query->orderBy('id_pendaftar', 'asc')->get();
+
+        $headers = [
+            'No. Pendaftaran', 'NISN', 'Nama Lengkap', 'Tempat Lahir', 'Tanggal Lahir',
+            'Jenis Kelamin', 'Agama', 'Pilihan Jurusan 1', 'Pilihan Jurusan 2', 'Asal Sekolah',
+            'No HP Siswa', 'Nama Ayah', 'Nama Ibu', 'No HP Ortu', 'Pekerjaan Ayah',
+            'Jalur Pendaftaran', 'Ukuran Seragam', 'Ukuran Wearpack', 'Status Pembayaran',
+            'Status Verifikasi', 'Status Kelulusan', 'Tanggal Daftar'
+        ];
+
+        $rows = [];
+        foreach ($pendaftar as $p) {
+            $rows[] = [
+                $p->no_pendaftaran,
+                $p->nisn,
+                $p->nama,
+                $p->tempat_lahir,
+                $p->tanggal_lahir ? $p->tanggal_lahir->format('d/m/Y') : '-',
+                $p->jenis_kelamin,
+                $p->agama,
+                $p->jurusan1 ? $p->jurusan1->nama_jurusan : '-',
+                $p->jurusan2 ? $p->jurusan2->nama_jurusan : '-',
+                $p->asal_sekolah,
+                $p->hp_siswa,
+                $p->nama_ayah,
+                $p->nama_ibu,
+                $p->hp_ortu,
+                $p->kerja_ayah,
+                $p->jalur_pendaftaran,
+                $p->ukuran_seragam,
+                $p->ukuran_wearpack,
+                $p->status_pembayaran,
+                $p->status_verifikasi,
+                $p->status_kelulusan,
+                $p->tgl_daftar ? $p->tgl_daftar->format('d/m/Y H:i') : '-',
+            ];
+        }
+
+        $filename = "Rekap_PPDB_SMK_IB_Khalifah_Bangsa_" . date('Ymd_His') . ".xlsx";
+        return $xlsxService->export($headers, $rows, $filename);
     }
 
     public function cetakRekapPDF(Request $request)

@@ -86,7 +86,7 @@ class LandingController extends Controller
             ->where('status_aktif', true)
             ->first();
 
-        if (!$voucher || $voucher->kuota_voucher <= 0) {
+        if (!$voucher || !$voucher->isAvailable()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Kode voucher tidak valid atau kuota telah habis.',

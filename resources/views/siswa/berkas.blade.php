@@ -80,7 +80,7 @@
                             <i data-lucide="file" class="w-4 h-4 text-emerald-600 shrink-0"></i>
                             <span class="truncate font-medium text-slate-700 dark:text-slate-300">{{ $item->nama_file }}</span>
                         </div>
-                        <a href="{{ asset('storage/' . $item->path_file) }}" target="_blank" class="text-xs text-emerald-600 dark:text-emerald-400 font-bold hover:underline shrink-0 ml-2">
+                        <a href="{{ route('dokumen.berkas', $item->id_berkas) }}" target="_blank" class="text-xs text-emerald-600 dark:text-emerald-400 font-bold hover:underline shrink-0 ml-2">
                             Lihat File
                         </a>
                     </div>
@@ -139,7 +139,7 @@
                             {{ $pr->status_verifikasi }}
                         </span>
                         <div class="mt-2">
-                            <a href="{{ asset('storage/' . $pr->berkas_sertifikat) }}" target="_blank" class="text-xs text-emerald-600 dark:text-emerald-400 hover:underline">Lihat Sertifikat &rarr;</a>
+                            <a href="{{ route('dokumen.prestasi', $pr->id_prestasi) }}" target="_blank" class="text-xs text-emerald-600 dark:text-emerald-400 hover:underline">Lihat Sertifikat &rarr;</a>
                         </div>
                     </div>
                 </div>

@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.role' => \App\Http\Middleware\AdminRoleMiddleware::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'api/midtrans/notification',
+        ]);
         $middleware->append(\App\Http\Middleware\CheckMaintenanceMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

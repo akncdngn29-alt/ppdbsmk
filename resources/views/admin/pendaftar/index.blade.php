@@ -57,8 +57,11 @@
         <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between flex-wrap gap-2 text-xs">
             <span class="text-slate-500">Ditemukan <strong>{{ $pendaftar->total() }}</strong> calon siswa</span>
             <div class="flex items-center gap-2">
+                <a href="{{ route('admin.ekspor.xlsx') }}" class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5">
+                    <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-600"></i> Ekspor Excel (.xlsx)
+                </a>
                 <a href="{{ route('admin.ekspor.excel') }}" class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5">
-                    <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-500"></i> Ekspor CSV
+                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-emerald-500"></i> Ekspor CSV
                 </a>
                 <a href="{{ route('admin.ekspor.dapodik') }}" class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5">
                     <i data-lucide="download" class="w-3.5 h-3.5 text-sky-500"></i> Format Dapodik

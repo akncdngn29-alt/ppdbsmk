@@ -17,13 +17,26 @@ class VoucherPendaftaran extends Model
         'tipe',
         'nilai_potongan',
         'kuota_voucher',
+        'kuota_terpakai',
         'status_aktif',
     ];
 
     protected $casts = [
         'nilai_potongan' => 'decimal:2',
+        'kuota_voucher' => 'integer',
+        'kuota_terpakai' => 'integer',
         'status_aktif' => 'boolean',
     ];
+
+    public function isAvailable(): bool
+    {
+        return $this->status_aktif && ($this->kuota_terpakai < $this->kuota_voucher);
+    }
+
+    public function sisaKuota(): int
+    {
+        return max(0, $this->kuota_voucher - $this->kuota_terpakai);
+    }
 
     public function pembayaran()
     {

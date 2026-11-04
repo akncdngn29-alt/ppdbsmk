@@ -11,8 +11,8 @@ class CheckMaintenanceMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // Don't block admin routes or login routes
-        if ($request->is('admin*') || $request->is('login') || $request->is('up')) {
+        // Jangan blokir rute administrasi (Admin TU, Kepala Sekolah), otentikasi admin/login, health check, atau admin yang sudah login
+        if ($request->is('admin*') || $request->is('kepsek*') || $request->is('login') || $request->is('up') || auth('admin')->check()) {
             return $next($request);
         }
 

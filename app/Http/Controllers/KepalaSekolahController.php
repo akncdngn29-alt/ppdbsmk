@@ -81,31 +81,33 @@ class KepalaSekolahController extends Controller
         $pendaftar = Pendaftar::findOrFail($id);
         $jurusanId = $request->id_jurusan_diterima ?: $pendaftar->id_jurusan_1;
 
-        $pendaftar->update([
-            'status_kelulusan' => $request->status_kelulusan,
-        ]);
+        DB::transaction(function () use ($request, $pendaftar, $jurusanId) {
+            $pendaftar->update([
+                'status_kelulusan' => $request->status_kelulusan,
+            ]);
 
-        if ($request->status_kelulusan === 'Diterima') {
-            Terima::updateOrCreate(
-                ['id_pendaftar' => $pendaftar->id_pendaftar],
-                [
-                    'id_jurusan' => $jurusanId,
-                    'id_admin_pengesah' => auth('admin')->id(),
-                    'no_surat_kelulusan' => Terima::generateNoSuratKelulusan(),
-                    'tgl_diterima' => Carbon::now()->format('Y-m-d'),
-                    'keterangan' => $request->catatan ?: 'Dinyatakan Lulus Seleksi PPDB SMK Islam Bina Khalifah Bangsa.',
-                ]
+            if ($request->status_kelulusan === 'Diterima') {
+                Terima::updateOrCreate(
+                    ['id_pendaftar' => $pendaftar->id_pendaftar],
+                    [
+                        'id_jurusan' => $jurusanId,
+                        'id_admin_pengesah' => auth('admin')->id(),
+                        'no_surat_kelulusan' => Terima::generateNoSuratKelulusan(),
+                        'tgl_diterima' => Carbon::now()->format('Y-m-d'),
+                        'keterangan' => $request->catatan ?: 'Dinyatakan Lulus Seleksi PPDB SMK Islam Bina Khalifah Bangsa.',
+                    ]
+                );
+            } else {
+                Terima::where('id_pendaftar', $pendaftar->id_pendaftar)->delete();
+            }
+
+            LogAktivitas::log(
+                'PENGESAHAN_SKL',
+                "Kepala Sekolah mengesahkan kelulusan {$pendaftar->nama}: {$request->status_kelulusan}",
+                'pendaftar',
+                $pendaftar->id_pendaftar
             );
-        } else {
-            Terima::where('id_pendaftar', $pendaftar->id_pendaftar)->delete();
-        }
-
-        LogAktivitas::log(
-            'PENGESAHAN_SKL',
-            "Kepala Sekolah mengesahkan kelulusan {$pendaftar->nama}: {$request->status_kelulusan}",
-            'pendaftar',
-            $pendaftar->id_pendaftar
-        );
+        });
 
         return back()->with('success', "Keputusan kelulusan untuk {$pendaftar->nama} berhasil disahkan.");
     }
