@@ -13,22 +13,30 @@ class BackupDatabaseController extends Controller
     protected string $backupDir = 'backups';
 
     /**
+     * Dapatkan disk private storage untuk berkas pencadangan basis data.
+     */
+    private function disk()
+    {
+        return Storage::disk('local');
+    }
+
+    /**
      * Tampilkan daftar file backup basis data yang tersedia.
      */
     public function index()
     {
-        if (!Storage::exists($this->backupDir)) {
-            Storage::makeDirectory($this->backupDir);
+        if (!$this->disk()->exists($this->backupDir)) {
+            $this->disk()->makeDirectory($this->backupDir);
         }
 
-        $allFiles = Storage::files($this->backupDir);
+        $allFiles = $this->disk()->files($this->backupDir);
         $backups = [];
 
         foreach ($allFiles as $file) {
             if (pathinfo($file, PATHINFO_EXTENSION) === 'sql') {
                 $filename = basename($file);
-                $size = Storage::size($file);
-                $lastModified = Storage::lastModified($file);
+                $size = $this->disk()->size($file);
+                $lastModified = $this->disk()->lastModified($file);
 
                 $backups[] = [
                     'filename' => $filename,
@@ -57,8 +65,8 @@ class BackupDatabaseController extends Controller
         $admin = auth('admin')->user();
 
         try {
-            if (!Storage::exists($this->backupDir)) {
-                Storage::makeDirectory($this->backupDir);
+            if (!$this->disk()->exists($this->backupDir)) {
+                $this->disk()->makeDirectory($this->backupDir);
             }
 
             $timestamp = Carbon::now()->format('Y-m-d_H-i-s');
@@ -68,8 +76,8 @@ class BackupDatabaseController extends Controller
 
             $sqlContent = $this->generateSqlDump($dbName);
 
-            Storage::put($relativePath, $sqlContent);
-            $fileSizeBytes = Storage::size($relativePath);
+            $this->disk()->put($relativePath, $sqlContent);
+            $fileSizeBytes = $this->disk()->size($relativePath);
 
             LogAktivitas::log(
                 'BACKUP_DATABASE',
@@ -92,18 +100,26 @@ class BackupDatabaseController extends Controller
     }
 
     /**
-     * Unduh file backup SQL secara aman.
+     * Unduh file backup SQL secara aman dari private storage.
      */
     public function download($filename)
     {
+        $admin = auth('admin')->user();
+        if (!$admin || $admin->role !== 'kepala_sekolah') {
+            abort(403, 'Akses ditolak. Hanya Kepala Sekolah yang berwenang mengunduh berkas cadangan basis data.');
+        }
+
+        if (str_contains($filename, '..') || str_contains($filename, '/') || str_contains($filename, '\\')) {
+            abort(400, 'Format nama file tidak sah.');
+        }
+
         $safeFilename = basename($filename);
         $relativePath = "{$this->backupDir}/{$safeFilename}";
 
-        if (!Storage::exists($relativePath)) {
+        if (!$this->disk()->exists($relativePath)) {
             abort(404, 'File backup tidak ditemukan.');
         }
 
-        $admin = auth('admin')->user();
         LogAktivitas::log(
             'UNDUH_BACKUP',
             "{$admin->nama_admin} mengunduh file backup basis data: {$safeFilename}",
@@ -117,21 +133,29 @@ class BackupDatabaseController extends Controller
             $admin->role
         );
 
-        return Storage::download($relativePath, $safeFilename, [
+        return $this->disk()->download($relativePath, $safeFilename, [
             'Content-Type' => 'application/sql',
         ]);
     }
 
     /**
-     * Pulihkan basis data dari file backup yang dipilih (Protected).
+     * Pulihkan basis data dari file backup yang dipilih (Khusus Kepala Sekolah).
      */
     public function restore(Request $request, $filename)
     {
         $admin = auth('admin')->user();
+        if (!$admin || $admin->role !== 'kepala_sekolah') {
+            abort(403, 'Akses ditolak. Hanya Kepala Sekolah yang memiliki wewenang memulihkan basis data.');
+        }
+
+        if (str_contains($filename, '..') || str_contains($filename, '/') || str_contains($filename, '\\')) {
+            abort(400, 'Format nama file tidak sah.');
+        }
+
         $safeFilename = basename($filename);
         $relativePath = "{$this->backupDir}/{$safeFilename}";
 
-        if (!Storage::exists($relativePath)) {
+        if (!$this->disk()->exists($relativePath)) {
             return back()->with('error', 'File backup yang dipilih tidak ditemukan.');
         }
 
@@ -142,7 +166,7 @@ class BackupDatabaseController extends Controller
         ]);
 
         try {
-            $sqlContent = Storage::get($relativePath);
+            $sqlContent = $this->disk()->get($relativePath);
 
             // Eksekusi SQL dump dengan penonaktifan foreign key check sementara
             DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
@@ -171,16 +195,24 @@ class BackupDatabaseController extends Controller
     }
 
     /**
-     * Hapus file backup yang sudah tidak diperlukan.
+     * Hapus file backup yang sudah tidak diperlukan (Khusus Kepala Sekolah).
      */
     public function destroy($filename)
     {
         $admin = auth('admin')->user();
+        if (!$admin || $admin->role !== 'kepala_sekolah') {
+            abort(403, 'Akses ditolak. Hanya Kepala Sekolah yang memiliki wewenang menghapus file cadangan basis data.');
+        }
+
+        if (str_contains($filename, '..') || str_contains($filename, '/') || str_contains($filename, '\\')) {
+            abort(400, 'Format nama file tidak sah.');
+        }
+
         $safeFilename = basename($filename);
         $relativePath = "{$this->backupDir}/{$safeFilename}";
 
-        if (Storage::exists($relativePath)) {
-            Storage::delete($relativePath);
+        if ($this->disk()->exists($relativePath)) {
+            $this->disk()->delete($relativePath);
 
             LogAktivitas::log(
                 'HAPUS_BACKUP',

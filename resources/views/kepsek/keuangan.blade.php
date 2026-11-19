@@ -16,7 +16,7 @@
             <h2 class="text-xl sm:text-2xl font-black tracking-tight leading-tight">
                 Rekapitulasi Finansial PPDB 2026/2027
             </h2>
-            <p class="text-xs sm:text-sm text-emerald-100/90 mt-2 leading-relaxed">
+            <p class="text-xs sm:text-sm text-pink-100/90 mt-2 leading-relaxed">
                 Pantau penerimaan biaya formulir pendaftaran secara transparan, akuntabel, dan terverifikasi antara pembayaran tunai loket TU dan gateway online Midtrans.
             </p>
         </div>
@@ -29,12 +29,12 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Total Masuk (Lunas)</span>
-                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center">
+                <div class="w-9 h-9 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-400 flex items-center justify-center">
                     <i data-lucide="badge-dollar-sign" class="w-5 h-5"></i>
                 </div>
             </div>
             <div class="mt-3">
-                <span class="text-2xl font-black text-emerald-600 dark:text-emerald-400">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</span>
+                <span class="text-2xl font-black text-[#fa2f79] dark:text-pink-400">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</span>
             </div>
             <div class="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
                 Dari <strong class="text-slate-700 dark:text-slate-300">{{ $totalTransaksiLunas }}</strong> transaksi sukses
@@ -95,7 +95,7 @@
         <!-- Berdasarkan Gelombang -->
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2 mb-4">
-                <i data-lucide="calendar" class="w-4 h-4 text-emerald-500"></i>
+                <i data-lucide="calendar" class="w-4 h-4 text-[#fa2f79]"></i>
                 Pendapatan per Gelombang
             </h3>
             <div class="space-y-3">
@@ -107,7 +107,7 @@
                             Tarif: Rp {{ number_format($g->biaya_pendaftaran, 0, ',', '.') }} &bull; {{ $g->transaksi_lunas_count }} pendaftar lunas
                         </div>
                     </div>
-                    <span class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                    <span class="text-xs font-extrabold text-[#fa2f79] dark:text-pink-400">
                         Rp {{ number_format($g->total_nominal, 0, ',', '.') }}
                     </span>
                 </div>
@@ -148,11 +148,11 @@
         <form method="GET" action="{{ route('kepsek.keuangan') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Cari Pendaftar / Kode</label>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="No. TRX, Nama, NISN..." class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="No. TRX, Nama, NISN..." class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-[#fa2f79]">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Metode Bayar</label>
-                <select name="tipe_bayar" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <select name="tipe_bayar" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-[#fa2f79]">
                     <option value="">Semua Metode</option>
                     <option value="tunai" {{ request('tipe_bayar') === 'tunai' ? 'selected' : '' }}>Tunai Loket</option>
                     <option value="midtrans" {{ request('tipe_bayar') === 'midtrans' ? 'selected' : '' }}>Midtrans Online</option>
@@ -160,7 +160,7 @@
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Status Transaksi</label>
-                <select name="status" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <select name="status" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-[#fa2f79]">
                     <option value="">Semua Status</option>
                     <option value="settlement" {{ request('status') === 'settlement' ? 'selected' : '' }}>Lunas (Settlement)</option>
                     <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
@@ -169,7 +169,7 @@
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Gelombang</label>
-                <select name="gelombang" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <select name="gelombang" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-[#fa2f79]">
                     <option value="">Semua Gelombang</option>
                     @foreach($daftarGelombang as $g)
                     <option value="{{ $g->id_gelombang }}" {{ request('gelombang') == $g->id_gelombang ? 'selected' : '' }}>{{ $g->nama_gelombang }}</option>
@@ -194,7 +194,7 @@
                 <h3 class="text-sm font-bold text-slate-800 dark:text-white">Rincian Buku Kas Penerimaan</h3>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400">Menampilkan {{ $transaksi->total() }} entri pembayaran</p>
             </div>
-            <span class="text-xs font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-lg font-bold">
+            <span class="text-xs font-mono text-[#fa2f79] dark:text-pink-400 bg-pink-50 dark:bg-pink-950/60 px-2.5 py-1 rounded-lg font-bold">
                 Aktual Database
             </span>
         </div>
@@ -244,12 +244,12 @@
                         <td class="py-3 px-4 text-purple-600 dark:text-purple-400">
                             {{ $t->potongan > 0 ? '-Rp ' . number_format($t->potongan, 0, ',', '.') : '-' }}
                         </td>
-                        <td class="py-3 px-4 font-extrabold text-emerald-600 dark:text-emerald-400">
+                        <td class="py-3 px-4 font-extrabold text-[#fa2f79] dark:text-pink-400">
                             Rp {{ number_format($t->total_bayar, 0, ',', '.') }}
                         </td>
                         <td class="py-3 px-4">
                             @if($t->status_transaksi === 'settlement')
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-pink-100 text-pink-700 dark:bg-pink-950/60 dark:text-pink-300">
                                     LUNAS
                                 </span>
                             @elseif($t->status_transaksi === 'pending')

@@ -67,14 +67,14 @@
                 <div class="relative">
                     <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari deskripsi, status..." 
-                           class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                           class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#fa2f79]">
                 </div>
             </div>
 
             <!-- Filter Kategori / Aksi -->
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">Jenis Aktivitas</label>
-                <select name="aksi" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select name="aksi" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#fa2f79]">
                     <option value="">Semua Jenis</option>
                     @foreach($daftarAksi as $itemAksi)
                         <option value="{{ $itemAksi }}" {{ request('aksi') === $itemAksi ? 'selected' : '' }}>
@@ -87,7 +87,7 @@
             <!-- Filter Status -->
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">Status</label>
-                <select name="status" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select name="status" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#fa2f79]">
                     <option value="">Semua Status</option>
                     <option value="SUCCESS" {{ request('status') === 'SUCCESS' ? 'selected' : '' }}>Sukses / Berhasil</option>
                     <option value="FAILED" {{ request('status') === 'FAILED' ? 'selected' : '' }}>Gagal</option>
@@ -99,7 +99,7 @@
                 <div class="flex-1">
                     <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">Tanggal</label>
                     <input type="date" name="tanggal" value="{{ request('tanggal') }}" 
-                           class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                           class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#fa2f79]">
                 </div>
                 <button type="submit" class="px-4 py-2 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs transition-colors shadow-sm shadow-pink-500/20" title="Terapkan Filter">
                     <i data-lucide="filter" class="w-4 h-4"></i>
@@ -118,7 +118,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="list" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="list" class="w-4 h-4 text-[#fa2f79]"></i>
                 Daftar Riwayat Peristiwa Akun
             </h3>
             <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Menampilkan {{ $logs->total() }} catatan</span>
@@ -248,7 +248,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
         <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="info" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="info" class="w-4 h-4 text-[#fa2f79]"></i>
                 Rincian Informasi Aktivitas
             </h3>
             <button onclick="closeSiswaLogModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
@@ -262,7 +262,7 @@
                 <pre id="modalSiswaLama" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[11px] overflow-x-auto max-h-36 border border-slate-200 dark:border-slate-700"></pre>
             </div>
             <div id="wrapperModalBaru">
-                <span class="text-[11px] font-bold text-emerald-600 block mb-1">Data Perubahan / Catatan:</span>
+                <span class="text-[11px] font-bold text-[#fa2f79] block mb-1">Data Perubahan / Catatan:</span>
                 <pre id="modalSiswaBaru" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[11px] overflow-x-auto max-h-36 border border-slate-200 dark:border-slate-700"></pre>
             </div>
         </div>

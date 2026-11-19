@@ -34,12 +34,12 @@
     <!-- Profil Singkat Calon Siswa -->
     <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-base shrink-0">
+            <div class="w-12 h-12 rounded-xl bg-pink-500/10 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center font-black text-base shrink-0">
                 {{ strtoupper(substr($pendaftar->nama, 0, 1)) }}
             </div>
             <div>
                 <h3 class="font-extrabold text-sm text-slate-800 dark:text-white uppercase">{{ $pendaftar->nama }}</h3>
-                <p class="text-xs text-slate-500">NISN: <span class="font-mono">{{ $pendaftar->nisn }}</span> | No. Daftar: <span class="font-mono font-bold text-emerald-600 dark:text-emerald-400">{{ $pendaftar->no_pendaftaran }}</span></p>
+                <p class="text-xs text-slate-500">NISN: <span class="font-mono">{{ $pendaftar->nisn }}</span> | No. Daftar: <span class="font-mono font-bold text-[#fa2f79] dark:text-pink-400">{{ $pendaftar->no_pendaftaran }}</span></p>
             </div>
         </div>
         <div class="flex items-center gap-2">
@@ -58,15 +58,15 @@
                     $jadwal = $item->jadwal;
                     $ruang  = $item->ruang;
                 @endphp
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border-2 border-emerald-500/40 dark:border-emerald-500/30 shadow-md p-6 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 px-4 py-1 bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider rounded-bl-xl">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border-2 border-pink-500/30 dark:border-pink-500/25 shadow-md p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 px-4 py-1 bg-[#fa2f79] text-white text-[10px] font-black uppercase tracking-wider rounded-bl-xl">
                         Ruang Telah Ditentukan
                     </div>
 
                     <div class="space-y-4 pt-1">
                         <!-- Judul Agenda -->
                         <div>
-                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 mb-1">
+                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-pink-50 dark:bg-pink-950/60 text-[#fa2f79] dark:text-pink-300 border border-pink-200/50 mb-1">
                                 {{ $jadwal->jenis_seleksi ?? 'Tes Seleksi Masuk' }}
                             </span>
                             <h3 class="text-lg font-black text-slate-800 dark:text-white">{{ $jadwal->nama_jadwal }}</h3>
@@ -77,13 +77,13 @@
                             <!-- Tanggal & Waktu -->
                             <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-1">
                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400"></i>
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-[#fa2f79] dark:text-pink-400"></i>
                                     <span>Waktu Pelaksanaan</span>
                                 </span>
                                 <p class="text-xs font-bold text-slate-800 dark:text-white">
                                     {{ \Carbon\Carbon::parse($jadwal->tanggal)->isoFormat('dddd, D MMMM Y') }}
                                 </p>
-                                <p class="text-xs font-mono font-semibold text-emerald-600 dark:text-emerald-400 dark:text-emerald-400">
+                                <p class="text-xs font-mono font-semibold text-[#fa2f79] dark:text-pink-400">
                                     Pukul {{ substr($jadwal->waktu_mulai, 0, 5) }} - {{ substr($jadwal->waktu_selesai, 0, 5) }} WIB
                                 </p>
                             </div>
@@ -148,7 +148,7 @@
     <!-- Panduan / Petunjuk -->
     <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 space-y-2">
         <h4 class="font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
-            <i data-lucide="help-circle" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+            <i data-lucide="help-circle" class="w-4 h-4 text-[#fa2f79] dark:text-pink-400"></i>
             <span>Informasi Penting Ujian Masuk</span>
         </h4>
         <ul class="list-disc list-inside space-y-1 pl-1 text-[11px]">

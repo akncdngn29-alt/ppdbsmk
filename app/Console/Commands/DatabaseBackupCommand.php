@@ -22,8 +22,9 @@ class DatabaseBackupCommand extends Command
             $filename = $this->option('filename') ?: "backup_{$dbName}_{$timestamp}.sql";
             $relativePath = "backups/{$filename}";
 
-            if (!Storage::exists('backups')) {
-                Storage::makeDirectory('backups');
+            $disk = Storage::disk('local');
+            if (!$disk->exists('backups')) {
+                $disk->makeDirectory('backups');
             }
 
             $pdo = DB::connection()->getPdo();
@@ -80,10 +81,10 @@ class DatabaseBackupCommand extends Command
             $out .= "SET FOREIGN_KEY_CHECKS=1;\n";
             $out .= "-- Dump Selesai.\n";
 
-            Storage::put($relativePath, $out);
-            $size = Storage::size($relativePath);
+            $disk->put($relativePath, $out);
+            $size = $disk->size($relativePath);
 
-            $this->info("Backup berhasil dibuat: storage/app/{$relativePath} (" . round($size / 1024, 2) . " KB)");
+            $this->info("Backup berhasil dibuat: storage/app/private/{$relativePath} (" . round($size / 1024, 2) . " KB)");
             return Command::SUCCESS;
 
         } catch (\Exception $e) {

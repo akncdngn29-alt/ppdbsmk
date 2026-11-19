@@ -10,7 +10,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <div class="w-12 h-12 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-400 flex items-center justify-center shrink-0">
                     <i data-lucide="award" class="w-6 h-6"></i>
                 </div>
                 <div>
@@ -23,7 +23,7 @@
 
             <!-- Filter Jurusan -->
             <form action="{{ route('kepsek.kelulusan') }}" method="GET" class="flex items-center gap-2 shrink-0">
-                <select name="jurusan" onchange="this.form.submit()" class="px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select name="jurusan" onchange="this.form.submit()" class="px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                     <option value="">Semua Program Keahlian</option>
                     @foreach($jurusan as $j)
                         <option value="{{ $j->id_jurusan }}" {{ request('jurusan') == $j->id_jurusan ? 'selected' : '' }}>
@@ -44,7 +44,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="clipboard-check" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="clipboard-check" class="w-4 h-4 text-[#fa2f79]"></i>
                 Daftar Calon Siswa Terverifikasi
             </h3>
             <span class="text-xs text-slate-500 dark:text-slate-400">Total: {{ $pendaftar->total() }} Calon Siswa</span>
@@ -73,7 +73,7 @@
 
                             <!-- Pilihan Jurusan -->
                             <td class="py-3.5 px-4">
-                                <div class="font-semibold text-emerald-600 dark:text-emerald-400">
+                                <div class="font-semibold text-[#fa2f79] dark:text-pink-400">
                                     1. {{ $p->jurusan1 ? $p->jurusan1->nama_jurusan : '-' }}
                                 </div>
                                 @if($p->jurusan2)
@@ -87,7 +87,7 @@
                             <td class="py-3.5 px-4">
                                 @if($p->nilaiSeleksi)
                                     <div class="flex items-center gap-2">
-                                        <span class="px-2 py-0.5 rounded font-black text-xs {{ $p->nilaiSeleksi->total_nilai >= 75 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400' }}">
+                                        <span class="px-2 py-0.5 rounded font-black text-xs {{ $p->nilaiSeleksi->total_nilai >= 75 ? 'bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400' }}">
                                             Skor: {{ number_format($p->nilaiSeleksi->total_nilai, 1) }}
                                         </span>
                                         <span class="text-[10px] text-slate-400">
@@ -95,7 +95,7 @@
                                         </span>
                                     </div>
                                     <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-                                        Tes Buta Warna: <span class="font-semibold {{ $p->nilaiSeleksi->tes_buta_warna === 'Normal' ? 'text-emerald-600' : 'text-rose-500' }}">{{ $p->nilaiSeleksi->tes_buta_warna }}</span>
+                                        Tes Buta Warna: <span class="font-semibold {{ $p->nilaiSeleksi->tes_buta_warna === 'Normal' ? 'text-[#fa2f79]' : 'text-rose-500' }}">{{ $p->nilaiSeleksi->tes_buta_warna }}</span>
                                     </div>
                                 @else
                                     <span class="text-slate-400 italic text-[11px]">Belum diinput TU</span>
@@ -111,7 +111,7 @@
                             <!-- Status Kelulusan -->
                             <td class="py-3.5 px-4 text-center">
                                 @if($p->status_kelulusan === 'Diterima')
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-pink-100 text-pink-800 dark:bg-pink-950/80 dark:text-pink-300">
                                         <i data-lucide="check-circle" class="w-3 h-3"></i> Diterima
                                     </span>
                                     @if($p->terima)
@@ -165,7 +165,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <i data-lucide="award" class="w-5 h-5 text-emerald-600"></i>
+                <i data-lucide="award" class="w-5 h-5 text-[#fa2f79]"></i>
                 <h3 class="text-sm font-bold text-slate-800 dark:text-white">Keputusan Sidang Kelulusan</h3>
             </div>
             <button onclick="closeDecisionModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
@@ -182,7 +182,7 @@
 
             <div>
                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Keputusan Akhir *</label>
-                <select name="status_kelulusan" id="modalStatusKelulusan" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select name="status_kelulusan" id="modalStatusKelulusan" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-pink-400">
                     <option value="Diterima">Diterima (Terbitkan SKL)</option>
                     <option value="Cadangan">Cadangan (Waiting List)</option>
                     <option value="Tidak Lolos">Tidak Lolos Seleksi</option>
@@ -191,7 +191,7 @@
 
             <div id="jurusanDiterimaContainer">
                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Diterima Pada Program Keahlian *</label>
-                <select name="id_jurusan_diterima" id="modalJurusanDiterima" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select name="id_jurusan_diterima" id="modalJurusanDiterima" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                     @foreach($jurusan as $j)
                         <option value="{{ $j->id_jurusan }}">{{ $j->nama_jurusan }} ({{ $j->kode_jurusan }})</option>
                     @endforeach
@@ -202,7 +202,7 @@
             <div>
                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Catatan Pengesahan / Keterangan SKL</label>
                 <textarea name="catatan" id="modalCatatan" rows="3" placeholder="Contoh: Dinyatakan Lulus Seleksi PPDB SMK Islam Bina Khalifah Bangsa Tahun Ajaran 2026/2027."
-                          class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+                          class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400"></textarea>
             </div>
 
             <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2">

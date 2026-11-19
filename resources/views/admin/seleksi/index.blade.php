@@ -35,7 +35,7 @@
                             <span class="font-bold text-slate-900 dark:text-white block">{{ $p->nama }}</span>
                             <span class="text-[10px] text-slate-400 font-mono">{{ $p->no_pendaftaran }} | {{ $p->asal_sekolah }}</span>
                         </td>
-                        <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">
+                        <td class="p-3 font-semibold text-[#fa2f79] dark:text-pink-400">
                             {{ $p->jurusan1 ? $p->jurusan1->nama_jurusan : '-' }}
                         </td>
                         <form action="{{ route('admin.seleksi.simpan', $p->id_pendaftar) }}" method="POST">

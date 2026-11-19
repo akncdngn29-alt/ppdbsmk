@@ -16,7 +16,7 @@
             </div>
             <div class="flex items-center gap-2 flex-wrap">
                 <span class="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 flex items-center gap-1.5">
-                    <i data-lucide="file-check" class="w-4 h-4 text-emerald-500"></i> Kelengkapan: {{ $berkas->whereIn('jenis_berkas', ['ijazah', 'kk', 'pasfoto', 'akta'])->count() }}/4 Wajib
+                    <i data-lucide="file-check" class="w-4 h-4 text-[#fa2f79]"></i> Kelengkapan: {{ $berkas->whereIn('jenis_berkas', ['ijazah', 'kk', 'pasfoto', 'akta'])->count() }}/4 Wajib
                 </span>
                 <span class="px-3 py-1.5 rounded-full text-xs font-bold 
                     @if($pendaftar->status_verifikasi === 'Terverifikasi') bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
@@ -64,7 +64,7 @@
                             <i data-lucide="circle-dashed" class="w-3 h-3"></i> Belum Diunggah
                         </span>
                         @elseif($isTerverifikasi)
-                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 flex items-center gap-1">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-pink-100 text-[#be123c] dark:bg-pink-950 dark:text-pink-300 flex items-center gap-1">
                             <i data-lucide="check-circle" class="w-3 h-3"></i> Terverifikasi
                         </span>
                         @elseif($isPerluPerbaikan)
@@ -84,10 +84,10 @@
                     <!-- Preview File Terunggah -->
                     <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
                         <div class="flex items-center gap-2 truncate">
-                            <i data-lucide="file" class="w-4 h-4 {{ $isTerverifikasi ? 'text-emerald-600' : ($isPerluPerbaikan ? 'text-rose-600' : 'text-amber-600') }} shrink-0"></i>
+                            <i data-lucide="file" class="w-4 h-4 {{ $isTerverifikasi ? 'text-[#fa2f79]' : ($isPerluPerbaikan ? 'text-rose-600' : 'text-amber-600') }} shrink-0"></i>
                             <span class="truncate font-medium text-slate-700 dark:text-slate-300">{{ $item->nama_file }}</span>
                         </div>
-                        <a href="{{ route('dokumen.berkas', $item->id_berkas) }}" target="_blank" class="text-xs text-emerald-600 dark:text-emerald-400 font-bold hover:underline shrink-0 ml-2 flex items-center gap-1">
+                        <a href="{{ route('dokumen.berkas', $item->id_berkas) }}" target="_blank" class="text-xs text-[#fa2f79] dark:text-pink-400 font-bold hover:underline shrink-0 ml-2 flex items-center gap-1">
                             <span>Lihat File</span>
                             <i data-lucide="external-link" class="w-3 h-3"></i>
                         </a>
@@ -104,8 +104,8 @@
                         </p>
                     </div>
                     @elseif($isTerverifikasi)
-                    <div class="p-2.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-300 text-[11px] flex items-center gap-2">
-                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                    <div class="p-2.5 rounded-xl bg-pink-50/70 dark:bg-pink-950/20 text-[#be123c] dark:text-pink-300 text-[11px] flex items-center gap-2">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-[#fa2f79] shrink-0"></i>
                         <span>Dokumen telah diverifikasi sah oleh TU. Tidak perlu diunggah ulang.</span>
                     </div>
                     @elseif($isMenunggu)
@@ -162,19 +162,19 @@
                         <div class="text-slate-500 dark:text-slate-400">
                             {{ $pr->peringkat }} | Kategori: {{ $pr->kategori }} | Tingkat: {{ $pr->tingkat }} (Tahun {{ $pr->tahun }})
                         </div>
-                        <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                        <div class="text-[11px] text-[#fa2f79] dark:text-pink-400 font-semibold">
                             Penyelenggara: {{ $pr->penyelenggara }} | Skor Tambahan: +{{ $pr->skor_bobot }} Poin
                         </div>
                     </div>
                     <div class="text-right shrink-0">
                         <span class="px-2.5 py-1 rounded-full text-[10px] font-bold 
-                            @if($pr->status_verifikasi === 'Valid') bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
+                            @if($pr->status_verifikasi === 'Valid') bg-pink-100 text-[#be123c] dark:bg-pink-950 dark:text-pink-300
                             @elseif($pr->status_verifikasi === 'Ditolak') bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300
                             @else bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 @endif">
                             {{ $pr->status_verifikasi }}
                         </span>
                         <div class="mt-2">
-                            <a href="{{ route('dokumen.prestasi', $pr->id_prestasi) }}" target="_blank" class="text-xs text-emerald-600 dark:text-emerald-400 hover:underline">Lihat Sertifikat &rarr;</a>
+                            <a href="{{ route('dokumen.prestasi', $pr->id_prestasi) }}" target="_blank" class="text-xs text-[#fa2f79] dark:text-pink-400 hover:underline">Lihat Sertifikat &rarr;</a>
                         </div>
                     </div>
                 </div>

@@ -19,7 +19,7 @@
         </div>
         <div>
             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                <i data-lucide="eye" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="eye" class="w-4 h-4 text-[#fa2f79]"></i>
                 <span>Akses Pengawasan (Read-Only)</span>
             </span>
         </div>
@@ -30,7 +30,7 @@
         <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
             <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Agenda Jadwal</span>
             <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-0.5">{{ $jadwals->count() }}</h3>
-            <p class="text-[11px] text-emerald-600 font-medium mt-1">{{ $jadwals->where('status', 'aktif')->count() }} jadwal berstatus aktif</p>
+            <p class="text-[11px] text-[#fa2f79] dark:text-pink-400 font-medium mt-1">{{ $jadwals->where('status', 'aktif')->count() }} jadwal berstatus aktif</p>
         </div>
 
         <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -41,8 +41,8 @@
 
         <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
             <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sudah Memiliki Ruang</span>
-            <h3 class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">{{ $totalDitempatkan }}</h3>
-            <p class="text-[11px] text-emerald-600 font-medium mt-1">Siap mengikuti sesi ujian</p>
+            <h3 class="text-2xl font-black text-[#fa2f79] dark:text-pink-400 mt-0.5">{{ $totalDitempatkan }}</h3>
+            <p class="text-[11px] text-[#fa2f79] dark:text-pink-400 font-medium mt-1">Siap mengikuti sesi ujian</p>
         </div>
 
         <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -72,7 +72,7 @@
                 <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
                     <div class="flex items-center justify-between mb-1">
                         <span class="font-bold text-xs text-slate-800 dark:text-white">{{ $ruang->nama_ruang }}</span>
-                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold">
+                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-pink-100 text-pink-700 font-bold">
                             {{ $ruang->kode_ruang }}
                         </span>
                     </div>
@@ -82,7 +82,7 @@
                         <span class="text-slate-400">Kapasitas: {{ $ruang->kapasitas }}</span>
                     </div>
                     <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full {{ $isFull ? 'bg-rose-500' : 'bg-emerald-500' }}" style="width: {{ $persen }}%"></div>
+                        <div class="h-full {{ $isFull ? 'bg-rose-500' : 'bg-[#fa2f79]' }}" style="width: {{ $persen }}%"></div>
                     </div>
                 </div>
             @empty
@@ -150,7 +150,7 @@
                         </td>
                         <td class="py-3.5 px-4 text-center">
                             @if($j->status === 'aktif')
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-pink-100 dark:bg-pink-950/60 text-pink-700 dark:text-pink-300">
                                 Aktif
                             </span>
                             @else

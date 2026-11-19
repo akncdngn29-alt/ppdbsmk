@@ -68,22 +68,23 @@
 
                 @foreach($stepsData as $st)
                 @php
-                    $isDone = $stage > $st['no'];
-                    $isCurrent = $stage === $st['no'];
+                    $isAllFinished = $pendaftar && $pendaftar->status_daftar_ulang === 'Selesai';
+                    $isDone = $stage > $st['no'] || ($st['no'] === 7 && $isAllFinished);
+                    $isCurrent = $stage === $st['no'] && !$isAllFinished;
                 @endphp
                 <div class="p-4 rounded-2xl border text-center transition-all 
-                    @if($isDone) bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300
+                    @if($isDone) bg-pink-50 dark:bg-pink-950/40 border-pink-200 dark:border-pink-800 text-pink-900 dark:text-pink-200
                     @elseif($isCurrent) bg-pink-50/50 dark:bg-[#1a1226] border-[#fa2f79] shadow-md ring-2 ring-pink-500/20 text-slate-900 dark:text-white
                     @else bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 @endif">
                     <div class="w-7 h-7 rounded-full mx-auto mb-2 flex items-center justify-center text-xs font-bold
-                        @if($isDone) bg-emerald-600 text-white
+                        @if($isDone) bg-[#fa2f79] text-white
                         @elseif($isCurrent) bg-[#fa2f79] text-white animate-pulse
                         @else bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 @endif">
                         @if($isDone) <i data-lucide="check" class="w-4 h-4"></i> @else {{ $st['no'] }} @endif
                     </div>
                     <div class="text-xs font-bold truncate">{{ $st['title'] }}</div>
                     <div class="text-[10px] mt-0.5 truncate font-medium
-                        @if($isDone) text-emerald-600 dark:text-emerald-400
+                        @if($isDone) text-pink-600 dark:text-pink-400
                         @elseif($isCurrent) text-[#fa2f79] font-bold
                         @endif">
                         {{ $st['desc'] }}
@@ -99,11 +100,11 @@
             <div class="p-6 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between space-y-4">
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/60 text-[#fa2f79] flex items-center justify-center">
                             <i data-lucide="file-text" class="w-5 h-5"></i>
                         </div>
                         <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold 
-                            @if($pendaftar && $pendaftar->is_locked) bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
+                            @if($pendaftar && $pendaftar->is_locked) bg-pink-100 text-[#be123c] dark:bg-pink-950 dark:text-pink-300
                             @elseif($pendaftar) bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300
                             @else bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300 @endif">
                             {{ $pendaftar ? ($pendaftar->is_locked ? 'Difinalisasi' : 'Draft Tersimpan') : 'Belum Diisi' }}
@@ -128,7 +129,7 @@
                         <i data-lucide="edit-3" class="w-4 h-4"></i> Isi / Edit Formulir
                     </a>
                     @else
-                    <a href="{{ route('siswa.cetak.formulir') }}" target="_blank" class="w-full py-2.5 px-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 font-bold text-xs hover:bg-emerald-100 transition-colors flex items-center justify-center gap-2">
+                    <a href="{{ route('siswa.cetak.formulir') }}" target="_blank" class="w-full py-2.5 px-4 rounded-xl bg-pink-50 dark:bg-pink-950/50 text-[#fa2f79] dark:text-pink-300 font-bold text-xs hover:bg-pink-100 transition-colors flex items-center justify-center gap-2">
                         <i data-lucide="printer" class="w-4 h-4"></i> Cetak Lembar Formulir (PDF)
                     </a>
                     @endif
@@ -143,7 +144,7 @@
                             <i data-lucide="credit-card" class="w-5 h-5"></i>
                         </div>
                         <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold 
-                            @if($pendaftar && $pendaftar->status_pembayaran === 'Paid') bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
+                            @if($pendaftar && $pendaftar->status_pembayaran === 'Paid') bg-pink-100 text-[#be123c] dark:bg-pink-950 dark:text-pink-300
                             @else bg-pink-100 text-[#fa2f79] dark:bg-pink-950/80 dark:text-pink-300 @endif">
                             {{ $pendaftar ? ($pendaftar->status_pembayaran === 'Paid' ? 'LUNAS' : 'Menunggu Bayar') : 'Belum Ada Tagihan' }}
                         </span>
@@ -166,7 +167,7 @@
                         <i data-lucide="wallet" class="w-4 h-4"></i> Rincian & Checkout Pembayaran
                     </a>
                     @if($pendaftar && $pendaftar->status_pembayaran === 'Paid')
-                    <a href="{{ route('siswa.cetak.kwitansi') }}" target="_blank" class="w-full py-2 px-4 rounded-xl text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline">
+                    <a href="{{ route('siswa.cetak.kwitansi') }}" target="_blank" class="w-full py-2 px-4 rounded-xl text-center text-xs font-semibold text-[#fa2f79] dark:text-pink-400 hover:underline">
                         Cetak Kwitansi Pembayaran Lunas &rarr;
                     </a>
                     @endif
@@ -185,7 +186,7 @@
                                 {{ $uploadedDocsCount }}/4 Upload
                             </span>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold 
-                                @if($pendaftar && $pendaftar->status_verifikasi === 'Terverifikasi') bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
+                                @if($pendaftar && $pendaftar->status_verifikasi === 'Terverifikasi') bg-pink-100 text-[#be123c] dark:bg-pink-950 dark:text-pink-300
                                 @elseif($pendaftar && $pendaftar->status_verifikasi === 'Ditolak') bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300
                                 @else bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 @endif">
                                 {{ $pendaftar ? $pendaftar->status_verifikasi : 'Belum Diunggah' }}
@@ -225,7 +226,7 @@
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400">Cetak kartu ujian masuk dan pantau status kelulusan final yang disahkan Kepala Sekolah.</p>
                 </div>
-                <a href="{{ route('siswa.cetak.kartu_ujian') }}" target="_blank" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                <a href="{{ route('siswa.cetak.kartu_ujian') }}" target="_blank" class="px-5 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
                     <i data-lucide="printer" class="w-4 h-4"></i> Cetak Kartu Peserta Ujian (PDF)
                 </a>
             </div>
@@ -235,7 +236,7 @@
                     <span class="text-xs text-slate-400 uppercase font-semibold">Status Kelulusan Final</span>
                     <div class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center justify-center md:justify-start gap-2">
                         @if($pendaftar->status_kelulusan === 'Diterima')
-                        <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                        <span class="text-[#fa2f79] dark:text-pink-400 flex items-center gap-1.5">
                             <i data-lucide="check-circle" class="w-5 h-5"></i> DITERIMA
                         </span>
                         <span class="text-xs font-semibold text-slate-500">di Jurusan {{ $pendaftar->terima ? $pendaftar->terima->jurusan->nama_jurusan : ($pendaftar->jurusan1 ? $pendaftar->jurusan1->nama_jurusan : '-') }}</span>
@@ -257,18 +258,18 @@
 
                 <div class="flex items-center gap-3">
                     @if($pendaftar->status_kelulusan === 'Diterima')
-                    <a href="{{ route('siswa.cetak.skl') }}" target="_blank" class="px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-bold text-xs hover:bg-emerald-100 transition-colors flex items-center gap-2">
+                    <a href="{{ route('siswa.cetak.skl') }}" target="_blank" class="px-4 py-2.5 rounded-xl bg-pink-50 dark:bg-pink-950/60 text-[#fa2f79] dark:text-pink-300 border border-pink-200 dark:border-pink-800 font-bold text-xs hover:bg-pink-100 transition-colors flex items-center gap-2">
                         <i data-lucide="file-check" class="w-4 h-4"></i> Unduh SKL Resmi (PDF)
                     </a>
                     @if($pendaftar->status_daftar_ulang !== 'Selesai')
                     <form action="{{ route('siswa.daftar_ulang.konfirmasi') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengonfirmasi pendaftaran ulang sebagai Siswa Baru SMK IB Khalifah Bangsa?');">
                         @csrf
-                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
                             <i data-lucide="user-check" class="w-4 h-4"></i> Konfirmasi Daftar Ulang
                         </button>
                     </form>
                     @else
-                    <span class="px-4 py-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold text-xs flex items-center gap-1.5">
+                    <span class="px-4 py-2.5 rounded-xl bg-pink-100 dark:bg-pink-950 text-[#be123c] dark:text-pink-300 font-bold text-xs flex items-center gap-1.5">
                         <i data-lucide="check" class="w-4 h-4"></i> Daftar Ulang Selesai
                     </span>
                     @endif

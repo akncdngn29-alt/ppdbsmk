@@ -7,7 +7,7 @@
 
         <!-- Page Header -->
         <div>
-            <a href="{{ route('siswa.dashboard') }}" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 mb-1">
+            <a href="{{ route('siswa.dashboard') }}" class="text-xs font-semibold text-[#fa2f79] hover:underline flex items-center gap-1 mb-1">
                 <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Kembali ke Dashboard
             </a>
             <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Pengaturan Akun Siswa</h1>
@@ -19,7 +19,7 @@
             
             <!-- Identitas Akun (Read-only) -->
             <div>
-                <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-[#fa2f79] dark:text-pink-400 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
                     <i data-lucide="shield" class="w-4 h-4"></i> Identitas Pendaftar
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -47,7 +47,7 @@
                 @csrf
 
                 <div>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-[#fa2f79] dark:text-pink-400 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
                         <i data-lucide="phone" class="w-4 h-4"></i> Pembaruan Kontak WhatsApp
                     </h3>
                     <div>
@@ -57,25 +57,25 @@
                         <input type="text" id="hp_siswa" name="hp_siswa" 
                                value="{{ old('hp_siswa', $pendaftar ? $pendaftar->hp_siswa : '') }}" 
                                placeholder="Contoh: 082188990011"
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#fa2f79]">
                         <span class="text-[10px] text-slate-400 mt-1 block">Nomor ini digunakan panitia untuk mengirimkan info pengumuman & jadwal tes.</span>
                     </div>
                 </div>
 
                 <div class="pt-2">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-[#fa2f79] dark:text-pink-400 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
                         <i data-lucide="lock" class="w-4 h-4"></i> Perbarui Kata Sandi (Opsional)
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label for="password" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Kata Sandi Baru</label>
                             <input type="password" id="password" name="password" placeholder="Kosongkan jika tidak diubah"
-                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#fa2f79]">
                         </div>
                         <div>
                             <label for="password_confirmation" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Ulangi Kata Sandi Baru</label>
                             <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Ulangi kata sandi baru"
-                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#fa2f79]">
                         </div>
                     </div>
                 </div>

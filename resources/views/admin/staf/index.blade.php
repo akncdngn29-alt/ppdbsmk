@@ -14,14 +14,21 @@
                 Kelola hak akses administratif untuk Petugas Tata Usaha (TU) dan Kepala Sekolah
             </p>
         </div>
+        @if($currentAdmin->role === 'kepala_sekolah')
         <button onclick="document.getElementById('modalTambahStaf').classList.remove('hidden')" class="px-4 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-md shadow-pink-500/25 shrink-0">
             <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Akun Staf
         </button>
+        @else
+        <div class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-semibold flex items-center gap-2">
+            <i data-lucide="shield" class="w-4 h-4 text-slate-400"></i>
+            <span>Penambahan akun staf di bawah wewenang Kepala Sekolah</span>
+        </div>
+        @endif
     </div>
 
     @if(session('success'))
-    <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 flex items-center gap-3 text-xs text-emerald-800 dark:text-emerald-200">
-        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+    <div class="p-4 rounded-xl bg-pink-50 dark:bg-pink-950/50 border border-pink-200 dark:border-pink-800 flex items-center gap-3 text-xs text-pink-800 dark:text-pink-200">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-[#fa2f79] shrink-0"></i>
         <span>{{ session('success') }}</span>
     </div>
     @endif
@@ -40,8 +47,8 @@
             <div class="mt-2 text-2xl font-black text-slate-800 dark:text-white">{{ $stats['total'] }}</div>
         </div>
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Petugas Tata Usaha (TU)</span>
-            <div class="mt-2 text-2xl font-black text-emerald-600 dark:text-emerald-400">{{ $stats['tu'] }}</div>
+            <span class="text-xs font-bold text-[#fa2f79] dark:text-pink-400">Petugas Tata Usaha (TU)</span>
+            <div class="mt-2 text-2xl font-black text-[#fa2f79] dark:text-pink-400">{{ $stats['tu'] }}</div>
         </div>
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
             <span class="text-xs font-bold text-purple-600 dark:text-purple-400">Kepala Sekolah</span>
@@ -53,16 +60,16 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm">
         <form method="GET" action="{{ route('admin.staf.index') }}" class="flex flex-col sm:flex-row gap-3">
             <div class="flex-1">
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama staf, username, email..." class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama staf, username, email..." class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div class="w-full sm:w-48">
-                <select name="role" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <select name="role" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                     <option value="">Semua Peran</option>
                     <option value="tu" {{ request('role') === 'tu' ? 'selected' : '' }}>Petugas TU</option>
                     <option value="kepala_sekolah" {{ request('role') === 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
                 </select>
             </div>
-            <button type="submit" class="text-xs font-bold px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+            <button type="submit" class="text-xs font-bold px-4 py-2 bg-[#fa2f79] hover:bg-[#e11d48] text-white rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-pink-500/20">
                 <i data-lucide="filter" class="w-3.5 h-3.5"></i> Filter
             </button>
             <a href="{{ route('admin.staf.index') }}" class="text-xs px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl transition-colors text-center">
@@ -91,7 +98,7 @@
                         <td class="py-3 px-4">
                             <span class="font-bold text-slate-800 dark:text-white">{{ $s->nama_admin }}</span>
                             @if($s->id_admin === $currentAdmin->id_admin)
-                                <span class="ml-1.5 px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Akun Anda</span>
+                                <span class="ml-1.5 px-2 py-0.5 rounded text-[9px] font-bold bg-pink-100 text-pink-800 dark:bg-pink-950/60 dark:text-pink-300">Akun Anda</span>
                             @endif
                         </td>
                         <td class="py-3 px-4 font-mono text-slate-600 dark:text-slate-300">{{ $s->username }}</td>
@@ -102,7 +109,7 @@
                                     Kepala Sekolah
                                 </span>
                             @else
-                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-pink-100 text-pink-800 dark:bg-pink-950/60 dark:text-pink-300 border border-pink-200 dark:border-pink-800">
                                     Petugas TU
                                 </span>
                             @endif
@@ -112,10 +119,13 @@
                         </td>
                         <td class="py-3 px-4 text-center">
                             <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="bukaModalEdit({{ json_encode($s) }})" class="p-1.5 rounded-lg text-slate-500 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Edit Akun">
+                                @if($currentAdmin->role === 'kepala_sekolah' || $s->id_admin === $currentAdmin->id_admin)
+                                <button onclick="bukaModalEdit({{ json_encode($s) }})" class="p-1.5 rounded-lg text-slate-500 hover:text-[#fa2f79] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="{{ $s->id_admin === $currentAdmin->id_admin ? 'Edit Profil Saya' : 'Edit Akun Staf' }}">
                                     <i data-lucide="edit-3" class="w-4 h-4"></i>
                                 </button>
-                                @if($s->id_admin !== $currentAdmin->id_admin)
+                                @endif
+
+                                @if($currentAdmin->role === 'kepala_sekolah' && $s->id_admin !== $currentAdmin->id_admin)
                                 <form action="{{ route('admin.staf.destroy', $s->id_admin) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun staf {{ $s->nama_admin }}?')">
                                     @csrf
                                     @method('DELETE')
@@ -123,6 +133,10 @@
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 </form>
+                                @endif
+
+                                @if($currentAdmin->role !== 'kepala_sekolah' && $s->id_admin !== $currentAdmin->id_admin)
+                                <span class="text-[10px] text-slate-400 italic">Hanya Lihat</span>
                                 @endif
                             </div>
                         </td>
@@ -152,7 +166,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 max-w-md w-full shadow-xl">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="user-plus" class="w-4 h-4 text-emerald-500"></i> Tambah Akun Staf Baru
+                <i data-lucide="user-plus" class="w-4 h-4 text-[#fa2f79]"></i> Tambah Akun Staf Baru
             </h3>
             <button onclick="document.getElementById('modalTambahStaf').classList.add('hidden')" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
                 <i data-lucide="x" class="w-4 h-4"></i>
@@ -163,19 +177,19 @@
             @csrf
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Nama Lengkap & Gelar</label>
-                <input type="text" name="nama_admin" required placeholder="Contoh: Budi Santoso, S.Kom" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" name="nama_admin" required placeholder="Contoh: Budi Santoso, S.Kom" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Username Login</label>
-                <input type="text" name="username" required placeholder="Contoh: tu_budi" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" name="username" required placeholder="Contoh: tu_budi" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Alamat Email</label>
-                <input type="email" name="email" required placeholder="Contoh: budi@smkib.com" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="email" name="email" required placeholder="Contoh: budi@smkib.com" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Hak Akses / Peran</label>
-                <select name="role" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <select name="role" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                     <option value="tu">Petugas Tata Usaha (TU)</option>
                     @if($currentAdmin->role === 'kepala_sekolah')
                     <option value="kepala_sekolah">Kepala Sekolah</option>
@@ -184,11 +198,11 @@
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Kata Sandi</label>
-                <input type="password" name="password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="password" name="password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Konfirmasi Kata Sandi</label>
-                <input type="password" name="password_confirmation" required minlength="6" placeholder="Ulangi kata sandi" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="password" name="password_confirmation" required minlength="6" placeholder="Ulangi kata sandi" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
 
             <div class="pt-3 flex gap-2">
@@ -208,7 +222,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 max-w-md w-full shadow-xl">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="edit-3" class="w-4 h-4 text-emerald-500"></i> Edit Akun Staf
+                <i data-lucide="edit-3" class="w-4 h-4 text-[#fa2f79]"></i> Edit Akun Staf
             </h3>
             <button onclick="document.getElementById('modalEditStaf').classList.add('hidden')" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
                 <i data-lucide="x" class="w-4 h-4"></i>
@@ -220,19 +234,19 @@
             @method('PUT')
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Nama Lengkap & Gelar</label>
-                <input type="text" id="edit_nama" name="nama_admin" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" id="edit_nama" name="nama_admin" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Username Login</label>
-                <input type="text" id="edit_username" name="username" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" id="edit_username" name="username" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Alamat Email</label>
-                <input type="email" id="edit_email" name="email" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="email" id="edit_email" name="email" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Hak Akses / Peran</label>
-                <select id="edit_role" name="role" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <select id="edit_role" name="role" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                     <option value="tu">Petugas Tata Usaha (TU)</option>
                     @if($currentAdmin->role === 'kepala_sekolah')
                     <option value="kepala_sekolah">Kepala Sekolah</option>
@@ -241,11 +255,11 @@
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Kata Sandi Baru (Kosongkan bila tidak ingin diubah)</label>
-                <input type="password" name="password" minlength="6" placeholder="Biarkan kosong jika tidak ganti" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="password" name="password" minlength="6" placeholder="Biarkan kosong jika tidak ganti" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Konfirmasi Kata Sandi Baru</label>
-                <input type="password" name="password_confirmation" minlength="6" placeholder="Ulangi kata sandi baru" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="password" name="password_confirmation" minlength="6" placeholder="Ulangi kata sandi baru" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
 
             <div class="pt-3 flex gap-2">

@@ -54,17 +54,17 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Siswa Diterima</span>
-                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center">
+                <div class="w-9 h-9 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-400 flex items-center justify-center">
                     <i data-lucide="user-check" class="w-5 h-5"></i>
                 </div>
             </div>
             <div class="mt-3 flex items-baseline gap-2">
-                <span class="text-2xl font-black text-emerald-600 dark:text-emerald-400">{{ $totalDiterima }}</span>
+                <span class="text-2xl font-black text-[#fa2f79] dark:text-pink-400">{{ $totalDiterima }}</span>
                 <span class="text-xs text-slate-400 font-medium">
                     ({{ $totalPendaftar > 0 ? round(($totalDiterima / $totalPendaftar) * 100, 1) : 0 }}%)
                 </span>
             </div>
-            <div class="mt-2 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+            <div class="mt-2 text-[11px] text-[#fa2f79] dark:text-pink-400 font-medium flex items-center gap-1">
                 <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Telah disahkan Kepala Sekolah
             </div>
         </div>
@@ -110,7 +110,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div class="flex items-center gap-2">
-                    <i data-lucide="bar-chart" class="w-5 h-5 text-emerald-600"></i>
+                    <i data-lucide="bar-chart" class="w-5 h-5 text-[#fa2f79]"></i>
                     <h3 class="text-sm font-bold text-slate-800 dark:text-white">Pendaftar & Siswa Diterima vs Kuota</h3>
                 </div>
             </div>
@@ -139,10 +139,10 @@
         <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div class="flex items-center gap-2">
-                    <i data-lucide="pie-chart" class="w-5 h-5 text-emerald-600"></i>
+                    <i data-lucide="pie-chart" class="w-5 h-5 text-[#fa2f79]"></i>
                     <h3 class="text-sm font-bold text-slate-800 dark:text-white">Status Keterisian Kuota Jurusan</h3>
                 </div>
-                <a href="{{ route('kepsek.kelulusan') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700">Kelola Kelulusan &rarr;</a>
+                <a href="{{ route('kepsek.kelulusan') }}" class="text-xs font-bold text-[#fa2f79] hover:text-[#e11d48]">Kelola Kelulusan &rarr;</a>
             </div>
 
             <div class="space-y-4">
@@ -163,14 +163,14 @@
                                 @endif
                             </div>
                             <div class="font-bold">
-                                <span class="text-emerald-600 dark:text-emerald-400">{{ $j->siswa_diterima_count }}</span>
+                                <span class="text-[#fa2f79] dark:text-pink-400">{{ $j->siswa_diterima_count }}</span>
                                 <span class="text-slate-400">/ {{ $j->kuota }} Siswa</span>
                                 <span class="text-[10px] text-slate-500 ml-1">({{ $persenTerisi }}%)</span>
                             </div>
                         </div>
                         <!-- Progress Bar -->
                         <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                            <div class="bg-emerald-600 h-2.5 rounded-full transition-all" style="width: {{ min(100, $persenTerisi) }}%"></div>
+                            <div class="bg-[#fa2f79] h-2.5 rounded-full transition-all" style="width: {{ min(100, $persenTerisi) }}%"></div>
                         </div>
                         <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mt-2">
                             <span>Total Peminat (Pilihan 1): <strong>{{ $j->pendaftar_pilihan1_count }}</strong></span>
@@ -184,7 +184,7 @@
         <!-- Top 5 Asal SMP/MTs (Market Intelligence) -->
         <div class="lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <div class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
-                <i data-lucide="target" class="w-5 h-5 text-teal-600"></i>
+                <i data-lucide="target" class="w-5 h-5 text-[#fa2f79]"></i>
                 <h3 class="text-sm font-bold text-slate-800 dark:text-white">Top 5 Asal SMP / MTs</h3>
             </div>
 
@@ -197,7 +197,7 @@
                     @foreach($topAsalSekolah as $index => $asal)
                         <div class="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                             <div class="flex items-center gap-3">
-                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 text-xs font-black flex items-center justify-center shrink-0">
+                                <span class="w-6 h-6 rounded-lg bg-pink-100 text-[#fa2f79] dark:bg-pink-950 dark:text-pink-400 text-xs font-black flex items-center justify-center shrink-0">
                                     {{ $index + 1 }}
                                 </span>
                                 <span class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[150px]">

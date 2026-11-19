@@ -44,7 +44,7 @@
         </div>
 
         <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 flex items-center justify-center shrink-0">
                 <i data-lucide="briefcase" class="w-5 h-5"></i>
             </div>
             <div>
@@ -180,7 +180,7 @@
                             <td class="py-3.5 px-4">
                                 @if($log->admin)
                                     <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 truncate">
-                                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+                                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-[#fa2f79] shrink-0"></i>
                                         <span class="truncate">{{ $log->admin->nama_admin }}</span>
                                     </div>
                                     <span class="inline-block mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase {{ $log->admin->role === 'kepala_sekolah' ? 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300' : 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300' }}">
@@ -225,9 +225,9 @@
                                     if(str_contains($aksi, 'LOGIN_GAGAL')) {
                                         $badgeClass = 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 font-bold';
                                     } elseif(str_contains($aksi, 'PENGESAHAN')) {
-                                        $badgeClass = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-black';
+                                        $badgeClass = 'bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300 font-black';
                                     } elseif(str_contains($aksi, 'VERIFIKASI')) {
-                                        $badgeClass = 'bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300';
+                                        $badgeClass = 'bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300';
                                     } elseif(str_contains($aksi, 'LOGIN') || str_contains($aksi, 'LOGOUT')) {
                                         $badgeClass = 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300';
                                     } elseif(str_contains($aksi, 'UPDATE') || str_contains($aksi, 'SIMPAN') || str_contains($aksi, 'UNLOCK')) {
@@ -262,7 +262,7 @@
                                         <i data-lucide="alert-circle" class="w-3 h-3"></i> Gagal
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-300">
                                         <i data-lucide="check-circle" class="w-3 h-3"></i> Sukses
                                     </span>
                                 @endif
@@ -329,7 +329,7 @@
                 <pre id="modalDataLama" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[11px] overflow-x-auto max-h-40 border border-slate-200 dark:border-slate-700"></pre>
             </div>
             <div>
-                <span class="text-[11px] font-bold text-emerald-600 block mb-1">Data Sesudahnya:</span>
+                <span class="text-[11px] font-bold text-[#fa2f79] block mb-1">Data Sesudahnya:</span>
                 <pre id="modalDataBaru" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[11px] overflow-x-auto max-h-40 border border-slate-200 dark:border-slate-700"></pre>
             </div>
         </div>

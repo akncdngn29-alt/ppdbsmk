@@ -12,10 +12,13 @@ use App\Services\MidtransService;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Carbon\Carbon;
 
 class MidtransMultiPaymentSnapTest extends TestCase
 {
+    use DatabaseTransactions;
+
     protected User $siswaUser;
     protected Pendaftar $pendaftar;
     protected Gelombang $gelombang;
@@ -328,6 +331,64 @@ class MidtransMultiPaymentSnapTest extends TestCase
         $this->assertEquals('tunai_tu', $pembayaran->tipe_bayar);
         $this->assertEquals('pending', $pembayaran->status_transaksi);
         $this->assertEquals('Pending', $this->pendaftar->fresh()->status_pembayaran);
+    }
+
+    /**
+     * 7. Transaksi online Midtrans otomatis dibatalkan dan berstatus expire jika melebihi 1 menit.
+     */
+    public function test_transaksi_online_otomatis_batal_dan_expired_jika_melebihi_1_menit(): void
+    {
+        config(['services.midtrans.server_key' => 'SB-Mid-server-test']);
+        $orderId = 'PPDB-REG-EXPIRE-' . uniqid();
+        $pembayaran = Pembayaran::updateOrCreate(
+            ['id_pendaftar' => $this->pendaftar->id_pendaftar],
+            [
+                'id_gelombang' => 1,
+                'kode_transaksi' => $orderId,
+                'nominal' => 100000.00,
+                'potongan' => 0.00,
+                'total_bayar' => 100000.00,
+                'tipe_bayar' => 'midtrans',
+                'metode_pembayaran' => 'QRIS (Midtrans Sandbox)',
+                'status_transaksi' => 'pending',
+                'waktu_transaksi' => \Carbon\Carbon::now()->subSeconds(75),
+            ]
+        );
+
+        Http::fake([
+            'https://api.sandbox.midtrans.com/v2/' . $orderId . '/status' => Http::response([
+                'status_code' => '201',
+                'transaction_status' => 'pending',
+            ], 200),
+            'https://api.sandbox.midtrans.com/v2/' . $orderId . '/cancel' => Http::response([
+                'status_code' => '200',
+                'status_message' => 'Transaction is canceled',
+            ], 200),
+        ]);
+
+        $response = $this->actingAs($this->siswaUser, 'web')->postJson(route('siswa.pembayaran.cek-status'));
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'is_paid' => false,
+            'is_expired' => true,
+            'status' => 'expire',
+        ]);
+
+        $pembayaran->refresh();
+        $this->assertEquals('expire', $pembayaran->status_transaksi);
+    }
+
+    /**
+     * 8. Halaman pembayaran memuat elemen real-time countdown display untuk modal dan alert.
+     */
+    public function test_halaman_pembayaran_memuat_elemen_countdown_timer(): void
+    {
+        $response = $this->actingAs($this->siswaUser, 'web')->get(route('siswa.pembayaran'));
+        $response->assertStatus(200);
+        $response->assertSee('modal-countdown-display');
+        $response->assertSee('startCountdown');
+        $response->assertSee('handlePaymentTimeout');
     }
 }
 

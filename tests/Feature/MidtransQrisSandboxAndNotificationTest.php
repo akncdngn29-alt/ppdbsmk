@@ -22,7 +22,7 @@ class MidtransQrisSandboxAndNotificationTest extends TestCase
      */
     public function test_admin_pengaturan_does_not_contain_whatsapp_token_input(): void
     {
-        $admin = Admin::where('role', 'tu')->first();
+        $admin = Admin::where('role', 'kepala_sekolah')->first() ?: Admin::where('role', 'tu')->first();
         $this->assertNotNull($admin);
 
         $response = $this->actingAs($admin, 'admin')->get('/admin/pengaturan');
@@ -33,7 +33,7 @@ class MidtransQrisSandboxAndNotificationTest extends TestCase
         $response->assertDontSee('Fonnte / Wablas');
         $response->assertDontSee('WhatsApp Gateway API Token');
 
-        // Pastikan field Midtrans tetap ada
+        // Pastikan field Midtrans tetap ada pada akun kepala sekolah
         $response->assertSee('name="midtrans_server_key"', false);
         $response->assertSee('name="midtrans_client_key"', false);
     }

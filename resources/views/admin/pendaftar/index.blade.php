@@ -61,15 +61,15 @@
                     <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import Excel/CSV
                 </a>
                 <a href="{{ route('admin.ekspor.xlsx') }}" class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5">
-                    <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-600"></i> Ekspor Excel (.xlsx)
+                    <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-pink-400"></i> Ekspor Excel (.xlsx)
                 </a>
                 <a href="{{ route('admin.ekspor.excel') }}" class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5">
-                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-emerald-500"></i> Ekspor CSV
+                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-pink-400"></i> Ekspor CSV
                 </a>
                 <a href="{{ route('admin.ekspor.dapodik') }}" class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5">
                     <i data-lucide="download" class="w-3.5 h-3.5 text-sky-500"></i> Format Dapodik
                 </a>
-                <a href="{{ route('admin.laporan.rekap_pdf') }}" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center gap-1.5 shadow-sm">
+                <a href="{{ route('admin.laporan.rekap_pdf') }}" target="_blank" class="px-3 py-1.5 rounded-lg bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold flex items-center gap-1.5 shadow-sm shadow-pink-500/20 transition-colors">
                     <i data-lucide="printer" class="w-3.5 h-3.5"></i> Cetak Rekap PDF
                 </a>
             </div>
@@ -103,7 +103,7 @@
                                         <i data-lucide="lock" class="w-2.5 h-2.5"></i> Terkunci
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1 text-[9px] font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800 font-sans">
+                                    <span class="inline-flex items-center gap-1 text-[9px] font-semibold bg-pink-50 dark:bg-pink-950/60 text-pink-700 dark:text-pink-400 px-2 py-0.5 rounded-full border border-pink-200 dark:border-pink-800 font-sans">
                                         <i data-lucide="unlock" class="w-2.5 h-2.5"></i> Terbuka
                                     </span>
                                 @endif
@@ -114,7 +114,7 @@
                             <span class="text-[10px] text-slate-400 font-mono">NISN: {{ $p->nisn }} | {{ $p->asal_sekolah }}</span>
                         </td>
                         <td class="p-3">
-                            <span class="font-bold text-emerald-600 dark:text-emerald-400 block">{{ $p->jurusan1 ? $p->jurusan1->nama_jurusan : 'Belum dipilih' }}</span>
+                            <span class="font-bold text-[#fa2f79] dark:text-pink-400 block">{{ $p->jurusan1 ? $p->jurusan1->nama_jurusan : 'Belum dipilih' }}</span>
                             <span class="text-[10px] text-slate-400 block">Pil 2: {{ $p->jurusan2 ? $p->jurusan2->nama_jurusan : '-' }}</span>
                         </td>
                         <td class="p-3">
@@ -124,13 +124,13 @@
                         </td>
                         <td class="p-3">
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold 
-                                {{ $p->status_pembayaran === 'Paid' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' }}">
+                                {{ $p->status_pembayaran === 'Paid' ? 'bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' }}">
                                 {{ $p->status_pembayaran }}
                             </span>
                         </td>
                         <td class="p-3">
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold 
-                                @if($p->status_verifikasi === 'Terverifikasi') bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
+                                @if($p->status_verifikasi === 'Terverifikasi') bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300
                                 @elseif($p->status_verifikasi === 'Ditolak') bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300
                                 @else bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 @endif">
                                 {{ $p->status_verifikasi }}
@@ -138,7 +138,7 @@
                         </td>
                         <td class="p-3">
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold 
-                                @if($p->status_kelulusan === 'Diterima') bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
+                                @if($p->status_kelulusan === 'Diterima') bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300
                                 @elseif($p->status_kelulusan === 'Cadangan') bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300
                                 @elseif($p->status_kelulusan === 'Tidak Lolos') bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300
                                 @else bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 @endif">

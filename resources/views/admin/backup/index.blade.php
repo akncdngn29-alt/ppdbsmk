@@ -24,8 +24,8 @@
 
     <!-- Alert Sukses / Gagal -->
     @if(session('success'))
-    <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 flex items-center gap-3 text-xs text-emerald-800 dark:text-emerald-200">
-        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+    <div class="p-4 rounded-xl bg-pink-50 dark:bg-pink-950/50 border border-pink-200 dark:border-pink-800 flex items-center gap-3 text-xs text-pink-800 dark:text-pink-200">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-[#fa2f79] shrink-0"></i>
         <span>{{ session('success') }}</span>
     </div>
     @endif
@@ -41,7 +41,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
             <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Nama Database Aktif</span>
-            <div class="mt-2 text-xl font-mono font-black text-emerald-600 dark:text-emerald-400 truncate">{{ $dbName }}</div>
+            <div class="mt-2 text-xl font-mono font-black text-[#fa2f79] dark:text-pink-400 truncate">{{ $dbName }}</div>
             <div class="mt-1 text-[11px] text-slate-400">Driver MySQL / MariaDB</div>
         </div>
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
@@ -52,8 +52,8 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
             <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Status Integritas Backup</span>
             <div class="mt-2 flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">Siap Dipulihkan</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse"></span>
+                <span class="text-sm font-bold text-[#fa2f79] dark:text-pink-400">Siap Dipulihkan</span>
             </div>
             <div class="mt-1 text-[11px] text-slate-400">Proteksi foreign key & dump transaksional</div>
         </div>
@@ -63,7 +63,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
         <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="archive" class="w-4 h-4 text-emerald-500"></i>
+                <i data-lucide="archive" class="w-4 h-4 text-[#fa2f79]"></i>
                 Arsip File Backup SQL
             </h3>
             <span class="text-xs text-slate-400 font-mono">storage/app/backups/</span>
@@ -83,7 +83,7 @@
                     @forelse($backups as $b)
                     <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors">
                         <td class="py-3 px-4 font-mono font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                            <i data-lucide="file-code" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                            <i data-lucide="file-code" class="w-4 h-4 text-[#fa2f79] shrink-0"></i>
                             <span class="truncate">{{ $b['filename'] }}</span>
                         </td>
                         <td class="py-3 px-4 font-mono text-slate-600 dark:text-slate-300">
@@ -94,9 +94,10 @@
                             <span class="text-[10px] text-slate-400 block font-mono">({{ $b['created_at']->diffForHumans() }})</span>
                         </td>
                         <td class="py-3 px-4 text-center">
+                            @if(auth('admin')->user()->role === 'kepala_sekolah')
                             <div class="flex items-center justify-center gap-2">
                                 <!-- Download -->
-                                <a href="{{ route('admin.backup.download', $b['filename']) }}" class="px-2.5 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 font-bold text-[11px] transition-colors flex items-center gap-1">
+                                <a href="{{ route('admin.backup.download', $b['filename']) }}" class="px-2.5 py-1.5 rounded-lg bg-pink-50 dark:bg-pink-950/40 hover:bg-pink-100 text-[#fa2f79] dark:text-pink-300 font-bold text-[11px] transition-colors flex items-center gap-1 border border-pink-200/50 dark:border-pink-800/50">
                                     <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh
                                 </a>
                                 <!-- Restore Modal Trigger -->
@@ -112,6 +113,11 @@
                                     </button>
                                 </form>
                             </div>
+                            @else
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-semibold">
+                                <i data-lucide="lock" class="w-3 h-3 text-slate-400"></i> Khusus Kepala Sekolah
+                            </span>
+                            @endif
                         </td>
                     </tr>
                     @empty

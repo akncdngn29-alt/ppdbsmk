@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'PPDB Online SMK Islam Bina Khalifah Bangsa Kota Metro T.A 2026/2027')</title>
 
@@ -17,6 +17,9 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    screens: {
+                        'xs': '480px',
+                    },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                         serif: ['"Playfair Display"', 'serif'],
@@ -48,11 +51,17 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        html {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc; /* Warna dasar lembut (slate-50 / pearl white, tidak silau) */
+            background-color: #060c1d; /* Warna navy dasar menyatu dengan hero & navbar, mencegah strip putih di mobile */
             color: #0f172a;
             overflow-x: hidden;
+            max-width: 100%;
+            width: 100%;
         }
         @media print {
             .no-print { display: none !important; }
@@ -129,67 +138,67 @@
     </style>
     @stack('styles')
 </head>
-<body class="min-h-screen flex flex-col antialiased">
+<body class="min-h-screen flex flex-col antialiased overflow-x-hidden w-full">
 
     <!-- Top Announcement Bar (Sesuai Referensi: Latar Putih, Badge Pink, Tombol Hitam) -->
-    <div class="bg-white text-slate-900 text-xs py-2 px-4 border-b border-slate-200 no-print">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5 truncate">
-                <span class="bg-[#eb3f7c] text-white px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide shrink-0">PENGUMUMAN</span>
-                <span class="truncate text-slate-900 font-bold text-xs sm:text-sm">Penerimaan Peserta Didik Baru (PPDB) T.A. 2026/2027 Resmi Dibuka! Kuota Terbatas.</span>
+    <div class="bg-white text-slate-900 text-xs py-2 px-3 sm:px-4 border-b border-slate-200 no-print overflow-hidden w-full">
+        <div class="max-w-[1600px] mx-auto px-1 sm:px-4 lg:px-12 xl:px-16 flex items-center justify-between gap-2 sm:gap-3 min-w-0">
+            <div class="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+                <span class="bg-[#eb3f7c] text-white px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wide shrink-0">PENGUMUMAN</span>
+                <span class="truncate text-slate-900 font-bold text-[11px] sm:text-xs md:text-sm">Penerimaan Peserta Didik Baru (PPDB) T.A. 2026/2027 Resmi Dibuka! Kuota Terbatas.</span>
             </div>
-            <a href="{{ route('landing') }}#alur" class="bg-black hover:bg-slate-800 text-white text-[10px] font-bold px-2.5 py-1 rounded flex items-center gap-1 shrink-0 transition-all">
-                <span>Lihat Alur</span>
+            <a href="{{ route('landing') }}#alur" class="bg-black hover:bg-slate-800 text-white text-[10px] font-bold px-2 sm:px-2.5 py-1 rounded flex items-center gap-1 shrink-0 transition-all">
+                <span class="hidden xs:inline">Lihat </span><span>Alur</span>
                 <i data-lucide="arrow-right" class="w-3 h-3"></i>
             </a>
         </div>
     </div>
 
     <!-- Header / Navbar Resmi (Sesuai Referensi Mockup) -->
-    <header class="sticky top-0 z-50 bg-[#060c1d] text-white shadow-md no-print">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div class="flex items-center justify-between h-16 sm:h-20 gap-4">
+    <header class="sticky top-0 z-50 bg-[#060c1d] text-white shadow-md no-print w-full overflow-hidden">
+        <div class="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-12 xl:px-16">
+            <div class="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
                 
                 <!-- Brand & Logo Transparan Sekolah -->
-                <a href="{{ route('landing') }}" class="flex items-center gap-3 shrink-0 py-2">
-                    <img src="{{ asset('images/logo-sekolah-transparan.png') }}" alt="Logo SMK Islam Bina Khalifah Bangsa" class="w-10 h-10 sm:w-11 sm:h-11 object-contain drop-shadow-sm">
-                    <div class="leading-tight">
-                        <span class="block text-[11px] font-bold text-slate-300 tracking-wider uppercase">SMK ISLAM</span>
-                        <span class="block text-sm md:text-base font-extrabold text-white tracking-tight">BINA KHALIFAH BANGSA</span>
-                        <span class="block text-[10px] sm:text-[11px] text-slate-400 font-medium">Kota Metro, Lampung</span>
+                <a href="{{ route('landing') }}" class="flex items-center gap-2 sm:gap-3 min-w-0 py-2">
+                    <img src="{{ asset('images/logo-sekolah-transparan.png') }}" alt="Logo SMK Islam Bina Khalifah Bangsa" class="w-9 h-9 sm:w-11 sm:h-11 object-contain shrink-0 drop-shadow-sm">
+                    <div class="leading-tight min-w-0">
+                        <span class="block text-[10px] sm:text-[11px] font-bold text-slate-300 tracking-wider uppercase truncate">SMK ISLAM</span>
+                        <span class="block text-xs sm:text-base font-extrabold text-white tracking-tight truncate">BINA KHALIFAH BANGSA</span>
+                        <span class="block text-[9px] sm:text-[11px] text-slate-400 font-medium truncate">Kota Metro, Lampung</span>
                     </div>
                 </a>
 
-                <!-- Navigasi Menu (Persis Referensi: Beranda Active Pink Pill, Menu Teks Bersih) -->
-                <nav id="main-nav" class="hidden lg:flex items-center gap-2 text-sm font-medium">
-                    <a href="{{ route('landing') }}" id="nav-beranda" class="nav-item px-5 py-2 rounded-full bg-brand-pink text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-pink/20 transition-all">
+                <!-- Navigasi Menu (Desktop) -->
+                <nav id="main-nav" class="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-medium">
+                    <a href="{{ route('landing') }}" id="nav-beranda" class="nav-item {{ request()->routeIs('landing') ? 'px-4 xl:px-5 py-2 rounded-full bg-brand-pink text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-pink/20 transition-all' : 'px-2.5 xl:px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium' }}">
                         Beranda
                     </a>
-                    <a href="{{ route('landing') }}#profil" id="nav-profil" class="nav-item px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
+                    <a href="{{ route('landing') }}#profil" id="nav-profil" class="nav-item px-2.5 xl:px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
                         Profil Sekolah
                     </a>
-                    <a href="{{ route('landing') }}#jurusan" id="nav-jurusan" class="nav-item px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
-                        Program keahlian
+                    <a href="{{ route('landing') }}#jurusan" id="nav-jurusan" class="nav-item px-2.5 xl:px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
+                        Program Keahlian
                     </a>
-                    <a href="{{ route('landing') }}#ekskul" id="nav-ekskul" class="nav-item px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
+                    <a href="{{ route('landing') }}#ekskul" id="nav-ekskul" class="nav-item px-2.5 xl:px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
                         Ekstrakurikuler
                     </a>
-                    <a href="{{ route('landing') }}#alur" id="nav-alur" class="nav-item px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
+                    <a href="{{ route('landing') }}#alur" id="nav-alur" class="nav-item px-2.5 xl:px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
                         Informasi PPDB
                     </a>
-                    <a href="{{ route('landing') }}#cek-kelulusan" id="nav-cek-kelulusan" class="nav-item px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
+                    <a href="{{ route('landing') }}#cek-kelulusan" id="nav-cek-kelulusan" class="nav-item px-2.5 xl:px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium">
                         Cek Kelulusan
                     </a>
                 </nav>
 
-                <!-- Tombol Auth: Login & Daftar Sekarang -->
-                <div class="flex items-center gap-2.5 shrink-0">
+                <!-- Tombol Auth & Hamburger -->
+                <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                     @auth
                     <!-- User Dropdown (Logged in Siswa) -->
-                    <div class="relative group">
-                        <a href="{{ route('siswa.dashboard') }}" class="flex items-center gap-2 py-2 px-3.5 rounded-full bg-slate-800/80 border border-slate-700 text-white font-semibold text-xs md:text-sm hover:bg-slate-700 transition-colors whitespace-nowrap">
+                    <div class="relative group hidden sm:block">
+                        <a href="{{ route('siswa.dashboard') }}" class="flex items-center gap-2 py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-full bg-slate-800/80 border border-slate-700 text-white font-semibold text-xs md:text-sm hover:bg-slate-700 transition-colors whitespace-nowrap">
                             <i data-lucide="user" class="w-4 h-4 text-emerald-400"></i>
-                            <span class="max-w-[120px] truncate">{{ Auth::user()->nama }}</span>
+                            <span class="max-w-[100px] md:max-w-[120px] truncate">{{ Auth::user()->nama }}</span>
                             <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
                         </a>
                         <div class="absolute right-0 mt-2 w-48 bg-navy-900 rounded-2xl shadow-2xl border border-slate-700 py-2 hidden group-hover:block transition-all z-50">
@@ -209,21 +218,21 @@
                         </div>
                     </div>
                     @else
-                    <a href="{{ route('login') }}" class="px-4 py-2 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shadow-md shadow-pink-500/20">
-                        <span class="w-5 h-5 rounded-md bg-[#060c1d] flex items-center justify-center shrink-0">
-                            <i data-lucide="user" class="w-3.5 h-3.5 text-white"></i>
+                    <a href="{{ route('login') }}" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 sm:gap-2 shadow-md shadow-pink-500/20">
+                        <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-[#060c1d] flex items-center justify-center shrink-0">
+                            <i data-lucide="user" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white"></i>
                         </span>
                         <span>Login</span>
                     </a>
-                    <a href="{{ route('register') }}" class="px-5 py-2.5 rounded-full btn-pink text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-md shadow-pink-500/25">
+                    <a href="{{ route('register') }}" class="hidden md:inline-flex px-5 py-2.5 rounded-full btn-pink text-xs sm:text-sm font-bold items-center gap-1.5 shadow-md shadow-pink-500/25">
                         <span>Daftar Sekarang</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </a>
                     @endauth
 
                     <!-- Mobile Menu Button -->
-                    <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800">
-                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    <button id="mobile-menu-btn" aria-label="Menu" class="lg:hidden p-1.5 sm:p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </button>
                 </div>
 
@@ -258,15 +267,15 @@
                     </form>
                 </div>
             @else
-                <a href="{{ route('landing') }}" class="block py-2 text-sm font-medium text-white hover:text-brand-pink">Beranda</a>
+                <a href="{{ route('landing') }}" class="block py-2 text-sm font-medium {{ request()->routeIs('landing') ? 'text-brand-pink font-bold' : 'text-slate-300 hover:text-white' }}">Beranda</a>
                 <a href="{{ route('landing') }}#profil" class="block py-2 text-sm font-medium text-slate-300 hover:text-white">Profil Sekolah</a>
                 <a href="{{ route('landing') }}#jurusan" class="block py-2 text-sm font-medium text-slate-300 hover:text-white">Program Keahlian</a>
                 <a href="{{ route('landing') }}#ekskul" class="block py-2 text-sm font-medium text-slate-300 hover:text-white">Ekstrakurikuler</a>
                 <a href="{{ route('landing') }}#alur" class="block py-2 text-sm font-medium text-slate-300 hover:text-white">Informasi / Alur PPDB</a>
                 <a href="{{ route('landing') }}#cek-kelulusan" class="block py-2 text-sm font-medium text-brand-pink font-semibold">Cek Kelulusan</a>
                 <div class="pt-3 border-t border-navy-800 flex flex-col gap-2">
-                    <a href="{{ route('login') }}" class="w-full py-2.5 text-center text-sm font-semibold rounded-xl border border-slate-700 text-white">Masuk Akun</a>
-                    <a href="{{ route('register') }}" class="w-full py-2.5 text-center text-sm font-semibold rounded-xl btn-pink text-white">Daftar Akun Baru</a>
+                    <a href="{{ route('login') }}" class="w-full py-2.5 text-center text-sm font-semibold rounded-xl {{ request()->routeIs('login') ? 'bg-[#fa2f79] text-white font-bold shadow-md' : 'border border-slate-700 text-white hover:bg-slate-800' }} transition-colors">Masuk Akun</a>
+                    <a href="{{ route('register') }}" class="w-full py-2.5 text-center text-sm font-semibold rounded-xl {{ request()->routeIs('register') ? 'bg-[#fa2f79] text-white font-bold ring-2 ring-pink-400 shadow-md' : 'btn-pink text-white shadow-md' }}">Daftar Akun Baru</a>
                 </div>
             @endauth
         </div>
@@ -429,7 +438,8 @@
             });
         }
 
-        // Nav Scroll Spy to Highlight Active Pill
+        @if(request()->routeIs('landing'))
+        // Nav Scroll Spy to Highlight Active Pill (Khusus Halaman Beranda)
         const navItems = {
             'profil': document.getElementById('nav-profil'),
             'jurusan': document.getElementById('nav-jurusan'),
@@ -441,10 +451,10 @@
 
         function setActiveNav(activeEl) {
             document.querySelectorAll('.nav-item').forEach(el => {
-                el.className = 'nav-item px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium';
+                el.className = 'nav-item px-2.5 xl:px-3 py-2 text-slate-200 hover:text-white rounded-lg transition-colors text-xs sm:text-sm font-medium';
             });
             if (activeEl) {
-                activeEl.className = 'nav-item px-5 py-2 rounded-full bg-brand-pink text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-pink/20 transition-all';
+                activeEl.className = 'nav-item px-4 xl:px-5 py-2 rounded-full bg-brand-pink text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-pink/20 transition-all';
             }
         }
 
@@ -477,6 +487,7 @@
                 setActiveNav(null);
             }
         }, { passive: true });
+        @endif
     </script>
     @stack('scripts')
 </body>

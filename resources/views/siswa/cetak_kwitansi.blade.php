@@ -19,7 +19,7 @@
         <a href="{{ route('siswa.pembayaran') }}" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-300">
             &larr; Kembali ke Rincian Pembayaran
         </a>
-        <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">
+        <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs shadow-md shadow-pink-500/25">
             Cetak Kwitansi Lunas (PDF)
         </button>
     </div>

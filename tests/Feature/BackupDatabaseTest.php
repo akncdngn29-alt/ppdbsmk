@@ -63,9 +63,10 @@ class BackupDatabaseTest extends TestCase
         $this->artisan('db:backup', ['--filename' => 'test_cli_backup.sql'])
             ->assertSuccessful();
 
-        $this->assertTrue(Storage::exists('backups/test_cli_backup.sql'));
+        $this->assertTrue(Storage::disk('local')->exists('backups/test_cli_backup.sql') || Storage::exists('backups/test_cli_backup.sql'));
 
         // Bersihkan file uji
+        Storage::disk('local')->delete('backups/test_cli_backup.sql');
         Storage::delete('backups/test_cli_backup.sql');
     }
 }

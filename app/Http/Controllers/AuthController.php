@@ -19,15 +19,82 @@ class AuthController extends Controller
 {
     // === CALON SISWA AUTH ===
 
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
         if (Auth::check()) {
             return redirect()->route('siswa.dashboard');
         }
-        $sampleStudents = User::with(['pendaftar.jurusan1'])->latest('id_user')->take(10)->get();
-        $adminTU = Admin::where('role', 'tu')->first();
-        $kepsek = Admin::where('role', 'kepala_sekolah')->first();
-        return view('auth.login', compact('sampleStudents', 'adminTU', 'kepsek'));
+
+        $isLocal = (app()->isLocal() || app()->runningUnitTests()) && config('app.debug') && $this->isLoopbackRequest($request);
+        $sampleStudents = $isLocal ? $this->getDummyStudents() : collect([]);
+        $adminTU = $isLocal ? Admin::where('role', 'tu')->first() : null;
+        $kepsek = $isLocal ? Admin::where('role', 'kepala_sekolah')->first() : null;
+
+        return view('auth.login', compact('sampleStudents', 'adminTU', 'kepsek', 'isLocal'));
+    }
+
+    /**
+     * Dapatkan data akun siswa pendaftar untuk simulasi pintasan masuk di lingkungan lokal.
+     */
+    protected function getDummyStudents()
+    {
+        try {
+            $students = User::with('pendaftar.jurusan1')
+                ->orderBy('id_user', 'asc')
+                ->take(25)
+                ->get();
+
+            if ($students->isNotEmpty()) {
+                return $students->map(function ($u) {
+                    $namaJurusan = 'Calon Siswa';
+                    if ($u->pendaftar && $u->pendaftar->jurusan1) {
+                        $namaJurusan = $u->pendaftar->jurusan1->nama_jurusan;
+                    }
+
+                    return (object)[
+                        'id_user' => $u->id_user,
+                        'nama' => $u->nama,
+                        'nisn' => $u->nisn,
+                        'email' => $u->email,
+                        'nama_jurusan' => $namaJurusan,
+                    ];
+                });
+            }
+        } catch (\Throwable $e) {
+            // Fallback jika database belum siap/tidak terjangkau
+        }
+
+        $demoUser = null;
+        try {
+            $demoUser = User::first();
+        } catch (\Throwable $e) {
+            // ignore
+        }
+        $demoId = $demoUser ? $demoUser->id_user : 1;
+
+        return collect([
+            (object)[
+                'id_user' => $demoId,
+                'nama' => 'Ahmad Fauzi (Akun Uji Coba)',
+                'nisn' => '0051234567',
+                'email' => 'siswa.demo1@smkib.test',
+                'nama_jurusan' => 'Teknik Komputer & Jaringan',
+            ],
+            (object)[
+                'id_user' => $demoId,
+                'nama' => 'Siti Nurhaliza (Akun Uji Coba)',
+                'nisn' => '0057654321',
+                'email' => 'siswa.demo2@smkib.test',
+                'nama_jurusan' => 'Rekayasa Perangkat Lunak',
+            ],
+            (object)[
+                'id_user' => $demoId,
+                'nama' => 'Rizky Pratama (Akun Uji Coba)',
+                'nisn' => '0059876543',
+                'email' => 'siswa.demo3@smkib.test',
+                'nama_jurusan' => 'Desain Komunikasi Visual',
+            ],
+        ]);
     }
 
     /**
@@ -152,25 +219,72 @@ class AuthController extends Controller
 
     // === ADMIN & KEPALA SEKOLAH AUTH ===
 
-    public function showAdminLoginForm()
+    public function showAdminLoginForm(Request $request)
     {
         if (Auth::guard('admin')->check()) {
             $role = Auth::guard('admin')->user()->role;
             return $role === 'kepala_sekolah' ? redirect()->route('kepsek.dashboard') : redirect()->route('admin.dashboard');
         }
-        $sampleStudents = User::with(['pendaftar.jurusan1'])->latest('id_user')->take(10)->get();
-        $adminTU = Admin::where('role', 'tu')->first();
-        $kepsek = Admin::where('role', 'kepala_sekolah')->first();
-        return view('auth.admin_login', compact('sampleStudents', 'adminTU', 'kepsek'));
+
+        $isLocal = (app()->isLocal() || app()->runningUnitTests()) && config('app.debug') && $this->isLoopbackRequest($request);
+        $sampleStudents = $isLocal ? $this->getDummyStudents() : collect([]);
+        $adminTU = $isLocal ? Admin::where('role', 'tu')->first() : null;
+        $kepsek = $isLocal ? Admin::where('role', 'kepala_sekolah')->first() : null;
+
+        return view('auth.admin_login', compact('sampleStudents', 'adminTU', 'kepsek', 'isLocal'));
     }
 
     /**
-     * Jalur pintasan atau akses masuk cepat tanpa mengetik kata sandi (Demo/Pengujian).
+     * Verifikasi bahwa request berasal secara murni dari host dan antarmuka loopback lokal (localhost).
+     * Mencegah akses via jaringan LAN, IP publik, atau tunnel proxy eksternal (ngrok, cloudflare tunnel, dll).
+     */
+    protected function isLoopbackRequest(Request $request): bool
+    {
+        $remoteAddr = $request->server('REMOTE_ADDR');
+        $clientIp = $request->ip();
+
+        // 1. Remote address fisik koneksi TCP dan client IP harus loopback
+        $isLoopbackIp = in_array($remoteAddr, ['127.0.0.1', '::1'], true)
+            && in_array($clientIp, ['127.0.0.1', '::1'], true);
+
+        // 2. Host header harus localhost / 127.0.0.1 (menolak domain tunnel seperti *.ngrok-free.app, *.trycloudflare.com, dll)
+        $host = strtolower($request->getHost());
+        $isLoopbackHost = in_array($host, ['localhost', '127.0.0.1', '[::1]'], true);
+
+        // 3. Mencegah spoofing jika request melewati tunnel/reverse proxy eksternal
+        $forwardedFor = $request->header('X-Forwarded-For');
+        if ($forwardedFor) {
+            $ips = array_map('trim', explode(',', $forwardedFor));
+            foreach ($ips as $ip) {
+                if (!in_array($ip, ['127.0.0.1', '::1'], true)) {
+                    return false;
+                }
+            }
+        }
+
+        $forwardedHost = $request->header('X-Forwarded-Host');
+        if ($forwardedHost) {
+            $fHost = strtolower(trim(explode(':', $forwardedHost)[0]));
+            if (!in_array($fHost, ['localhost', '127.0.0.1', '[::1]'], true)) {
+                return false;
+            }
+        }
+
+        return $isLoopbackIp && $isLoopbackHost;
+    }
+
+    /**
+     * Jalur pintasan atau akses masuk cepat tanpa mengetik kata sandi (HANYA LOCALHOST & DEBUG MODE).
+     * Ditolak mutlak secara fail-closed (HTTP 404) pada lingkungan nonlokal/production atau jika diakses dari luar localhost.
      */
     public function quickLogin(Request $request)
     {
-        if ((app()->environment('production') || config('app.env') === 'production') && !config('app.debug')) {
-            return back()->withErrors(['login' => 'Akses pintasan login dinonaktifkan pada lingkungan produksi demi keamanan.']);
+        $isLocalEnv = (app()->isLocal() || app()->runningUnitTests())
+            && app()->environment() !== 'production'
+            && config('app.env') !== 'production';
+
+        if (!$isLocalEnv || !config('app.debug') || !$this->isLoopbackRequest($request)) {
+            abort(404, 'Halaman atau aksi pintasan tidak tersedia.');
         }
 
         $request->validate([
@@ -310,13 +424,12 @@ class AuthController extends Controller
             ->orWhere('nisn', $request->identifier)
             ->first();
 
-        if (!$user) {
-            return back()->withErrors(['identifier' => 'Data pendaftar dengan Email atau NISN tersebut tidak ditemukan.']);
+        if ($user) {
+            $simulatedOtp = rand(100000, 999999);
+            \Illuminate\Support\Facades\Log::info("Simulasi reset kata sandi akun {$user->username} (NISN: {$user->nisn}). OTP: {$simulatedOtp}");
         }
 
-        // Simulation OTP/Link
-        $simulatedOtp = rand(100000, 999999);
-        return back()->with('success', "Kode verifikasi reset sandi telah disimulasikan terkirim ke WhatsApp / Email ({$user->email}). Kode demo reset: {$simulatedOtp}");
+        return back()->with('success', 'Jika NISN atau Email terdaftar di sistem PPDB, tautan atau instruksi pemulihan kata sandi telah dikirimkan ke kontak terdaftar.');
     }
 }
 

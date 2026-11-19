@@ -8,12 +8,12 @@
 
     <!-- Flash Messages -->
     @if(session('success'))
-    <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center justify-between shadow-sm animate-in fade-in duration-200">
+    <div class="p-4 rounded-2xl bg-pink-50 dark:bg-pink-950/60 border border-pink-200 dark:border-pink-800 text-pink-800 dark:text-pink-200 text-xs font-semibold flex items-center justify-between shadow-sm animate-in fade-in duration-200">
         <div class="flex items-center gap-2">
-            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+            <i data-lucide="check-circle" class="w-4 h-4 text-[#fa2f79]"></i>
             <span>{{ session('success') }}</span>
         </div>
-        <button type="button" onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-800 font-bold">&times;</button>
+        <button type="button" onclick="this.parentElement.remove()" class="text-[#fa2f79] hover:text-pink-800 font-bold">&times;</button>
     </div>
     @endif
 
@@ -43,7 +43,7 @@
     <!-- Statistic Summary Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-pink-50 dark:bg-pink-950/50 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center shrink-0">
                 <i data-lucide="graduation-cap" class="w-6 h-6"></i>
             </div>
             <div>
@@ -91,7 +91,7 @@
             <div>
                 <div class="flex items-center gap-2">
                     <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Master Program Keahlian</h2>
-                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300">
                         Rekomendasi
                     </span>
                 </div>
@@ -129,7 +129,7 @@
                 <div>
                     <div class="flex items-start justify-between gap-3 mb-2">
                         <div class="flex items-center gap-2.5">
-                            <span class="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 font-mono font-extrabold flex items-center justify-center text-xs shadow-sm border border-slate-200 dark:border-slate-700">
+                            <span class="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 text-[#fa2f79] dark:text-pink-400 font-mono font-extrabold flex items-center justify-center text-xs shadow-sm border border-slate-200 dark:border-slate-700">
                                 {{ $j->kode_jurusan }}
                             </span>
                             <div>
@@ -141,8 +141,8 @@
                         <!-- Status Badge (Matching referensi: [Aktif]) -->
                         <div>
                             @if($j->status_aktif)
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300">
+                                <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span>
                                 Aktif
                             </span>
                             @else
@@ -160,12 +160,12 @@
                             <span class="text-slate-900 dark:text-white font-mono">{{ $p1Count }} / {{ $j->kuota }} Siswa</span>
                         </div>
                         <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full transition-all duration-500 {{ $percent >= 100 ? 'bg-rose-500' : ($percent >= 80 ? 'bg-amber-500' : 'bg-emerald-500') }}"
+                            <div class="h-full rounded-full transition-all duration-500 {{ $percent >= 100 ? 'bg-rose-500' : ($percent >= 80 ? 'bg-amber-500' : 'bg-[#fa2f79]') }}"
                                  style="width: {{ $percent }}%"></div>
                         </div>
                         <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
                             <span>Terisi {{ $percent }}%</span>
-                            <span class="font-semibold text-emerald-600 dark:text-emerald-400">Sisa: {{ $sisaKuota }} Kursi</span>
+                            <span class="font-semibold text-[#fa2f79] dark:text-pink-400">Sisa: {{ $sisaKuota }} Kursi</span>
                         </div>
                     </div>
 
@@ -179,7 +179,7 @@
                         @endif
                         @if($j->prospek_kerja)
                         <p class="text-slate-600 dark:text-slate-300 line-clamp-2">
-                            <strong class="text-emerald-600 dark:text-emerald-400">Prospek Kerja:</strong> {{ $j->prospek_kerja }}
+                            <strong class="text-[#fa2f79] dark:text-pink-400">Prospek Kerja:</strong> {{ $j->prospek_kerja }}
                         </p>
                         @endif
                     </div>
@@ -201,9 +201,9 @@
                         <!-- Edit Jurusan -->
                         <button type="button" 
                                 onclick="openEditModal({{ json_encode($j) }})"
-                                class="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+                                class="px-3 py-1.5 rounded-xl bg-pink-50 dark:bg-pink-950/60 hover:bg-pink-100 text-[#fa2f79] dark:text-pink-300 border border-pink-200 dark:border-pink-800 font-bold transition-colors flex items-center gap-1.5 shadow-sm"
                                 title="Edit Data Jurusan">
-                            <i data-lucide="edit-3" class="w-3.5 h-3.5 text-emerald-600"></i>
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5 text-[#fa2f79]"></i>
                             <span>Edit</span>
                         </button>
 
@@ -223,7 +223,7 @@
                               onsubmit="return confirm('Apakah Anda yakin ingin {{ $j->status_aktif ? 'menonaktifkan' : 'mengaktifkan' }} program keahlian {{ $j->nama_jurusan }} ({{ $j->kode_jurusan }})? {{ $j->status_aktif ? 'Jurusan nonaktif tidak akan muncul sebagai pilihan baru pada pendaftaran.' : 'Jurusan akan kembali dapat dipilih calon siswa.' }}')">
                             @csrf
                             <button type="submit" 
-                                    class="px-2.5 py-1.5 rounded-xl font-bold transition-colors flex items-center gap-1 border shadow-sm {{ $j->status_aktif ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-300 dark:border-slate-600' : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600' }}"
+                                    class="px-2.5 py-1.5 rounded-xl font-bold transition-colors flex items-center gap-1 border shadow-sm {{ $j->status_aktif ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-300 dark:border-slate-600' : 'bg-[#fa2f79] hover:bg-[#e11d48] text-white border-[#fa2f79] shadow-pink-500/20' }}"
                                     title="{{ $j->status_aktif ? 'Nonaktifkan Jurusan' : 'Aktifkan Jurusan' }}">
                                 <i data-lucide="{{ $j->status_aktif ? 'pause' : 'play' }}" class="w-3.5 h-3.5"></i>
                                 <span>{{ $j->status_aktif ? 'Nonaktifkan' : 'Aktifkan' }}</span>
@@ -258,9 +258,9 @@
 
         <!-- Dashed Card: Tambah Program Keahlian (Exact design matching referensi/image.png) -->
         <div onclick="openTambahModal()" 
-             class="cursor-pointer group relative rounded-3xl p-8 border-2 border-dashed border-emerald-400/80 dark:border-emerald-500/60 bg-emerald-50/20 dark:bg-slate-900/40 hover:bg-emerald-50/70 dark:hover:bg-emerald-950/30 hover:border-emerald-500 transition-all duration-200 flex flex-col items-center justify-center text-center space-y-2">
+             class="cursor-pointer group relative rounded-3xl p-8 border-2 border-dashed border-pink-400/80 dark:border-pink-500/60 bg-pink-50/20 dark:bg-slate-900/40 hover:bg-pink-50/70 dark:hover:bg-pink-950/30 hover:border-pink-500 transition-all duration-200 flex flex-col items-center justify-center text-center space-y-2">
             
-            <div class="w-12 h-12 rounded-full border-2 border-emerald-500 dark:border-emerald-400 text-emerald-500 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div class="w-12 h-12 rounded-full border-2 border-[#fa2f79] dark:border-pink-400 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <i data-lucide="plus" class="w-6 h-6 stroke-[2.5]"></i>
             </div>
             
@@ -280,12 +280,12 @@
         
         <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+                <div class="w-8 h-8 rounded-xl bg-[#fa2f79] text-white flex items-center justify-center">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                 </div>
                 <div>
                     <h3 class="text-sm font-extrabold">Tambah Program Keahlian</h3>
-                    <span class="text-[10px] text-emerald-400 font-medium">Buat jurusan baru dan tentukan kapasitas kuota PPDB</span>
+                    <span class="text-[10px] text-pink-300 font-medium">Buat jurusan baru dan tentukan kapasitas kuota PPDB</span>
                 </div>
             </div>
             <button type="button" onclick="closeTambahModal()" class="text-slate-400 hover:text-white transition-colors">
@@ -304,7 +304,7 @@
                         Kode Jurusan <span class="text-rose-500">*</span>
                     </label>
                     <input type="text" name="kode_jurusan" required placeholder="Cth: RPL, DKV" maxlength="20"
-                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-emerald-500">
+                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-[#fa2f79]">
                 </div>
 
                 <div class="col-span-2">
@@ -312,7 +312,7 @@
                         Nama Program Keahlian <span class="text-rose-500">*</span>
                     </label>
                     <input type="text" name="nama_jurusan" required placeholder="Cth: Rekayasa Perangkat Lunak" maxlength="100"
-                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-emerald-500">
+                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-[#fa2f79]">
                 </div>
             </div>
 
@@ -322,7 +322,7 @@
                         Kapasitas Kuota Siswa <span class="text-rose-500">*</span>
                     </label>
                     <input type="number" name="kuota" required min="0" value="72"
-                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-emerald-500">
+                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-[#fa2f79]">
                     <span class="text-[10px] text-slate-400">Tidak boleh bernilai negatif.</span>
                 </div>
 
@@ -330,7 +330,7 @@
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Status Awal <span class="text-rose-500">*</span>
                     </label>
-                    <select name="status_aktif" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-emerald-500">
+                    <select name="status_aktif" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-[#fa2f79]">
                         <option value="1" selected>Aktif (Buka Pendaftaran)</option>
                         <option value="0">Nonaktif (Tutup Pendaftaran)</option>
                     </select>
@@ -342,7 +342,7 @@
                     Deskripsi Program Keahlian
                 </label>
                 <textarea name="deskripsi" rows="3" placeholder="Jelaskan fokus keahlian, keunggulan, materi praktikum, atau kompetensi jurusan..."
-                          class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500"></textarea>
+                          class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]"></textarea>
             </div>
 
             <div>
@@ -350,7 +350,7 @@
                     Prospek Kerja Lulusan
                 </label>
                 <textarea name="prospek_kerja" rows="2" placeholder="Cth: Web Developer, Mobile App Engineer, UI/UX Designer, IT Consultant..."
-                          class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500"></textarea>
+                          class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]"></textarea>
             </div>
 
             <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2">
@@ -375,12 +375,12 @@
         
         <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+                <div class="w-8 h-8 rounded-xl bg-[#fa2f79] text-white flex items-center justify-center">
                     <i data-lucide="edit-3" class="w-4 h-4"></i>
                 </div>
                 <div>
                     <h3 class="text-sm font-extrabold" id="editModalHeaderTitle">Edit Program Keahlian</h3>
-                    <span class="text-[10px] text-emerald-400 font-medium">Ubah nama, kode, kuota, prospek kerja, atau status</span>
+                    <span class="text-[10px] text-pink-300 font-medium">Ubah nama, kode, kuota, prospek kerja, atau status</span>
                 </div>
             </div>
             <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-white transition-colors">
@@ -399,7 +399,7 @@
                         Kode Jurusan <span class="text-rose-500">*</span>
                     </label>
                     <input type="text" id="edit_kode_jurusan" name="kode_jurusan" required maxlength="20"
-                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-emerald-500">
+                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-[#fa2f79]">
                 </div>
 
                 <div class="col-span-2">
@@ -407,7 +407,7 @@
                         Nama Program Keahlian <span class="text-rose-500">*</span>
                     </label>
                     <input type="text" id="edit_nama_jurusan" name="nama_jurusan" required maxlength="100"
-                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-emerald-500">
+                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-[#fa2f79]">
                 </div>
             </div>
 
@@ -417,7 +417,7 @@
                         Kapasitas Kuota Siswa <span class="text-rose-500">*</span>
                     </label>
                     <input type="number" id="edit_kuota" name="kuota" required min="0"
-                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-emerald-500">
+                           class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-[#fa2f79]">
                     <span class="text-[10px] text-slate-400">Tidak boleh bernilai negatif.</span>
                 </div>
 
@@ -425,7 +425,7 @@
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Status Penerimaan <span class="text-rose-500">*</span>
                     </label>
-                    <select id="edit_status_aktif" name="status_aktif" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-emerald-500">
+                    <select id="edit_status_aktif" name="status_aktif" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-[#fa2f79]">
                         <option value="1">Aktif (Menerima Pendaftar)</option>
                         <option value="0">Nonaktif (Tutup Pendaftaran)</option>
                     </select>
@@ -437,7 +437,7 @@
                     Deskripsi Program Keahlian
                 </label>
                 <textarea id="edit_deskripsi" name="deskripsi" rows="3"
-                          class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500"></textarea>
+                          class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]"></textarea>
             </div>
 
             <div>
@@ -445,7 +445,7 @@
                     Prospek Kerja Lulusan
                 </label>
                 <textarea id="edit_prospek_kerja" name="prospek_kerja" rows="2"
-                          class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500"></textarea>
+                          class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]"></textarea>
             </div>
 
             <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2">
@@ -470,7 +470,7 @@
         
         <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
             <div class="flex items-center gap-2.5">
-                <span id="detail_kode_badge" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-mono font-extrabold text-xs">
+                <span id="detail_kode_badge" class="px-2.5 py-1 rounded-lg bg-[#fa2f79] text-white font-mono font-extrabold text-xs">
                     FAR
                 </span>
                 <div>
@@ -488,7 +488,7 @@
             <div class="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 text-center">
                 <div>
                     <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">Status</span>
-                    <span id="detail_status_badge" class="mt-1 inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                    <span id="detail_status_badge" class="mt-1 inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300">
                         Aktif
                     </span>
                 </div>
@@ -498,14 +498,14 @@
                 </div>
                 <div>
                     <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">Sisa Kursi</span>
-                    <span id="detail_sisa_kuota" class="mt-1 block text-base font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">72</span>
+                    <span id="detail_sisa_kuota" class="mt-1 block text-base font-extrabold text-[#fa2f79] dark:text-pink-400 font-mono">72</span>
                 </div>
             </div>
 
             <!-- Detail Pendaftar -->
             <div class="space-y-2">
                 <h5 class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                    <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i>
+                    <i data-lucide="users" class="w-4 h-4 text-[#fa2f79]"></i>
                     <span>Statistik Pendaftar:</span>
                 </h5>
                 <div class="grid grid-cols-2 gap-2 text-[11px]">
@@ -523,7 +523,7 @@
             <!-- Deskripsi -->
             <div class="space-y-1">
                 <h5 class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                    <i data-lucide="file-text" class="w-4 h-4 text-emerald-600"></i>
+                    <i data-lucide="file-text" class="w-4 h-4 text-[#fa2f79]"></i>
                     <span>Deskripsi Program Keahlian:</span>
                 </h5>
                 <div id="detail_deskripsi" class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 leading-relaxed text-xs">
@@ -534,10 +534,10 @@
             <!-- Prospek Kerja -->
             <div class="space-y-1">
                 <h5 class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                    <i data-lucide="briefcase" class="w-4 h-4 text-emerald-600"></i>
+                    <i data-lucide="briefcase" class="w-4 h-4 text-[#fa2f79]"></i>
                     <span>Prospek Kerja Lulusan:</span>
                 </h5>
-                <div id="detail_prospek_kerja" class="p-3 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/50 text-slate-700 dark:text-slate-300 leading-relaxed text-xs">
+                <div id="detail_prospek_kerja" class="p-3 rounded-2xl bg-pink-50/50 dark:bg-pink-950/30 border border-pink-200/60 dark:border-pink-800/50 text-slate-700 dark:text-slate-300 leading-relaxed text-xs">
                     -
                 </div>
             </div>
@@ -662,7 +662,7 @@
         const statusBadge = document.getElementById('detail_status_badge');
         if (jurusan.status_aktif) {
             statusBadge.textContent = 'Aktif';
-            statusBadge.className = 'mt-1 inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300';
+            statusBadge.className = 'mt-1 inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300';
         } else {
             statusBadge.textContent = 'Nonaktif';
             statusBadge.className = 'mt-1 inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300';

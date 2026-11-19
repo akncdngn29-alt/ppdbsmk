@@ -28,7 +28,7 @@
             <span class="text-xs text-slate-400">|</span>
             <span class="text-xs font-semibold text-slate-700">Total Data: {{ count($pendaftar) }} Calon Siswa</span>
         </div>
-        <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
+        <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs flex items-center gap-2 shadow-sm shadow-pink-500/20 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
             Cetak Dokumen Resmi / Simpan PDF
         </button>
@@ -40,7 +40,7 @@
         <!-- Kop Surat Lembaga -->
         <div class="border-b-4 border-double border-slate-900 pb-4 mb-6">
             <div class="flex items-center justify-between gap-4">
-                <div class="w-20 h-20 rounded-full border-2 border-emerald-600 flex items-center justify-center font-bold text-emerald-800 text-2xl bg-emerald-50 shrink-0">
+                <div class="w-20 h-20 rounded-full border-2 border-[#fa2f79] flex items-center justify-center font-bold text-[#fa2f79] text-2xl bg-pink-50 shrink-0">
                     SMK
                 </div>
                 <div class="text-center flex-1">
@@ -98,13 +98,13 @@
                             <td class="border border-slate-300 px-2 py-1.5 text-center">{{ $item->jenis_kelamin === 'Laki-laki' ? 'L' : 'P' }}</td>
                             <td class="border border-slate-300 px-2 py-1.5">{{ $item->asal_sekolah }}</td>
                             <td class="border border-slate-300 px-2 py-1.5">
-                                <span class="font-semibold text-emerald-800">{{ $item->jurusan1 ? $item->jurusan1->kode_jurusan : '-' }}</span>
+                                <span class="font-semibold text-[#fa2f79]">{{ $item->jurusan1 ? $item->jurusan1->kode_jurusan : '-' }}</span>
                                 @if($item->jurusan2)
                                     <span class="text-slate-400 text-[10px]"> / {{ $item->jurusan2->kode_jurusan }}</span>
                                 @endif
                             </td>
                             <td class="border border-slate-300 px-2 py-1.5 text-center">
-                                <span class="font-bold {{ $item->status_pembayaran === 'Paid' ? 'text-emerald-700' : 'text-amber-700' }}">
+                                <span class="font-bold {{ $item->status_pembayaran === 'Paid' ? 'text-[#fa2f79]' : 'text-amber-700' }}">
                                     {{ $item->status_pembayaran }}
                                 </span>
                             </td>
@@ -113,7 +113,7 @@
                             </td>
                             <td class="border border-slate-300 px-2 py-1.5 text-center font-bold">
                                 @if($item->status_kelulusan === 'Diterima')
-                                    <span class="text-emerald-700">DITERIMA</span>
+                                    <span class="text-[#fa2f79]">DITERIMA</span>
                                 @elseif($item->status_kelulusan === 'Cadangan')
                                     <span class="text-amber-700">CADANGAN</span>
                                 @elseif($item->status_kelulusan === 'Tidak Lolos')
@@ -149,9 +149,9 @@
                 
                 <!-- Digital Stamp / Space for Signature -->
                 <div class="h-20 flex items-center justify-end pr-8 my-1">
-                    <div class="w-24 h-16 border border-dashed border-emerald-500 rounded-lg flex flex-col items-center justify-center text-[9px] text-emerald-700 uppercase font-bold transform -rotate-3">
+                    <div class="w-24 h-16 border border-dashed border-[#fa2f79] rounded-lg flex flex-col items-center justify-center text-[9px] text-[#fa2f79] uppercase font-bold transform -rotate-3">
                         <span>TERVERIFIKASI</span>
-                        <span class="text-[7px] text-emerald-600 font-mono">PANITIA PPDB</span>
+                        <span class="text-[7px] text-[#fa2f79] font-mono">PANITIA PPDB</span>
                     </div>
                 </div>
 

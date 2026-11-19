@@ -29,3 +29,7 @@ ppdb_smk.sql
 ppdb_smktidb.sql
 ppdb_smk_tidb.sql
 *.sql
+/referensi
+/Dokumentasi
+*.bak
+*.tmp

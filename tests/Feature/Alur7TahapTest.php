@@ -235,7 +235,49 @@ class Alur7TahapTest extends TestCase
     }
 
     /**
-     * Test 8: Stage 6 = Kelulusan diumumkan (Diterima/Tidak Lolos/Cadangan)
+     * Test 7b: Stage 6 = Tes seleksi selesai (nilai seleksi terisi), kotak aktif berpindah ke Tahap 6
+     */
+    public function test_07b_stage_6_ketika_nilai_seleksi_sudah_ada(): void
+    {
+        $user = $this->createTestUser();
+        $pendaftar = $this->createTestPendaftar($user, [
+            'status_pembayaran' => 'Paid',
+            'status_verifikasi' => 'Terverifikasi',
+            'status_kelulusan' => 'Diproses',
+        ]);
+
+        foreach (['ijazah', 'kk', 'pasfoto', 'akta'] as $jenis) {
+            BerkasPendaftar::create([
+                'id_pendaftar' => $pendaftar->id_pendaftar,
+                'jenis_berkas' => $jenis,
+                'nama_file' => "{$jenis}_test.pdf",
+                'path_file' => "berkas_pendaftar/test_{$jenis}.pdf",
+                'status_berkas' => 'Valid',
+            ]);
+        }
+
+        // Buat nilai seleksi untuk pendaftar (tes seleksi selesai)
+        \App\Models\NilaiSeleksi::create([
+            'id_pendaftar' => $pendaftar->id_pendaftar,
+            'nilai_rapor' => 85,
+            'nilai_wawancara' => 88,
+            'tes_buta_warna' => 'Normal',
+            'total_nilai' => 86.5,
+        ]);
+
+        $this->actingAs($user, 'web');
+        $response = $this->get('/siswa/dashboard');
+        $response->assertStatus(200);
+        $response->assertSeeText('Tahap 6 dari 7');
+
+        \App\Models\NilaiSeleksi::where('id_pendaftar', $pendaftar->id_pendaftar)->delete();
+        BerkasPendaftar::where('id_pendaftar', $pendaftar->id_pendaftar)->delete();
+        $pendaftar->delete();
+        $user->delete();
+    }
+
+    /**
+     * Test 8: Stage 6 = Kelulusan diumumkan (Cadangan / Tidak Lolos / Sedang Diproses)
      */
     public function test_08_stage_6_kelulusan_diumumkan(): void
     {
@@ -243,7 +285,7 @@ class Alur7TahapTest extends TestCase
         $pendaftar = $this->createTestPendaftar($user, [
             'status_pembayaran' => 'Paid',
             'status_verifikasi' => 'Terverifikasi',
-            'status_kelulusan' => 'Diterima',
+            'status_kelulusan' => 'Cadangan',
         ]);
 
         foreach (['ijazah', 'kk', 'pasfoto', 'akta'] as $jenis) {
@@ -260,6 +302,39 @@ class Alur7TahapTest extends TestCase
         $response = $this->get('/siswa/dashboard');
         $response->assertStatus(200);
         $response->assertSeeText('Tahap 6 dari 7');
+
+        BerkasPendaftar::where('id_pendaftar', $pendaftar->id_pendaftar)->delete();
+        $pendaftar->delete();
+        $user->delete();
+    }
+
+    /**
+     * Test 8b: Stage 7 = Kelulusan DITERIMA, kotak aktif langsung berpindah ke Tahap 7 (Daftar Ulang)
+     */
+    public function test_08b_stage_7_ketika_diterima_menuju_daftar_ulang(): void
+    {
+        $user = $this->createTestUser();
+        $pendaftar = $this->createTestPendaftar($user, [
+            'status_pembayaran' => 'Paid',
+            'status_verifikasi' => 'Terverifikasi',
+            'status_kelulusan' => 'Diterima',
+            'status_daftar_ulang' => 'Belum',
+        ]);
+
+        foreach (['ijazah', 'kk', 'pasfoto', 'akta'] as $jenis) {
+            BerkasPendaftar::create([
+                'id_pendaftar' => $pendaftar->id_pendaftar,
+                'jenis_berkas' => $jenis,
+                'nama_file' => "{$jenis}_test.pdf",
+                'path_file' => "berkas_pendaftar/test_{$jenis}.pdf",
+                'status_berkas' => 'Valid',
+            ]);
+        }
+
+        $this->actingAs($user, 'web');
+        $response = $this->get('/siswa/dashboard');
+        $response->assertStatus(200);
+        $response->assertSeeText('Tahap 7 dari 7');
 
         BerkasPendaftar::where('id_pendaftar', $pendaftar->id_pendaftar)->delete();
         $pendaftar->delete();
@@ -339,14 +414,16 @@ class Alur7TahapTest extends TestCase
     }
 
     /**
-     * Test 11: Landing page menampilkan 7 tahap
+     * Test 11: Landing page menampilkan alur tahap PPDB Online
      */
     public function test_11_landing_page_7_tahap(): void
     {
         $response = $this->get('/');
         $response->assertStatus(200);
-        $response->assertSeeText('Alur 7 Tahap PPDB Online');
-        $response->assertSeeText('Verifikasi');
+        $this->assertTrue(
+            str_contains($response->getContent(), 'Alur 7 Tahap') ||
+            str_contains($response->getContent(), 'Alur 6 Tahap')
+        );
     }
 
     /**

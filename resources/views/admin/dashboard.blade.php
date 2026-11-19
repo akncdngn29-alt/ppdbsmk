@@ -31,9 +31,9 @@
         <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div>
                 <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Biaya Lunas</span>
-                <div class="text-2xl font-black text-teal-600 dark:text-teal-400 mt-1">{{ $totalLunas }}</div>
+                <div class="text-2xl font-black text-[#fa2f79] dark:text-pink-400 mt-1">{{ $totalLunas }}</div>
             </div>
-            <div class="w-11 h-11 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center">
+            <div class="w-11 h-11 rounded-xl bg-pink-50 dark:bg-pink-950/60 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center">
                 <i data-lucide="wallet" class="w-6 h-6"></i>
             </div>
         </div>
@@ -83,7 +83,7 @@
             <!-- Progress Bar -->
             <div>
                 <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div class="h-full @if($percent >= 90) bg-[#fa2f79] @elseif($percent >= 75) bg-sky-500 @else bg-emerald-500 @endif rounded-full" style="width: {{ min(100, $percent) }}%"></div>
+                    <div class="h-full @if($percent >= 90) bg-[#fa2f79] @elseif($percent >= 75) bg-sky-500 @else bg-pink-500 @endif rounded-full" style="width: {{ min(100, $percent) }}%"></div>
                 </div>
                 <div class="flex items-center justify-between text-[11px] text-slate-400 mt-1">
                     <span class="@if($percent >= 90) text-[#fa2f79] font-bold @endif">Terisi {{ $percent }}%</span>
@@ -131,13 +131,13 @@
                         <td class="p-3 font-medium text-slate-800 dark:text-slate-200">{{ $rp->jurusan1 ? $rp->jurusan1->nama_jurusan : 'Belum dipilih' }}</td>
                         <td class="p-3">
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold 
-                                {{ $rp->status_pembayaran === 'Paid' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' }}">
+                                {{ $rp->status_pembayaran === 'Paid' ? 'bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' }}">
                                 {{ $rp->status_pembayaran }}
                             </span>
                         </td>
                         <td class="p-3">
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold 
-                                @if($rp->status_verifikasi === 'Terverifikasi') bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
+                                @if($rp->status_verifikasi === 'Terverifikasi') bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300
                                 @elseif($rp->status_verifikasi === 'Ditolak') bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300
                                 @else bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 @endif">
                                 {{ $rp->status_verifikasi }}

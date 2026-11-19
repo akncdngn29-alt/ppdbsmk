@@ -26,7 +26,7 @@
             &larr; Kembali ke Dashboard
         </a>
         @endif
-        <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">
+        <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs shadow-md shadow-pink-500/25">
             Cetak Kartu Ujian (PDF)
         </button>
     </div>

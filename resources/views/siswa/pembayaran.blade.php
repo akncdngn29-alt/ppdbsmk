@@ -35,13 +35,13 @@
 
         <div class="flex items-center gap-2.5 flex-wrap">
             <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-sm">
-                <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-500"></i>
+                <i data-lucide="layers" class="w-3.5 h-3.5 text-[#fa2f79]"></i>
                 <span>{{ $gelombang->nama_gelombang ?? 'Gelombang Reguler' }}</span>
             </span>
 
             @if($isPaid)
-                <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 flex items-center gap-1.5 shadow-sm">
-                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+                <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-pink-100 text-[#be123c] dark:bg-pink-950 dark:text-pink-300 border border-pink-300 dark:border-pink-700 flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-[#fa2f79] dark:text-pink-400"></i>
                     <span>Status: Lunas</span>
                 </span>
             @elseif($trxStatus === 'expire')
@@ -65,12 +65,12 @@
 
     <!-- Flash Messages (Alerts) -->
     @if(session('success'))
-    <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center justify-between shadow-sm">
+    <div class="p-4 rounded-2xl bg-pink-50 dark:bg-pink-950/60 border border-pink-200 dark:border-pink-800 text-[#be123c] dark:text-pink-200 text-xs font-semibold flex items-center justify-between shadow-sm">
         <div class="flex items-center gap-2">
-            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+            <i data-lucide="check-circle" class="w-4 h-4 text-[#fa2f79]"></i>
             <span>{{ session('success') }}</span>
         </div>
-        <button type="button" onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-800">&times;</button>
+        <button type="button" onclick="this.parentElement.remove()" class="text-[#fa2f79] hover:text-[#be123c]">&times;</button>
     </div>
     @endif
 
@@ -117,9 +117,18 @@
     </div>
     @elseif(!$isPaid && $pembayaran && $trxStatus === 'pending')
     <div class="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 flex items-center justify-between flex-wrap gap-3 shadow-sm">
-        <div class="flex items-center gap-2.5 text-xs sm:text-sm">
-            <i data-lucide="clock" class="w-5 h-5 text-amber-600 shrink-0"></i>
-            <span>Tagihan aktif menunggu pembayaran: <strong class="font-mono text-slate-900 dark:text-white">{{ $pembayaran->kode_transaksi }}</strong> (Rp {{ number_format($pembayaran->total_bayar, 0, ',', '.') }})</span>
+        <div class="space-y-1">
+            <div class="flex items-center gap-2.5 text-xs sm:text-sm">
+                <i data-lucide="clock" class="w-5 h-5 text-amber-600 shrink-0"></i>
+                <span>Tagihan aktif menunggu pembayaran: <strong class="font-mono text-slate-900 dark:text-white">{{ $pembayaran->kode_transaksi }}</strong> (Rp {{ number_format($pembayaran->total_bayar, 0, ',', '.') }})</span>
+            </div>
+            @if($pembayaran->tipe_bayar === 'midtrans')
+            <div class="flex items-center gap-2 text-xs font-semibold text-rose-600 dark:text-rose-400 pl-7">
+                <i data-lucide="timer" class="w-4 h-4 text-rose-500 animate-pulse shrink-0"></i>
+                <span>Sisa waktu pembayaran: <strong id="main-countdown-display" class="font-mono font-bold text-sm bg-rose-100 dark:bg-rose-950 px-2 py-0.5 rounded-lg border border-rose-300 dark:border-rose-800">--:--</strong></span>
+                <span class="text-[11px] text-slate-500 dark:text-slate-400 font-normal">(Otomatis batal jika waktu habis)</span>
+            </div>
+            @endif
         </div>
         <div class="flex items-center gap-2">
             <button type="button" onclick="openPaymentGatewayModal()" class="px-4 py-2 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5 active:scale-95">
@@ -134,18 +143,18 @@
 
     <!-- Kotak Notifikasi Lunas (Jika Siswa Telah Lunas) -->
     @if($isPaid)
-    <div class="p-6 md:p-8 rounded-3xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 space-y-5 shadow-sm">
+    <div class="p-6 md:p-8 rounded-3xl bg-pink-50 dark:bg-pink-950/40 border border-pink-200 dark:border-pink-800 text-[#be123c] dark:text-pink-200 space-y-5 shadow-sm">
         <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
+            <div class="w-12 h-12 rounded-2xl bg-[#fa2f79] text-white flex items-center justify-center shrink-0 shadow-md">
                 <i data-lucide="check" class="w-7 h-7"></i>
             </div>
             <div>
-                <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Alhamdulillah, Pembayaran Anda Telah Lunas!</h3>
-                <p class="text-xs sm:text-sm text-emerald-700 dark:text-emerald-300">Biaya formulir pendaftaran telah berhasil diverifikasi oleh sistem gateway resmi Midtrans / Kasir TU sekolah.</p>
+                <h3 class="text-base sm:lg font-bold text-slate-900 dark:text-white">Alhamdulillah, Pembayaran Anda Telah Lunas!</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">Biaya formulir pendaftaran telah berhasil diverifikasi oleh sistem gateway resmi Midtrans / Kasir TU sekolah.</p>
             </div>
         </div>
 
-        <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-emerald-200 dark:border-emerald-800 text-xs sm:text-sm text-slate-700 dark:text-slate-300 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-pink-200 dark:border-pink-800/60 text-xs sm:text-sm text-slate-700 dark:text-slate-300 grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
                 <span class="text-slate-400 block text-[11px] mb-0.5">Kode Transaksi</span>
                 <strong class="font-mono text-slate-900 dark:text-white">{{ $pembayaran->kode_transaksi ?? '-' }}</strong>
@@ -156,7 +165,7 @@
             </div>
             <div>
                 <span class="text-slate-400 block text-[11px] mb-0.5">Total Bayar</span>
-                <strong class="font-mono text-emerald-600 dark:text-emerald-400 font-bold">Rp {{ number_format($pembayaran->total_bayar ?? 0, 0, ',', '.') }}</strong>
+                <strong class="font-mono text-[#fa2f79] dark:text-pink-400 font-bold">Rp {{ number_format($pembayaran->total_bayar ?? 0, 0, ',', '.') }}</strong>
             </div>
             <div>
                 <span class="text-slate-400 block text-[11px] mb-0.5">Waktu Lunas</span>
@@ -165,7 +174,7 @@
         </div>
 
         <div class="flex items-center gap-3 flex-wrap pt-1">
-            <a href="{{ route('siswa.cetak.kwitansi') }}" target="_blank" class="px-5 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
+            <a href="{{ route('siswa.cetak.kwitansi') }}" target="_blank" class="px-5 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
                 <i data-lucide="printer" class="w-4 h-4"></i>
                 <span>Cetak Bukti Kwitansi (PDF)</span>
             </a>
@@ -191,7 +200,7 @@
                 Pembayaran PPDB
             </h2>
             @if($isPaid)
-                <span class="px-3.5 py-1 rounded-full text-xs font-semibold bg-[#dcfce7] text-[#059669] dark:bg-emerald-950 dark:text-emerald-300">
+                <span class="px-3.5 py-1 rounded-full text-xs font-semibold bg-pink-100 text-[#be123c] dark:bg-pink-950 dark:text-pink-300">
                     Lunas
                 </span>
             @elseif($trxStatus === 'expire')
@@ -216,13 +225,13 @@
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center bg-slate-50/70 dark:bg-slate-800/40 p-5 sm:p-7 rounded-2xl border border-slate-100 dark:border-slate-800">
-                <!-- Sisi Kiri: Biaya Pendaftaran & Nominal Besar Hijau (Persis image1.png) -->
+                <!-- Sisi Kiri: Biaya Pendaftaran & Nominal Besar (Persis image1.png) -->
                 <div class="md:col-span-5 space-y-1.5">
                     <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium">Biaya pendaftaran</span>
-                    <div id="display-total-prominent" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#059669] dark:text-emerald-400 font-mono tracking-tight">
+                    <div id="display-total-prominent" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#fa2f79] dark:text-pink-400 font-mono tracking-tight">
                         Rp {{ number_format($totalBayarAwal, 0, ',', '.') }}
                     </div>
-                    <div id="row-info-potongan" class="{{ $potonganAwal > 0 ? '' : 'hidden' }} text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                    <div id="row-info-potongan" class="{{ $potonganAwal > 0 ? '' : 'hidden' }} text-xs text-[#fa2f79] dark:text-pink-400 font-medium pt-1">
                         Potongan voucher: <span id="text-info-potongan" class="font-mono font-bold">- Rp {{ number_format($potonganAwal, 0, ',', '.') }}</span>
                     </div>
                 </div>
@@ -265,15 +274,15 @@
 
             <!-- Input Box Kode Voucher dengan Tombol Gunakan Persis image1.png -->
             <div class="relative flex items-center">
-                <input type="text" id="kode_voucher" value="{{ $kodeVoucherAwal }}" placeholder="Masukkan kode voucher" class="w-full pl-4 pr-32 py-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-sans text-slate-900 dark:text-white placeholder:text-slate-400 placeholder:normal-case focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-sm">
+                <input type="text" id="kode_voucher" value="{{ $kodeVoucherAwal }}" placeholder="Masukkan kode voucher" class="w-full pl-4 pr-32 py-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-sans text-slate-900 dark:text-white placeholder:text-slate-400 placeholder:normal-case focus:outline-none focus:ring-2 focus:ring-[#fa2f79] focus:border-[#fa2f79] transition-all shadow-sm">
                 <div class="absolute right-2.5 flex items-center">
-                    <button type="button" id="btn-apply-voucher" onclick="applyVoucher()" class="px-5 py-2 rounded-xl bg-[#dcfce7] hover:bg-[#bbf7d0] dark:bg-emerald-950 dark:hover:bg-emerald-900 text-[#059669] dark:text-emerald-300 font-bold text-xs transition-colors flex items-center gap-1 active:scale-95 shadow-sm">
+                    <button type="button" id="btn-apply-voucher" onclick="applyVoucher()" class="px-5 py-2 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs transition-colors flex items-center gap-1 active:scale-95 shadow-sm">
                         <span>Gunakan</span>
                     </button>
                 </div>
             </div>
 
-            <div id="voucher-msg" class="{{ $potonganAwal > 0 ? '' : 'hidden' }} text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <div id="voucher-msg" class="{{ $potonganAwal > 0 ? '' : 'hidden' }} text-xs font-semibold text-[#fa2f79] dark:text-pink-400">
                 @if($potonganAwal > 0)
                     Voucher {{ $kodeVoucherAwal }} berhasil diterapkan pada tagihan Anda.
                 @endif
@@ -290,10 +299,10 @@
                             ? 'Diskon ' . rtrim(rtrim(number_format((float)$promo->nilai_potongan, 2, ',', '.'), '0'), ',') . '%'
                             : 'Potongan Rp ' . number_format($promo->nilai_potongan, 0, ',', '.');
                     @endphp
-                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col justify-between space-y-2 hover:border-emerald-500 transition-colors shadow-sm">
+                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col justify-between space-y-2 hover:border-[#fa2f79] transition-colors shadow-sm">
                         <div>
                             <div class="flex items-center justify-between text-[10px]">
-                                <span class="px-2 py-0.5 rounded font-bold uppercase {{ $promo->tipe === 'persen' ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' }}">
+                                <span class="px-2 py-0.5 rounded font-bold uppercase {{ $promo->tipe === 'persen' ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300' : 'bg-pink-100 text-[#be123c] dark:bg-pink-950 dark:text-pink-300' }}">
                                     {{ $potonganText }}
                                 </span>
                                 <span class="font-mono text-slate-400">Sisa {{ $promo->sisaKuota() }}</span>
@@ -304,8 +313,8 @@
                             @endif
                         </div>
                         <div class="flex items-center justify-between pt-1 border-t border-slate-200 dark:border-slate-700">
-                            <span class="font-mono font-bold text-xs text-emerald-600 dark:text-emerald-400">{{ $promo->kode_voucher }}</span>
-                            <button type="button" onclick="selectPromoVoucher('{{ $promo->kode_voucher }}')" class="px-3 py-1 rounded-lg bg-[#059669] hover:bg-[#047857] text-white font-bold text-[10px] transition-colors">
+                            <span class="font-mono font-bold text-xs text-[#fa2f79] dark:text-pink-400">{{ $promo->kode_voucher }}</span>
+                            <button type="button" onclick="selectPromoVoucher('{{ $promo->kode_voucher }}')" class="px-3 py-1 rounded-lg bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-[10px] transition-colors">
                                 Pakai
                             </button>
                         </div>
@@ -319,12 +328,12 @@
         <!-- 3. TOMBOL BAYAR SEKARANG (Persis image1.png) -->
         <div class="space-y-3 pt-2">
             @if($isPaid)
-                <div class="w-full py-4 sm:py-5 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 font-extrabold text-base sm:text-lg flex items-center justify-center gap-2 shadow-sm">
-                    <i data-lucide="check-circle-2" class="w-6 h-6 text-emerald-600 dark:text-emerald-400"></i>
+                <div class="w-full py-4 sm:py-5 rounded-2xl bg-pink-500/15 border border-pink-500/30 text-[#be123c] dark:text-pink-300 font-extrabold text-base sm:text-lg flex items-center justify-center gap-2 shadow-sm">
+                    <i data-lucide="check-circle-2" class="w-6 h-6 text-[#fa2f79] dark:text-pink-400"></i>
                     <span>Tagihan Telah Selesai Dibayar (Lunas)</span>
                 </div>
                 <div class="flex items-center justify-center gap-3 pt-1">
-                    <a href="{{ route('siswa.cetak.kwitansi') }}" target="_blank" class="px-5 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
+                    <a href="{{ route('siswa.cetak.kwitansi') }}" target="_blank" class="px-5 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
                         <i data-lucide="printer" class="w-4 h-4"></i> Cetak Kwitansi Resmi
                     </a>
                     <a href="{{ route('siswa.berkas') }}" class="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
@@ -352,7 +361,7 @@
     <!-- ======================================================== -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
         <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-start gap-3.5">
-            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <div class="w-9 h-9 rounded-xl bg-pink-500/10 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center shrink-0">
                 <i data-lucide="shield-check" class="w-5 h-5"></i>
             </div>
             <div class="space-y-1">
@@ -429,7 +438,7 @@
                 <!-- Nominal Tagihan Box (Persis image 3.png) -->
                 <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                     <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">Nominal Tagihan</span>
-                    <div id="modal-step1-nominal" class="text-2xl font-black text-[#059669] dark:text-emerald-400 font-mono">
+                    <div id="modal-step1-nominal" class="text-2xl font-black text-[#fa2f79] dark:text-pink-400 font-mono">
                         Rp {{ number_format($totalBayarAwal, 0, ',', '.') }}
                     </div>
                 </div>
@@ -445,9 +454,9 @@
 
                     <div class="grid grid-cols-3 gap-2.5">
                         <!-- QRIS -->
-                        <label class="modal-method-card p-3 rounded-2xl border-2 border-[#10b981] bg-emerald-50/20 dark:bg-emerald-950/20 cursor-pointer transition-all flex flex-col items-center justify-center text-center space-y-2 relative shadow-sm">
+                        <label class="modal-method-card p-3 rounded-2xl border-2 border-[#fa2f79] bg-pink-50/20 dark:bg-pink-950/20 cursor-pointer transition-all flex flex-col items-center justify-center text-center space-y-2 relative shadow-sm">
                             <input type="radio" name="modal_method" value="qris" checked onchange="updateSelectedMethod('qris')" class="sr-only">
-                            <div class="text-[#10b981]">
+                            <div class="text-[#fa2f79]">
                                 <i data-lucide="qr-code" class="w-6 h-6"></i>
                             </div>
                             <strong class="block text-xs font-bold text-slate-900 dark:text-white">QRIS</strong>
@@ -612,7 +621,7 @@
                     <div id="step2-qris-box" class="w-56 h-56 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center p-3 text-slate-500 shadow-sm relative">
                         <img id="step2-qris-img" src="{{ $pembayaran->qr_url ?? '' }}" alt="QRIS Midtrans" class="{{ ($pembayaran && !empty($pembayaran->qr_url)) ? '' : 'hidden' }} w-full h-full object-contain rounded-xl bg-white p-2">
                         <div id="step2-qris-placeholder" class="{{ ($pembayaran && !empty($pembayaran->qr_url)) ? 'hidden' : '' }} flex flex-col items-center justify-center space-y-2">
-                            <i data-lucide="qr-code" class="w-16 h-16 text-emerald-600 animate-pulse"></i>
+                            <i data-lucide="qr-code" class="w-16 h-16 text-[#fa2f79] animate-pulse"></i>
                             <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">QRIS transaksi asli</span>
                         </div>
                     </div>
@@ -623,16 +632,27 @@
                     <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
                         QRIS RESMI PEMBAYARAN PPDB
                     </h4>
-                    <div id="step2-total-text" class="text-2xl font-black text-[#059669] dark:text-emerald-400 font-mono">
+                    <div id="step2-total-text" class="text-2xl font-black text-[#fa2f79] dark:text-pink-400 font-mono">
                         Rp {{ number_format($totalBayarAwal, 0, ',', '.') }}
                     </div>
                 </div>
 
                 <!-- Badge Menunggu Pembayaran Persis image 2.png -->
-                <div>
+                <div class="space-y-2">
                     <span class="inline-block px-4 py-1 rounded-full text-xs font-bold bg-[#e0f2fe] text-[#0284c7] dark:bg-sky-950 dark:text-sky-300">
                         Menunggu Pembayaran
                     </span>
+
+                    <!-- Countdown Timer 1 Menit Otomatis Batal -->
+                    <div class="flex flex-col items-center justify-center gap-1">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 text-xs font-bold shadow-sm">
+                            <i data-lucide="timer" class="w-4 h-4 text-rose-500 animate-pulse"></i>
+                            <span>Sisa Waktu: <strong id="modal-countdown-display" class="font-mono text-sm tracking-wider font-extrabold text-rose-700 dark:text-rose-300">--:--</strong></span>
+                        </div>
+                        <span class="text-[10px] text-slate-400">
+                            Harap bayar sebelum waktu habis. Tagihan otomatis dibatalkan dalam 1 menit.
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Panduan Scan Persis image 2.png -->
@@ -642,18 +662,35 @@
 
                 <!-- Status Poller / Refresh Icon Persis image 2.png -->
                 <div class="pt-2 flex flex-col items-center justify-center space-y-1 text-xs text-slate-500 dark:text-slate-400">
-                    <i data-lucide="refresh-cw" class="w-4 h-4 animate-spin text-emerald-600"></i>
+                    <i data-lucide="refresh-cw" class="w-4 h-4 animate-spin text-[#fa2f79]"></i>
                     <span class="font-medium">Menunggu konfirmasi Midtrans...</span>
                 </div>
 
-                <!-- Copy String & Simulator Links -->
-                <div class="pt-2 flex items-center justify-center gap-2 flex-wrap">
-                    <button type="button" onclick="copyStep2QrisCode()" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95">
-                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin Kode QRIS
-                    </button>
-                    <a href="https://simulator.sandbox.midtrans.com/qris/index" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95">
-                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Simulator Midtrans &nearr;
-                    </a>
+                <!-- Copy URL & Simulator Links (Menghindari error unparsable) -->
+                <div class="pt-2 space-y-2 max-w-sm mx-auto">
+                    <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-left space-y-1.5 shadow-sm">
+                        <div class="flex items-center justify-between text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                            <span>URL QR untuk Simulator Midtrans:</span>
+                            <button type="button" onclick="copyStep2QrUrl()" class="text-[#fa2f79] hover:underline flex items-center gap-1 font-extrabold text-[10px]">
+                                <i data-lucide="copy" class="w-3 h-3"></i> Salin URL Simulator
+                            </button>
+                        </div>
+                        <input type="text" id="step2-qr-url-input" readonly value="{{ $pembayaran->qr_url ?? '' }}" 
+                               placeholder="https://api.sandbox.midtrans.com/v2/qris/.../qr-code"
+                               class="w-full px-2.5 py-1.5 text-[10px] font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-300 select-all focus:outline-none">
+                        <span class="text-[9px] text-slate-400 block leading-tight">
+                            * Paste URL ini di kolom "QR Code Image URL" pada simulator Midtrans agar terbaca sukses.
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-2 flex-wrap pt-1">
+                        <button type="button" onclick="copyStep2QrUrl()" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin URL Simulator
+                        </button>
+                        <a href="https://simulator.sandbox.midtrans.com/qris/index" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Buka Simulator Midtrans &nearr;
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Footnote Persis image 2.png -->
@@ -694,6 +731,7 @@
     const nominalAsli = {{ $biayaAwal }};
     let currentSelectedMethod = 'qris';
     let currentQrisString = "{{ $pembayaran->qr_string ?? '' }}";
+    let currentQrUrl = "{{ $pembayaran->qr_url ?? '' }}";
 
     function togglePromoList() {
         const drawer = document.getElementById('promo-list-drawer');
@@ -745,7 +783,7 @@
                 appliedVoucherCode = data.kode_voucher;
                 document.getElementById('hidden-tunai-voucher').value = appliedVoucherCode;
 
-                msg.className = "text-xs font-semibold text-emerald-600 dark:text-emerald-400";
+                msg.className = "text-xs font-semibold text-[#fa2f79] dark:text-pink-400";
                 msg.innerText = data.message;
 
                 // Update nominal di Ringkasan Tagihan & Modal
@@ -819,7 +857,8 @@
         // Reset styling for ALL cards
         document.querySelectorAll('.modal-method-card').forEach(card => {
             card.classList.remove(
-                'border-[#10b981]', 'border-emerald-500', 'border-amber-500', 'border-2',
+                'border-[#fa2f79]', 'border-pink-500', 'border-[#10b981]', 'border-emerald-500', 'border-amber-500', 'border-2',
+                'bg-pink-50/20', 'bg-pink-50/30', 'dark:bg-pink-950/20', 'dark:bg-pink-950/30',
                 'bg-emerald-50/20', 'bg-emerald-50/30', 'dark:bg-emerald-950/20', 'dark:bg-emerald-950/30',
                 'bg-amber-50/30', 'dark:bg-amber-950/20'
             );
@@ -832,7 +871,7 @@
             const card = activeRadio.closest('.modal-method-card');
             if (card) {
                 card.classList.remove('border-slate-200', 'dark:border-slate-700', 'border');
-                card.classList.add('border-[#10b981]', 'border-2', 'bg-emerald-50/20', 'dark:bg-emerald-950/20');
+                card.classList.add('border-[#fa2f79]', 'border-2', 'bg-pink-50/20', 'dark:bg-pink-950/20');
             }
         }
     }
@@ -882,6 +921,10 @@
                 }
 
                 currentQrisString = data.qr_string || '';
+                currentQrUrl = data.qr_code_url || '';
+                const urlInput = document.getElementById('step2-qr-url-input');
+                if (urlInput) urlInput.value = currentQrUrl;
+
                 const fmtTotal = "Rp " + new Intl.NumberFormat('id-ID').format(data.total_bayar);
 
                 document.getElementById('step2-total-text').innerText = fmtTotal;
@@ -900,8 +943,9 @@
 
                 if (window.lucide) lucide.createIcons();
 
-                // Mulai polling status settlement
+                // Mulai polling status settlement & countdown timer 1 menit
                 startPoller();
+                startCountdown(data.sisa_detik || 60);
 
             } catch (err) {
                 alert('Terjadi kendala saat meminta QRIS: ' + (err.message || err));
@@ -945,6 +989,8 @@
             }
 
             if (data.snap_token && window.snap) {
+                startCountdown(data.sisa_detik || 60);
+                startPoller();
                 window.snap.pay(data.snap_token, {
                     onSuccess: function(result) {
                         alert('Alhamdulillah! Pembayaran Anda berhasil diterima oleh Midtrans.');
@@ -974,6 +1020,82 @@
     }
 
     let statusPoller = null;
+    let countdownSeconds = {{ $sisaDetik ?? 0 }};
+    let countdownInterval = null;
+
+    function startCountdown(seconds) {
+        if (countdownInterval) clearInterval(countdownInterval);
+        countdownSeconds = typeof seconds === 'number' ? seconds : countdownSeconds;
+
+        function renderTime() {
+            if (countdownSeconds <= 0) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                updateCountdownUI("00:00");
+                handlePaymentTimeout();
+                return;
+            }
+
+            const m = Math.floor(countdownSeconds / 60);
+            const s = countdownSeconds % 60;
+            const text = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+            updateCountdownUI(text);
+            countdownSeconds--;
+        }
+
+        renderTime();
+        countdownInterval = setInterval(renderTime, 1000);
+    }
+
+    function updateCountdownUI(str) {
+        const mainEl = document.getElementById('main-countdown-display');
+        const modalEl = document.getElementById('modal-countdown-display');
+        if (mainEl) mainEl.innerText = str;
+        if (modalEl) modalEl.innerText = str;
+    }
+
+    async function handlePaymentTimeout() {
+        stopPoller();
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
+
+        const modalStep2 = document.getElementById('modal-step-2');
+        if (modalStep2 && !modalStep2.classList.contains('hidden')) {
+            modalStep2.innerHTML = `
+                <div class="p-8 sm:p-12 text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
+                    <div class="w-20 h-20 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 mx-auto flex items-center justify-center shadow-lg shadow-rose-500/20">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-xl font-black text-slate-900 dark:text-white">Waktu Pembayaran Habis!</h3>
+                        <p class="text-xs text-rose-600 dark:text-rose-400 font-semibold">Batas waktu 1 menit telah terlampaui. Tagihan otomatis dibatalkan.</p>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Memperbarui status pembayaran Anda...</p>
+                </div>
+            `;
+            if (window.lucide) lucide.createIcons();
+        }
+
+        try {
+            await fetch("{{ route('siswa.pembayaran.cek-status') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+        } catch (e) {}
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+    }
+
     function startPoller() {
         if (statusPoller) clearInterval(statusPoller);
         statusPoller = setInterval(async () => {
@@ -987,22 +1109,31 @@
                     }
                 });
                 const data = await res.json();
+
+                // Deteksi jika transaksi sudah kedaluwarsa atau dibatalkan
+                if (data.is_expired || data.status === 'expire' || data.status === 'cancel') {
+                    clearInterval(statusPoller);
+                    handlePaymentTimeout();
+                    return;
+                }
+
                 if (data.is_paid || data.status === 'settlement') {
                     clearInterval(statusPoller);
+                    if (countdownInterval) clearInterval(countdownInterval);
 
                     // Tampilkan transisi sukses langsung di modal jika sedang terbuka
                     const modalStep2 = document.getElementById('modal-step-2');
                     if (modalStep2 && !modalStep2.classList.contains('hidden')) {
                         modalStep2.innerHTML = `
                             <div class="p-8 sm:p-12 text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
-                                <div class="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center animate-bounce shadow-lg shadow-emerald-500/20">
+                                <div class="w-20 h-20 rounded-full bg-pink-100 dark:bg-pink-950 text-[#fa2f79] dark:text-pink-400 mx-auto flex items-center justify-center animate-bounce shadow-lg shadow-pink-500/20">
                                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
                                 <div class="space-y-1">
                                     <h3 class="text-xl font-black text-slate-900 dark:text-white">Pembayaran Berhasil!</h3>
-                                    <p class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Alhamdulillah, tagihan Anda telah terverifikasi LUNAS oleh Midtrans.</p>
+                                    <p class="text-xs text-[#fa2f79] dark:text-pink-400 font-semibold">Alhamdulillah, tagihan Anda telah terverifikasi LUNAS oleh Midtrans.</p>
                                 </div>
                                 <p class="text-[11px] text-slate-400">Memuat tampilan bukti pembayaran dan kwitansi resmi...</p>
                             </div>
@@ -1025,12 +1156,17 @@
         }
     }
 
-    function copyStep2QrisCode() {
-        if (!currentQrisString) {
-            alert('Kode pembayaran belum tersedia.');
+    function copyStep2QrUrl() {
+        const url = currentQrUrl || (document.getElementById('step2-qr-url-input') ? document.getElementById('step2-qr-url-input').value : '');
+        if (!url) {
+            alert('URL QR Code untuk Simulator belum tersedia.');
             return;
         }
-        copyText(currentQrisString, 'Kode QRIS resmi Midtrans berhasil disalin ke clipboard!\nSilakan buka Simulator Midtrans Sandbox untuk menguji pembayaran.');
+        copyText(url, 'URL QR Code Midtrans berhasil disalin ke clipboard!\nSilakan paste (Ctrl+V) di kolom input Simulator Midtrans.');
+    }
+
+    function copyStep2QrisCode() {
+        copyStep2QrUrl();
     }
 
     function copyText(text, successMsg) {
@@ -1073,9 +1209,14 @@
         }
     }
 
-    @if(!$isPaid && $trxStatus === 'pending')
-        // Otomatis jalankan background polling jika terdapat transaksi yang sedang menunggu pembayaran
+    @if(!$isPaid && $pembayaran && $trxStatus === 'pending' && $pembayaran->tipe_bayar === 'midtrans')
+        // Otomatis jalankan background polling dan countdown timer
         startPoller();
+        @if(($sisaDetik ?? 0) > 0)
+            startCountdown({{ $sisaDetik }});
+        @else
+            handlePaymentTimeout();
+        @endif
     @endif
 </script>
 @endpush

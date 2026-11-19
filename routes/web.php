@@ -16,8 +16,8 @@ use App\Http\Controllers\BackupDatabaseController;
 
 // 1. Landing Page & Public Widgets
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-Route::post('/cek-kelulusan', [LandingController::class, 'cekKelulusan'])->name('cek.kelulusan');
-Route::post('/check-voucher', [LandingController::class, 'checkVoucher'])->name('check.voucher');
+Route::post('/cek-kelulusan', [LandingController::class, 'cekKelulusan'])->name('cek.kelulusan')->middleware('throttle:30,1');
+Route::post('/check-voucher', [LandingController::class, 'checkVoucher'])->name('check.voucher')->middleware('throttle:30,1');
 
 // Webhook Midtrans (Exempt CSRF)
 Route::post('/api/midtrans/notification', [MidtransWebhookController::class, 'handle'])->name('midtrans.notification');
@@ -73,6 +73,7 @@ Route::middleware(['auth'])->prefix('siswa')->name('siswa.')->group(function () 
     // Daftar Ulang & Pengaturan Akun
     Route::get('/daftar-ulang', [SiswaDashboardController::class, 'daftarUlang'])->name('daftar_ulang');
     Route::post('/daftar-ulang/konfirmasi', [SiswaDashboardController::class, 'konfirmasiDaftarUlang'])->name('daftar_ulang.konfirmasi');
+    Route::post('/daftar-ulang/snap', [SiswaDashboardController::class, 'createSnapDaftarUlangPayment'])->name('daftar_ulang.snap');
     Route::post('/daftar-ulang/qris', [SiswaDashboardController::class, 'generateQrisDaftarUlang'])->name('daftar_ulang.qris');
     Route::post('/daftar-ulang/tunai', [SiswaDashboardController::class, 'prosesBayarDaftarUlangTunai'])->name('daftar_ulang.tunai');
     Route::post('/daftar-ulang/cek-status', [SiswaDashboardController::class, 'cekStatusDaftarUlangMidtrans'])->name('daftar_ulang.cek-status');
@@ -108,23 +109,12 @@ Route::middleware(['admin.role:tu'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/master/jurusan/{id}/toggle', [AdminTUController::class, 'toggleStatusJurusan'])->name('master.jurusan.toggle');
     Route::delete('/master/jurusan/{id}', [AdminTUController::class, 'hapusJurusan'])->name('master.jurusan.destroy');
     Route::post('/master/jurusan/{id}/hapus', [AdminTUController::class, 'hapusJurusan'])->name('master.jurusan.hapus');
-    Route::get('/master/gelombang', [AdminTUController::class, 'masterGelombang'])->name('master.gelombang');
-    Route::post('/master/gelombang', [AdminTUController::class, 'simpanGelombang'])->name('master.gelombang.simpan');
-    Route::get('/master/voucher', [AdminTUController::class, 'masterVoucher'])->name('master.voucher');
-    Route::post('/master/voucher', [AdminTUController::class, 'simpanVoucher'])->name('master.voucher.simpan');
-    Route::put('/master/voucher/{id}', [AdminTUController::class, 'updateVoucher'])->name('master.voucher.update');
-    Route::post('/master/voucher/{id}', [AdminTUController::class, 'updateVoucher'])->name('master.voucher.update.post');
-    Route::post('/master/voucher/{id}/toggle', [AdminTUController::class, 'toggleStatusVoucher'])->name('master.voucher.toggle');
     
     Route::get('/pengumuman', [AdminTUController::class, 'pengumuman'])->name('pengumuman');
     Route::post('/pengumuman', [AdminTUController::class, 'simpanPengumuman'])->name('pengumuman.simpan');
-    Route::post('/pengaturan/maintenance', [AdminTUController::class, 'toggleMaintenance'])->name('maintenance.toggle');
-    Route::get('/pengaturan', [AdminTUController::class, 'pengaturanSekolah'])->name('pengaturan');
-    Route::post('/pengaturan', [AdminTUController::class, 'simpanPengaturanSekolah'])->name('pengaturan.simpan');
-    Route::post('/pengaturan/biaya-pendaftaran', [AdminTUController::class, 'simpanBiayaPendaftaran'])->name('pengaturan.biaya_pendaftaran');
-    Route::post('/pengaturan/biaya-daftar-ulang', [AdminTUController::class, 'simpanBiayaDaftarUlang'])->name('pengaturan.biaya_daftar_ulang');
-    Route::post('/pengaturan/payment-gateway', [AdminTUController::class, 'simpanPaymentGateway'])->name('pengaturan.payment_gateway');
-    Route::post('/pengaturan/test-midtrans', [AdminTUController::class, 'testMidtransConnection'])->name('pengaturan.test_midtrans');
+    Route::put('/pengumuman/{id}', [AdminTUController::class, 'updatePengumuman'])->name('pengumuman.update');
+    Route::post('/pengumuman/{id}/toggle', [AdminTUController::class, 'togglePengumuman'])->name('pengumuman.toggle');
+    Route::delete('/pengumuman/{id}', [AdminTUController::class, 'hapusPengumuman'])->name('pengumuman.hapus');
     
     // Verifikasi Pembayaran Tunai di Loket TU
     Route::get('/verifikasi-pembayaran-tunai', [AdminTUController::class, 'verifikasiPembayaranTunai'])->name('pembayaran.tunai');
@@ -159,25 +149,57 @@ Route::middleware(['admin.role:tu'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/jadwal/{idJadwal}/ruang/{idRuang}/cetak', [JadwalSeleksiController::class, 'cetakDaftarPeserta'])->name('jadwal.cetak');
 });
 
-// 4b. Rute Ekspor Data & Rekap Laporan (Dapat diakses Petugas TU & Kepala Sekolah)
+// 4b. Rute Bersama (Ekspor, Pengaturan, Backup, Staf) - Akses Terkendali Sesuai Role
 Route::middleware(['admin.role:tu,kepala_sekolah'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/ekspor/excel', [AdminTUController::class, 'eksporExcel'])->name('ekspor.excel');
     Route::get('/ekspor/xlsx', [AdminTUController::class, 'eksporXlsx'])->name('ekspor.xlsx');
     Route::get('/ekspor/dapodik', [AdminTUController::class, 'eksporDapodik'])->name('ekspor.dapodik');
     Route::get('/laporan/rekap-pdf', [AdminTUController::class, 'cetakRekapPDF'])->name('laporan.rekap_pdf');
 
-    // Manajemen Akun Staf & Hak Akses (Section 4.B.13)
-    Route::get('/staf', [ManajemenStafController::class, 'index'])->name('staf.index');
-    Route::post('/staf', [ManajemenStafController::class, 'store'])->name('staf.store');
-    Route::put('/staf/{id}', [ManajemenStafController::class, 'update'])->name('staf.update');
-    Route::delete('/staf/{id}', [ManajemenStafController::class, 'destroy'])->name('staf.destroy');
+    // Pengaturan Sekolah (TU & Kepsek dapat melihat; pengubahan biaya/gateway khusus Kepsek)
+    Route::get('/master/gelombang', [AdminTUController::class, 'masterGelombang'])->name('master.gelombang');
+    Route::get('/pengaturan', [AdminTUController::class, 'pengaturanSekolah'])->name('pengaturan');
+    Route::post('/pengaturan', [AdminTUController::class, 'simpanPengaturanSekolah'])->name('pengaturan.simpan');
+    Route::post('/pengaturan/maintenance', [AdminTUController::class, 'toggleMaintenance'])->name('maintenance.toggle');
+    Route::post('/pengaturan/test-midtrans', [AdminTUController::class, 'testMidtransConnection'])->name('pengaturan.test_midtrans');
 
-    // Pencadangan & Pemulihan Basis Data (Section 4.D.10 & 11)
+    // Pengaturan Biaya & Gateway & Gelombang (Eksklusif Kepala Sekolah)
+    Route::middleware(['admin.role:kepala_sekolah'])->group(function () {
+        Route::post('/pengaturan/biaya-pendaftaran', [AdminTUController::class, 'simpanBiayaPendaftaran'])->name('pengaturan.biaya_pendaftaran');
+        Route::post('/pengaturan/biaya-daftar-ulang', [AdminTUController::class, 'simpanBiayaDaftarUlang'])->name('pengaturan.biaya_daftar_ulang');
+        Route::post('/pengaturan/payment-gateway', [AdminTUController::class, 'simpanPaymentGateway'])->name('pengaturan.payment_gateway');
+
+        // Manajemen Gelombang Pendaftaran (Eksklusif Kepala Sekolah)
+        Route::post('/master/gelombang', [AdminTUController::class, 'simpanGelombang'])->name('master.gelombang.simpan');
+        Route::put('/master/gelombang/{id}', [AdminTUController::class, 'updateGelombang'])->name('master.gelombang.update');
+        Route::post('/master/gelombang/{id}/toggle', [AdminTUController::class, 'toggleGelombang'])->name('master.gelombang.toggle');
+        Route::delete('/master/gelombang/{id}', [AdminTUController::class, 'hapusGelombang'])->name('master.gelombang.destroy');
+        Route::post('/master/gelombang/{id}/hapus', [AdminTUController::class, 'hapusGelombang'])->name('master.gelombang.hapus');
+    });
+
+    // Manajemen Voucher Beasiswa / Diskon (Dikelola di Pengaturan Kepala Sekolah)
+    Route::get('/master/voucher', [AdminTUController::class, 'masterVoucher'])->name('master.voucher');
+    Route::post('/master/voucher', [AdminTUController::class, 'simpanVoucher'])->name('master.voucher.simpan');
+    Route::put('/master/voucher/{id}', [AdminTUController::class, 'updateVoucher'])->name('master.voucher.update');
+    Route::post('/master/voucher/{id}', [AdminTUController::class, 'updateVoucher'])->name('master.voucher.update.post');
+    Route::post('/master/voucher/{id}/toggle', [AdminTUController::class, 'toggleStatusVoucher'])->name('master.voucher.toggle');
+
+    // Manajemen Akun Staf (Index dapat dilihat TU & Kepsek; Tambah & Hapus eksklusif Kepsek)
+    Route::get('/staf', [ManajemenStafController::class, 'index'])->name('staf.index');
+    Route::put('/staf/{id}', [ManajemenStafController::class, 'update'])->name('staf.update');
+    Route::middleware(['admin.role:kepala_sekolah'])->group(function () {
+        Route::post('/staf', [ManajemenStafController::class, 'store'])->name('staf.store');
+        Route::delete('/staf/{id}', [ManajemenStafController::class, 'destroy'])->name('staf.destroy');
+    });
+
+    // Pencadangan Basis Data (Index & Buat Backup bisa TU & Kepsek; Unduh, Pulihkan, Hapus eksklusif Kepsek)
     Route::get('/backup', [BackupDatabaseController::class, 'index'])->name('backup.index');
     Route::post('/backup', [BackupDatabaseController::class, 'createBackup'])->name('backup.create');
-    Route::get('/backup/download/{filename}', [BackupDatabaseController::class, 'download'])->name('backup.download');
-    Route::post('/backup/restore/{filename}', [BackupDatabaseController::class, 'restore'])->name('backup.restore');
-    Route::delete('/backup/{filename}', [BackupDatabaseController::class, 'destroy'])->name('backup.destroy');
+    Route::middleware(['admin.role:kepala_sekolah'])->group(function () {
+        Route::get('/backup/download/{filename}', [BackupDatabaseController::class, 'download'])->name('backup.download');
+        Route::post('/backup/restore/{filename}', [BackupDatabaseController::class, 'restore'])->name('backup.restore');
+        Route::delete('/backup/{filename}', [BackupDatabaseController::class, 'destroy'])->name('backup.destroy');
+    });
 });
 
 // 5. Kepala Sekolah Routes (Protected)

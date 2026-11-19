@@ -14,7 +14,7 @@
         </div>
         <div class="flex items-center gap-2">
             <a href="{{ route('admin.ruang.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
-                <i data-lucide="door-open" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+                <i data-lucide="door-open" class="w-4 h-4 text-[#fa2f79] dark:text-pink-400"></i>
                 <span>Kelola Ruang Seleksi</span>
             </a>
             <a href="{{ route('admin.jadwal.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white text-xs font-bold shadow-md shadow-pink-500/20 transition-colors">
@@ -32,11 +32,11 @@
                     <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Jadwal</span>
                     <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-0.5">{{ $totalJadwal }}</h3>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center">
                     <i data-lucide="calendar" class="w-5 h-5"></i>
                 </div>
             </div>
-            <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-2">{{ $jadwalAktif }} jadwal aktif</p>
+            <p class="text-[11px] text-[#fa2f79] dark:text-pink-400 font-medium mt-2">{{ $jadwalAktif }} jadwal aktif</p>
         </div>
 
         <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -84,11 +84,11 @@
         <form method="GET" action="{{ route('admin.jadwal.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
             <div class="sm:col-span-5">
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">Cari Jadwal</label>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Nama jadwal, jenis seleksi, lokasi..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Nama jadwal, jenis seleksi, lokasi..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
             </div>
             <div class="sm:col-span-3">
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">Status</label>
-                <select name="status" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select name="status" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                     <option value="">Semua Status</option>
                     <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
                     <option value="nonaktif" {{ request('status') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
@@ -96,10 +96,10 @@
             </div>
             <div class="sm:col-span-2">
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">Tanggal</label>
-                <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
             </div>
             <div class="sm:col-span-2 flex gap-2">
-                <button type="submit" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors">
+                <button type="submit" class="w-full py-2 px-3 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white text-xs font-bold shadow-sm shadow-pink-500/20 transition-colors">
                     Filter
                 </button>
                 @if(request()->hasAny(['q', 'status', 'tanggal']))
@@ -135,7 +135,7 @@
                     <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
                         <td class="py-3.5 px-4">
                             <span class="font-bold text-slate-800 dark:text-white block">{{ $j->nama_jadwal }}</span>
-                            <span class="inline-block mt-0.5 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
+                            <span class="inline-block mt-0.5 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-400 border border-pink-200/60 dark:border-pink-800/60">
                                 {{ $j->jenis_seleksi }}
                             </span>
                         </td>
@@ -157,7 +157,7 @@
                         </td>
                         <td class="py-3.5 px-4 text-center">
                             @if($j->status === 'aktif')
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-pink-100 dark:bg-pink-950/60 text-pink-700 dark:text-pink-300">
                                 Aktif
                             </span>
                             @else
@@ -168,7 +168,7 @@
                         </td>
                         <td class="py-3.5 px-4 text-right">
                             <div class="flex items-center justify-end gap-1.5">
-                                <a href="{{ route('admin.jadwal.penempatan', $j->id_jadwal) }}" title="Penempatan Peserta" class="px-2.5 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 text-[11px] font-bold transition-colors inline-flex items-center gap-1">
+                                <a href="{{ route('admin.jadwal.penempatan', $j->id_jadwal) }}" title="Penempatan Peserta" class="px-2.5 py-1.5 rounded-lg bg-pink-50 dark:bg-pink-950/50 text-[#fa2f79] dark:text-pink-400 hover:bg-pink-100 text-[11px] font-bold transition-colors inline-flex items-center gap-1 border border-pink-200/50 dark:border-pink-800/50">
                                     <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
                                     <span>Penempatan</span>
                                 </a>
@@ -190,7 +190,7 @@
                         <td colspan="6" class="py-8 text-center text-slate-400">
                             <i data-lucide="calendar-x" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
                             <p class="font-semibold text-xs">Belum ada jadwal seleksi yang ditambahkan.</p>
-                            <a href="{{ route('admin.jadwal.create') }}" class="inline-block mt-2 text-emerald-600 hover:underline text-xs font-bold">+ Tambah Jadwal Baru</a>
+                            <a href="{{ route('admin.jadwal.create') }}" class="inline-block mt-2 text-[#fa2f79] hover:underline text-xs font-bold">+ Tambah Jadwal Baru</a>
                         </td>
                     </tr>
                     @endforelse

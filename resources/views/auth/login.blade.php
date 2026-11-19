@@ -3,16 +3,28 @@
 @section('title', 'Masuk Akun - PPDB SMK IB Khalifah Bangsa')
 
 @section('content')
-<div class="py-8 md:py-14 flex items-center justify-center px-4 bg-slate-950 min-h-[calc(100vh-140px)]">
-    <div class="w-full max-w-md bg-[#161f30] rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl text-slate-200">
+<div class="relative min-h-[calc(100vh-140px)] flex items-center justify-center px-4 py-8 md:py-14 overflow-hidden">
+    <!-- Blurred Beranda Background Layer -->
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 filter blur-md transform"
+         style="background-image: url('{{ asset('images/hero-siswa-jurusan.jpg') }}');">
+    </div>
+
+    <!-- Overlay Gradient Dark (Menyatu dengan tema Navy Beranda & Menjaga Kontras Teks) -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[#060c1d]/90 via-[#0b1329]/80 to-[#060c1d]/95 backdrop-blur-sm"></div>
+
+    <!-- Ambient Glow Aksen Pink -->
+    <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#fa2f79]/15 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Login Card Container Glassmorphism -->
+    <div class="relative z-10 w-full max-w-md bg-[#161f30]/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl text-slate-200">
         
         <!-- Header -->
         <div class="text-center mb-6 space-y-1.5">
             <div class="flex justify-center mb-3">
-                <img src="{{ asset('images/logo-sekolah.png') }}" alt="Logo SMK IB Khalifah Bangsa" class="w-16 h-16 object-contain">
+                <img src="{{ asset('images/logo-sekolah.png') }}" alt="Logo SMK IB Khalifah Bangsa" class="w-16 h-16 object-contain drop-shadow-md">
             </div>
             <h2 class="text-2xl font-black text-white tracking-tight">Welcome Back!</h2>
-            <p class="text-xs text-slate-400">Silakan masukkan email dan kata sandi akun Anda</p>
+            <p class="text-xs text-slate-300">Silakan masukkan email dan kata sandi akun Anda</p>
         </div>
 
         <!-- Alert Session Status -->
@@ -42,13 +54,14 @@
         @endif
 
         <!-- Login Form -->
-        <form action="{{ route('login.post') }}" method="POST" class="space-y-4">
+        <form action="{{ route('login.post') }}" method="POST" class="space-y-4" autocomplete="off">
             @csrf
             <div>
                 <label for="login" class="block text-xs font-bold text-slate-300 mb-1.5">Alamat Email / NISN</label>
                 <div class="relative">
                     <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
                     <input type="text" id="login" name="login" required value="{{ old('login') }}" placeholder="admin@smkib.com atau 0078912345"
+                           autocomplete="off"
                            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0d1424] border border-slate-700/80 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#ff2e79] focus:ring-1 focus:ring-[#ff2e79] font-medium">
                 </div>
             </div>
@@ -61,6 +74,7 @@
                 <div class="relative">
                     <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
                     <input type="password" id="password" name="password" required placeholder="••••••••••••"
+                           autocomplete="new-password"
                            class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#0d1424] border border-slate-700/80 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#ff2e79] focus:ring-1 focus:ring-[#ff2e79] font-medium">
                     <button type="button" onclick="togglePassword('password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
                         <i data-lucide="eye" class="w-4 h-4"></i>
@@ -99,33 +113,58 @@
             </div>
         </div>
 
-        <!-- Quick Access / Shortcuts Grid (Demo & Pengujian Cepat) -->
+        @if(!empty($isLocal))
+        <!-- Quick Access / Shortcuts Grid (Khusus Pengujian di Localhost) -->
         <div class="space-y-2">
-            <div class="text-[11px] font-bold text-slate-400 text-center uppercase tracking-wider">
-                Akses Masuk Cepat (Pintasan Resmi)
+            <div class="text-[11px] font-bold text-amber-400/90 text-center uppercase tracking-wider flex items-center justify-center gap-1.5">
+                <i data-lucide="flask-conical" class="w-3.5 h-3.5 text-amber-400"></i>
+                Akses Masuk Cepat (Khusus Localhost Demo)
             </div>
 
             <div>
                 <!-- Calon Siswa (Buka Modal Pilihan Siswa) -->
-                <button type="button" onclick="openStudentModal()" class="w-full p-3 rounded-2xl bg-[#0f172a] border border-slate-700/70 hover:border-sky-500 hover:bg-[#131f36] transition-all text-left flex items-center justify-between gap-3 group">
+                <button type="button" onclick="openStudentModal()" class="w-full p-3 rounded-2xl bg-[#0f172a] border border-slate-700/70 hover:border-[#fa2f79]/50 hover:bg-[#131f36] transition-all text-left flex items-center justify-between gap-3 group">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-sky-950 border-2 border-sky-500 flex items-center justify-center text-sky-400 shrink-0 group-hover:scale-105 transition-transform">
+                        <div class="w-9 h-9 rounded-full bg-[#fa2f79]/15 border-2 border-[#fa2f79]/60 flex items-center justify-center text-[#fa2f79] shrink-0 group-hover:scale-105 transition-transform">
                             <i data-lucide="graduation-cap" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-white group-hover:text-sky-400 transition-colors">Calon Siswa</span>
-                            <span class="block text-[10px] text-slate-400">Pilih akun siswa aktif dari daftar untuk masuk instan</span>
+                            <span class="block text-xs font-bold text-white group-hover:text-[#fa2f79] transition-colors">Calon Siswa (Akses Cepat)</span>
+                            <span class="block text-[10px] text-slate-400">Pilih akun calon siswa terdaftar untuk masuk instan</span>
                         </div>
                     </div>
-                    <span class="px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-300 text-[10px] font-bold group-hover:bg-sky-500 group-hover:text-white transition-colors">
+                    <span class="px-2.5 py-1 rounded-lg bg-[#fa2f79]/20 text-[#fa2f79] text-[10px] font-bold group-hover:bg-[#fa2f79] group-hover:text-white transition-colors">
                         Pilih Akun &rarr;
                     </span>
                 </button>
             </div>
         </div>
+        @else
+        <!-- Panduan Masuk Resmi (Lingkungan Online Production) -->
+        <div class="p-3.5 rounded-2xl bg-[#0f172a] border border-slate-800 text-left space-y-2 shadow-sm">
+            <div class="flex items-center gap-2 text-sky-400">
+                <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+                <span class="text-xs font-bold text-white">Panduan Masuk Calon Siswa</span>
+            </div>
+            <ul class="text-[11px] text-slate-300 space-y-1.5 pl-1 leading-relaxed">
+                <li class="flex items-start gap-2">
+                    <span class="text-sky-400 font-bold">&bull;</span>
+                    <span>Masuk menggunakan <strong class="text-white">NISN (10 digit)</strong> atau <strong class="text-white">Email</strong> yang didaftarkan.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-sky-400 font-bold">&bull;</span>
+                    <span>Ketik kata sandi akun pendaftaran Anda dengan benar.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-sky-400 font-bold">&bull;</span>
+                    <span>Belum memiliki akun? Silakan klik tombol <strong class="text-sky-300">Daftar Sekarang</strong> di atas.</span>
+                </li>
+            </ul>
+        </div>
+        @endif
 
         <div class="mt-6 pt-4 border-t border-slate-800/80 text-center">
-            <a href="{{ route('admin.login') }}" class="text-xs text-slate-400 hover:text-emerald-400 transition-colors">
+            <a href="{{ route('admin.login') }}" class="text-xs text-slate-400 hover:text-[#fa2f79] transition-colors">
                 &larr; Masuk ke Portal Khusus Administrator & Kepala Sekolah
             </a>
         </div>
@@ -133,17 +172,18 @@
     </div>
 </div>
 
-<!-- Modal Pilihan Akun Siswa -->
+@if(!empty($isLocal))
+<!-- Modal Pilihan Akun Siswa (Hanya Localhost) -->
 <div id="studentModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-[#161f30] rounded-3xl max-w-md w-full border border-slate-800 shadow-2xl p-6 text-slate-200 space-y-4 animate-in fade-in zoom-in-95 duration-150">
         <div class="flex items-center justify-between pb-3 border-b border-slate-800">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center">
-                    <i data-lucide="users" class="w-4 h-4"></i>
+                <div class="w-8 h-8 rounded-xl bg-[#fa2f79]/15 text-[#fa2f79] flex items-center justify-center">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-white">Pilih Akun Calon Siswa</h3>
-                    <p class="text-[11px] text-slate-400">Pilih salah satu siswa untuk langsung masuk ke dashboard</p>
+                    <h3 class="text-sm font-bold text-white">Akun Calon Siswa (Pintasan Masuk)</h3>
+                    <p class="text-[11px] text-slate-400">Pilih akun calon siswa terdaftar untuk masuk cepat di localhost</p>
                 </div>
             </div>
             <button type="button" onclick="closeStudentModal()" class="text-slate-400 hover:text-white">
@@ -157,26 +197,28 @@
                 @csrf
                 <input type="hidden" name="role" value="siswa">
                 <input type="hidden" name="user_id" value="{{ $st->id_user }}">
-                <button type="submit" class="w-full p-3 rounded-2xl bg-[#0d1424] hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/50 transition-all text-left flex items-center justify-between group">
+                <button type="submit" class="w-full p-3 rounded-2xl bg-[#0d1424] hover:bg-slate-800/80 border border-slate-800 hover:border-[#fa2f79]/50 transition-all text-left flex items-center justify-between group">
                     <div class="flex items-center gap-3 truncate">
-                        <div class="w-9 h-9 rounded-xl bg-slate-800 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <div class="w-9 h-9 rounded-xl bg-[#fa2f79]/15 text-[#fa2f79] flex items-center justify-center font-bold text-xs shrink-0 group-hover:bg-[#fa2f79] group-hover:text-white transition-colors">
                             {{ strtoupper(substr($st->nama, 0, 1)) }}
                         </div>
                         <div class="truncate">
                             <span class="block text-xs font-bold text-white truncate">{{ $st->nama }}</span>
-                            <span class="block text-[10px] text-slate-400 font-mono">NISN: {{ $st->nisn ?? '-' }} &bull; {{ $st->email }}</span>
-                            @if($st->pendaftar && $st->pendaftar->jurusan1)
-                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-sky-300 font-semibold">{{ $st->pendaftar->jurusan1->nama_jurusan }}</span>
+                            <span class="block text-[10px] text-slate-400 font-mono">NISN: {{ $st->nisn ? substr($st->nisn, 0, 4) . '******' : '-' }} &bull; {{ $st->email ? \Illuminate\Support\Str::mask($st->email, '*', 3, max(1, (strpos($st->email, '@') ?: 3) - 3)) : '-' }}</span>
+                            @if(!empty($st->nama_jurusan))
+                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-pink-300 font-semibold">{{ $st->nama_jurusan }}</span>
+                            @elseif(isset($st->pendaftar) && $st->pendaftar && $st->pendaftar->jurusan1)
+                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-pink-300 font-semibold">{{ $st->pendaftar->jurusan1->nama_jurusan }}</span>
                             @endif
                         </div>
                     </div>
-                    <span class="text-xs text-emerald-400 font-bold group-hover:translate-x-1 transition-transform shrink-0 ml-2">
+                    <span class="text-xs text-[#fa2f79] font-bold group-hover:translate-x-1 transition-transform shrink-0 ml-2">
                         Masuk &rarr;
                     </span>
                 </button>
             </form>
             @empty
-            <p class="text-xs text-slate-400 text-center py-4">Belum ada akun calon siswa terdaftar.</p>
+            <p class="text-xs text-slate-400 text-center py-4">Belum ada akun calon siswa yang terdaftar.</p>
             @endforelse
         </div>
 
@@ -187,6 +229,7 @@
         </div>
     </div>
 </div>
+@endif
 @endsection
 
 @push('scripts')

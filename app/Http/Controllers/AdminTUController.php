@@ -100,25 +100,91 @@ class AdminTUController extends Controller
     public function verifikasiBerkas(Request $request, $id)
     {
         $request->validate([
-            'status_verifikasi' => 'required|in:Terverifikasi,Ditolak,Menunggu',
+            'status_verifikasi' => 'nullable|in:Terverifikasi,Ditolak,Menunggu',
             'catatan_verifikasi' => 'nullable|string',
+            'berkas' => 'nullable|array',
+            'berkas.*.status_berkas' => 'nullable|in:Valid,Terverifikasi,Tidak Valid,Perlu Perbaikan,Menunggu',
+            'berkas.*.catatan' => 'nullable|string',
         ]);
 
         $pendaftar = Pendaftar::findOrFail($id);
         $oldStatus = $pendaftar->status_verifikasi;
-        
+
+        // 1. Simpan status berkas masing-masing dokumen jika dikirim dari form
+        $hasRevisi = false;
+        $revisiList = [];
+
+        if ($request->has('berkas') && is_array($request->berkas)) {
+            foreach ($request->berkas as $idBerkas => $bData) {
+                $item = BerkasPendaftar::where('id_berkas', $idBerkas)
+                    ->where('id_pendaftar', $pendaftar->id_pendaftar)
+                    ->first();
+                if ($item) {
+                    $statusInput = $bData['status_berkas'] ?? $item->status_berkas;
+                    if ($statusInput === 'Terverifikasi') {
+                        $statusInput = 'Valid';
+                    }
+
+                    $dataUpdate = ['status_berkas' => $statusInput];
+                    if (isset($bData['catatan'])) {
+                        $catatanItem = trim($bData['catatan']);
+                        $dataUpdate['catatan'] = $catatanItem ?: null;
+                    }
+
+                    $item->update($dataUpdate);
+
+                    if (in_array($statusInput, ['Tidak Valid', 'Perlu Perbaikan'])) {
+                        $hasRevisi = true;
+                        $revisiList[] = strtoupper($item->jenis_berkas);
+                    }
+                }
+            }
+        }
+
+        // 2. Tentukan status verifikasi akhir pendaftar otomatis
+        $pendaftar->load('berkas');
+
+        if ($hasRevisi) {
+            $statusFinal = 'Ditolak';
+        } else {
+            // Cek apakah 4 dokumen wajib sudah lengkap dan valid
+            $wajibKeys = ['ijazah', 'pasfoto', 'kk', 'akta'];
+            $allWajibValid = true;
+            foreach ($wajibKeys as $wk) {
+                $bWajib = $pendaftar->berkas->where('jenis_berkas', $wk)->first();
+                if (!$bWajib || !in_array($bWajib->status_berkas, ['Valid', 'Terverifikasi'])) {
+                    $allWajibValid = false;
+                    break;
+                }
+            }
+            $statusFinal = $allWajibValid ? 'Terverifikasi' : 'Menunggu';
+        }
+
+        // Jika request eksplisit mengirim status_verifikasi (backward compatibility / API)
+        if ($request->filled('status_verifikasi')) {
+            $statusFinal = $hasRevisi ? 'Ditolak' : $request->status_verifikasi;
+        }
+
+        $catatanFinal = $request->catatan_verifikasi;
+        if ($statusFinal === 'Ditolak' && empty($catatanFinal) && !empty($revisiList)) {
+            $catatanFinal = 'Terdapat dokumen yang perlu diperbaiki: ' . implode(', ', $revisiList) . '. Silakan unggah kembali dokumen perbaikan.';
+        }
+
         $pendaftar->update([
-            'status_verifikasi' => $request->status_verifikasi,
-            'catatan_verifikasi' => $request->catatan_verifikasi,
+            'status_verifikasi' => $statusFinal,
+            'catatan_verifikasi' => $catatanFinal,
         ]);
+
+        $admin = auth('admin')->user();
+        $namaAdmin = $admin ? $admin->nama_admin : 'Petugas TU';
 
         LogAktivitas::log(
             'VERIFIKASI',
-            "Admin TU mengubah status verifikasi {$pendaftar->nama} dari {$oldStatus} menjadi {$request->status_verifikasi}",
+            "{$namaAdmin} memperbarui status verifikasi berkas {$pendaftar->nama} menjadi {$statusFinal}",
             'pendaftar',
             $pendaftar->id_pendaftar,
             ['status' => $oldStatus],
-            ['status' => $request->status_verifikasi, 'catatan' => $request->catatan_verifikasi]
+            ['status' => $statusFinal, 'catatan' => $catatanFinal]
         );
 
         return back()->with('success', 'Status verifikasi berkas pendaftar berhasil diperbarui.');
@@ -465,6 +531,9 @@ class AdminTUController extends Controller
 
     public function masterGelombang()
     {
+        if (auth('admin')->check() && auth('admin')->user()->role === 'kepala_sekolah') {
+            return redirect()->route('admin.pengaturan', ['tab' => 'gelombang']);
+        }
         $gelombang = Gelombang::withCount('pendaftar')->get();
         return view('admin.master.gelombang', compact('gelombang'));
     }
@@ -481,7 +550,48 @@ class AdminTUController extends Controller
         ]);
 
         Gelombang::create($validated);
-        return back()->with('success', 'Gelombang pendaftaran baru berhasil ditambahkan.');
+        return redirect()->route('admin.pengaturan', ['tab' => 'gelombang'])->with('success', 'Gelombang pendaftaran baru berhasil ditambahkan.');
+    }
+
+    public function updateGelombang(Request $request, $id)
+    {
+        $gelombang = Gelombang::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama_gelombang'   => 'required|string|max:100',
+            'tahun_ajaran'     => 'required|string|max:20',
+            'tgl_buka'         => 'required|date',
+            'tgl_tutup'        => 'required|date|after_or_equal:tgl_buka',
+            'biaya_pendaftaran'=> 'required|numeric|min:0',
+            'status_aktif'     => 'required|boolean',
+        ]);
+
+        $gelombang->update($validated);
+        LogAktivitas::log('UPDATE', 'Admin mengubah data gelombang: ' . $gelombang->nama_gelombang, 'gelombang', null, null, null, 'SUCCESS');
+        return redirect()->route('admin.pengaturan', ['tab' => 'gelombang'])->with('success', 'Data gelombang "' . $gelombang->nama_gelombang . '" berhasil diperbarui.');
+    }
+
+    public function toggleGelombang($id)
+    {
+        $gelombang = Gelombang::findOrFail($id);
+        $gelombang->update(['status_aktif' => !$gelombang->status_aktif]);
+        $status = $gelombang->status_aktif ? 'AKTIF' : 'NONAKTIF';
+        LogAktivitas::log('UPDATE', "Admin mengubah status gelombang '{$gelombang->nama_gelombang}' menjadi {$status}", 'gelombang', null, null, null, 'SUCCESS');
+        return redirect()->route('admin.pengaturan', ['tab' => 'gelombang'])->with('success', "Status gelombang \"{$gelombang->nama_gelombang}\" berhasil diubah menjadi {$status}.");
+    }
+
+    public function hapusGelombang($id)
+    {
+        $gelombang = Gelombang::withCount('pendaftar')->findOrFail($id);
+
+        if ($gelombang->pendaftar_count > 0) {
+            return redirect()->route('admin.pengaturan', ['tab' => 'gelombang'])->with('error', "Gelombang \"{$gelombang->nama_gelombang}\" tidak dapat dihapus karena masih memiliki {$gelombang->pendaftar_count} data pendaftar.");
+        }
+
+        $nama = $gelombang->nama_gelombang;
+        $gelombang->delete();
+        LogAktivitas::log('DELETE', "Admin menghapus gelombang: {$nama}", 'gelombang', null, null, null, 'SUCCESS');
+        return redirect()->route('admin.pengaturan', ['tab' => 'gelombang'])->with('success', "Gelombang \"{$nama}\" berhasil dihapus.");
     }
 
     public function masterVoucher(Request $request)
@@ -573,9 +683,7 @@ class AdminTUController extends Controller
 
     public function pengumuman()
     {
-        $pengumuman = Pengumuman::orderBy('id_pengumuman', 'desc')->get();
-        $pengaturan = PengaturanSekolah::getPengaturan();
-        return view('admin.pengumuman.index', compact('pengumuman', 'pengaturan'));
+        return redirect()->route('admin.pengaturan', ['tab' => 'pengumuman']);
     }
 
     public function simpanPengumuman(Request $request)
@@ -596,7 +704,48 @@ class AdminTUController extends Controller
             'status_aktif' => $request->has('status_aktif'),
         ]));
 
-        return back()->with('success', 'Pengumuman berhasil dipublikasikan.');
+        return redirect()->route('admin.pengaturan', ['tab' => 'pengumuman'])->with('success', 'Pengumuman berhasil dipublikasikan.');
+    }
+
+    public function updatePengumuman(Request $request, $id)
+    {
+        $pengumuman = Pengumuman::findOrFail($id);
+
+        $validated = $request->validate([
+            'judul'           => 'required|string|max:150',
+            'isi_pengumuman'  => 'required|string',
+            'tipe'            => 'required|in:info,peringatan,penting,maintenance',
+            'tgl_mulai'       => 'required|date',
+            'tgl_selesai'     => 'required|date',
+            'tampil_di_banner'=> 'nullable|boolean',
+            'status_aktif'    => 'nullable|boolean',
+        ]);
+
+        $pengumuman->update(array_merge($validated, [
+            'tampil_di_banner' => $request->has('tampil_di_banner'),
+            'status_aktif'     => $request->has('status_aktif'),
+        ]));
+
+        LogAktivitas::log('UPDATE', 'Admin memperbarui pengumuman: ' . $pengumuman->judul, 'pengumuman', $pengumuman->id_pengumuman);
+        return redirect()->route('admin.pengaturan', ['tab' => 'pengumuman'])->with('success', 'Pengumuman "' . $pengumuman->judul . '" berhasil diperbarui.');
+    }
+
+    public function togglePengumuman($id)
+    {
+        $pengumuman = Pengumuman::findOrFail($id);
+        $pengumuman->update(['status_aktif' => !$pengumuman->status_aktif]);
+        $status = $pengumuman->status_aktif ? 'diaktifkan' : 'dinonaktifkan';
+        LogAktivitas::log('UPDATE', "Admin {$status} pengumuman: {$pengumuman->judul}", 'pengumuman', $pengumuman->id_pengumuman);
+        return redirect()->route('admin.pengaturan', ['tab' => 'pengumuman'])->with('success', "Pengumuman \"{$pengumuman->judul}\" berhasil {$status}.");
+    }
+
+    public function hapusPengumuman($id)
+    {
+        $pengumuman = Pengumuman::findOrFail($id);
+        $judul = $pengumuman->judul;
+        $pengumuman->delete();
+        LogAktivitas::log('DELETE', 'Admin menghapus pengumuman: ' . $judul, 'pengumuman', $id);
+        return redirect()->route('admin.pengaturan', ['tab' => 'pengumuman'])->with('success', "Pengumuman \"{$judul}\" berhasil dihapus.");
     }
 
     public function toggleMaintenance(Request $request)
@@ -608,13 +757,13 @@ class AdminTUController extends Controller
         $statusText = $newStatus ? 'DIAKTIFKAN (Pengunjung diarahkan ke halaman pemeliharaan)' : 'DINONAKTIFKAN (Website normal)';
         LogAktivitas::log('UPDATE', "Admin mengubah status Mode Maintenance: {$statusText}");
 
-        return back()->with('success', "Mode Pemeliharaan berhasil {$statusText}.");
+        return redirect()->route('admin.pengaturan', ['tab' => 'pengumuman'])->with('success', "Mode Pemeliharaan berhasil {$statusText}.");
     }
 
     public function pengaturanSekolah()
     {
         $pengaturan = PengaturanSekolah::getPengaturan();
-        $gelombangs = Gelombang::orderBy('id_gelombang')->get();
+        $gelombangs = Gelombang::withCount('pendaftar')->orderBy('id_gelombang')->get();
         $vouchers = VoucherPendaftaran::orderBy('id_voucher', 'desc')->get();
         $voucherStats = [
             'total'          => $vouchers->count(),
@@ -622,7 +771,8 @@ class AdminTUController extends Controller
             'terpakai'       => $vouchers->sum('kuota_terpakai'),
             'total_potongan' => Pembayaran::where('status_transaksi', 'settlement')->sum('potongan'),
         ];
-        return view('admin.pengaturan.index', compact('pengaturan', 'gelombangs', 'vouchers', 'voucherStats'));
+        $pengumuman = Pengumuman::orderBy('id_pengumuman', 'desc')->get();
+        return view('admin.pengaturan.index', compact('pengaturan', 'gelombangs', 'vouchers', 'voucherStats', 'pengumuman'));
     }
 
     public function simpanPengaturanSekolah(Request $request)
@@ -640,12 +790,7 @@ class AdminTUController extends Controller
             'website' => 'required|string|max:100',
             'nama_kepsek' => 'required|string|max:100',
             'nip_kepsek' => 'nullable|string|max:50',
-            'midtrans_server_key' => 'nullable|string|max:255',
-            'midtrans_client_key' => 'nullable|string|max:255',
-            'midtrans_is_production' => 'nullable|boolean',
         ]);
-
-        $validated['midtrans_is_production'] = $request->has('midtrans_is_production');
 
         $pengaturan->update($validated);
         return back()->with('success', 'Pengaturan profil sekolah berhasil diperbarui.');
@@ -656,6 +801,11 @@ class AdminTUController extends Controller
      */
     public function simpanBiayaPendaftaran(Request $request)
     {
+        $admin = auth('admin')->user();
+        if (!$admin || $admin->role !== 'kepala_sekolah') {
+            abort(403, 'Akses ditolak. Pengubahan kebijakan biaya pendaftaran hanya dapat dilakukan oleh Kepala Sekolah.');
+        }
+
         $validated = $request->validate([
             'gelombang' => 'required|array',
             'gelombang.*.biaya_pendaftaran' => 'required|numeric|min:0',
@@ -670,23 +820,28 @@ class AdminTUController extends Controller
             }
         }
 
-        $admin = auth('admin')->user();
         LogAktivitas::log(
             'UPDATE',
-            'Petugas TU (' . ($admin ? $admin->nama_admin : 'Admin') . ') memperbarui pengaturan Biaya Pendaftaran Formulir',
+            'Kepala Sekolah (' . $admin->nama_admin . ') memperbarui pengaturan Biaya Pendaftaran Formulir',
             'gelombang',
             1
         );
 
         return redirect()->route('admin.pengaturan', ['tab' => 'biaya_pendaftaran'])
-            ->with('success', 'Pengaturan Biaya Formulir Pendaftaran berhasil diperbarui.');
+            ->with('success', 'Pengaturan Biaya Formulir Pendaftaran berhasil diperbarui oleh Kepala Sekolah.');
     }
 
     /**
      * Simpan pengaturan Tab Biaya Daftar Ulang (Siswa Diterima).
+     * Otorisasi khusus: Hanya Kepala Sekolah.
      */
     public function simpanBiayaDaftarUlang(Request $request)
     {
+        $admin = auth('admin')->user();
+        if (!$admin || $admin->role !== 'kepala_sekolah') {
+            abort(403, 'Akses ditolak. Pengubahan kebijakan biaya daftar ulang hanya dapat dilakukan oleh Kepala Sekolah.');
+        }
+
         $pengaturan = PengaturanSekolah::getPengaturan();
 
         $validated = $request->validate([
@@ -697,16 +852,15 @@ class AdminTUController extends Controller
 
         $pengaturan->update($validated);
 
-        $admin = auth('admin')->user();
         LogAktivitas::log(
             'UPDATE',
-            'Petugas TU (' . ($admin ? $admin->nama_admin : 'Admin') . ') memperbarui pengaturan Biaya Daftar Ulang',
+            'Kepala Sekolah (' . $admin->nama_admin . ') memperbarui pengaturan Biaya Daftar Ulang',
             'pengaturan_sekolah',
             $pengaturan->id_pengaturan
         );
 
         return redirect()->route('admin.pengaturan', ['tab' => 'biaya_daftar_ulang'])
-            ->with('success', 'Pengaturan Biaya Daftar Ulang berhasil disimpan.');
+            ->with('success', 'Pengaturan Biaya Daftar Ulang berhasil disimpan oleh Kepala Sekolah.');
     }
 
     /**
@@ -714,6 +868,11 @@ class AdminTUController extends Controller
      */
     public function simpanPaymentGateway(Request $request)
     {
+        $admin = auth('admin')->user();
+        if (!$admin || $admin->role !== 'kepala_sekolah') {
+            abort(403, 'Akses ditolak. Pengubahan konfigurasi Payment Gateway hanya dapat dilakukan oleh Kepala Sekolah.');
+        }
+
         $pengaturan = PengaturanSekolah::getPengaturan();
 
         $validated = $request->validate([
@@ -739,10 +898,9 @@ class AdminTUController extends Controller
 
         $pengaturan->update($data);
 
-        $admin = auth('admin')->user();
         LogAktivitas::log(
             'UPDATE',
-            'Petugas TU (' . ($admin ? $admin->nama_admin : 'Admin') . ') memperbarui konfigurasi Payment Gateway (Midtrans)',
+            'Kepala Sekolah (' . $admin->nama_admin . ') memperbarui konfigurasi Payment Gateway (Midtrans)',
             'pengaturan_sekolah',
             $pengaturan->id_pengaturan,
             null,

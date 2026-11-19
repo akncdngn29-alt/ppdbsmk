@@ -8,12 +8,12 @@
 
     <!-- Flash Messages -->
     @if(session('success'))
-    <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center justify-between">
+    <div class="p-4 rounded-2xl bg-pink-50 dark:bg-pink-950/60 border border-pink-200 dark:border-pink-800 text-pink-800 dark:text-pink-200 text-xs font-semibold flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-[#fa2f79]"></i>
             <span>{{ session('success') }}</span>
         </div>
-        <button type="button" onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-800">&times;</button>
+        <button type="button" onclick="this.parentElement.remove()" class="text-[#fa2f79] hover:text-pink-800">&times;</button>
     </div>
     @endif
 
@@ -31,7 +31,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-pink-100 dark:bg-pink-950/60 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center shrink-0">
                     <i data-lucide="banknote" class="w-6 h-6"></i>
                 </div>
                 <div>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-                <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1.5">
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-pink-50 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 border border-pink-200 dark:border-pink-800 flex items-center gap-1.5">
                     <i data-lucide="user-check" class="w-4 h-4"></i> Kasir: {{ auth('admin')->user()->nama_admin ?? 'Petugas TU' }}
                 </span>
             </div>
@@ -55,7 +55,7 @@
             <div class="relative flex-1 w-full">
                 <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
                 <input type="text" name="q" value="{{ $search }}" placeholder="Cari berdasarkan Nama Siswa, NISN (10 digit), atau No. Pendaftaran..."
-                       class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                       class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
             </div>
             <button type="submit" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-pink-500/20 transition-colors">
                 <i data-lucide="filter" class="w-4 h-4"></i> Cari Siswa
@@ -118,7 +118,7 @@
                             {{ $gel ? $gel->nama_gelombang : 'Gelombang 1' }}
                         </td>
                         <td class="px-4 py-3.5">
-                            <strong class="block font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                            <strong class="block font-mono text-[#fa2f79] dark:text-pink-400 font-bold">
                                 Rp {{ number_format($totalTagihan, 0, ',', '.') }}
                             </strong>
                             @if($pot > 0)
@@ -171,7 +171,7 @@
         <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-wrap gap-2">
             <div>
                 <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <i data-lucide="badge-check" class="w-4 h-4 text-emerald-500"></i> Antrean Verifikasi Tunai Daftar Ulang (Siswa Diterima)
+                    <i data-lucide="badge-check" class="w-4 h-4 text-[#fa2f79]"></i> Antrean Verifikasi Tunai Daftar Ulang (Siswa Diterima)
                 </h3>
                 <span class="text-[11px] text-slate-400">Total ditemukan: {{ count($antreanDaftarUlang ?? []) }} siswa diterima belum menyelesaikan daftar ulang</span>
             </div>
@@ -203,7 +203,7 @@
                         <td class="px-4 py-3.5 font-mono font-bold text-slate-800 dark:text-slate-200">
                             {{ $du->no_pendaftaran }}
                         </td>
-                        <td class="px-4 py-3.5 font-semibold text-emerald-600 dark:text-emerald-400">
+                        <td class="px-4 py-3.5 font-semibold text-[#fa2f79] dark:text-pink-400">
                             {{ $du->jurusan1 ? $du->jurusan1->nama_jurusan : '-' }}
                         </td>
                         <td class="px-4 py-3.5 font-mono font-bold text-slate-900 dark:text-white">
@@ -226,7 +226,7 @@
                         </td>
                         <td class="px-5 py-3.5 text-center">
                             <form action="{{ route('admin.pembayaran.daftar_ulang.konfirmasi', $du->id_pendaftar) }}" method="POST"
-                                  onsubmit="return confirm('Konfirmasi penerimaan pembayaran tunai daftar ulang sebesar Rp {{ number_format($nominalDu, 0, \',\', \'.\') }} untuk siswa {{ $du->nama }}?');">
+                                  onsubmit="return confirm('Konfirmasi penerimaan pembayaran tunai daftar ulang sebesar Rp {{ number_format($nominalDu, 0, ',', '.') }} untuk siswa {{ $du->nama }}?');">
                                 @csrf
                                 <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs shadow-sm shadow-pink-500/20 hover:shadow transition-all">
                                     <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
@@ -252,7 +252,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <i data-lucide="receipt" class="w-4 h-4 text-emerald-500"></i> Riwayat Pembayaran Tunai Dikonfirmasi Lunas
+                <i data-lucide="receipt" class="w-4 h-4 text-[#fa2f79]"></i> Riwayat Pembayaran Tunai Dikonfirmasi Lunas
             </h3>
             <span class="text-[11px] text-slate-400">20 Transaksi Kasir Terakhir</span>
         </div>
@@ -285,15 +285,15 @@
                         </td>
                         <td class="px-4 py-3">
                             <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 dark:text-slate-200">
-                                <i data-lucide="user" class="w-3.5 h-3.5 text-emerald-500"></i>
+                                <i data-lucide="user" class="w-3.5 h-3.5 text-[#fa2f79]"></i>
                                 {{ $r->adminVerifikator ? $r->adminVerifikator->nama_admin : 'Petugas TU' }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                        <td class="px-4 py-3 font-mono font-bold text-[#fa2f79] dark:text-pink-400">
                             Rp {{ number_format($r->total_bayar, 0, ',', '.') }}
                         </td>
                         <td class="px-4 py-3">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 inline-flex items-center gap-1">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300 inline-flex items-center gap-1">
                                 <i data-lucide="check-circle-2" class="w-3 h-3"></i> LUNAS (Tunai)
                             </span>
                         </td>

@@ -88,10 +88,11 @@ class ImportPendaftarController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'berkas' => 'required|file|max:5120', // Maksimal 5MB
+            'berkas' => 'required|file|mimes:csv,txt,xlsx|max:5120', // Maksimal 5MB
             'id_gelombang' => 'required|exists:gelombang,id_gelombang',
         ], [
             'berkas.required' => 'Silakan pilih berkas CSV atau Excel yang akan diunggah.',
+            'berkas.mimes' => 'Format berkas harus berupa .csv atau .xlsx.',
             'berkas.max' => 'Ukuran berkas tidak boleh melebihi 5 MB.',
             'id_gelombang.required' => 'Pilih gelombang pendaftaran tujuan.',
         ]);

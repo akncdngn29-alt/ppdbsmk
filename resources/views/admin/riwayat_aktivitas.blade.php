@@ -9,7 +9,7 @@
     <!-- Header Banner -->
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <div class="w-12 h-12 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-400 flex items-center justify-center shrink-0">
                 <i data-lucide="history" class="w-6 h-6"></i>
             </div>
             <div>
@@ -44,7 +44,7 @@
         </div>
 
         <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-400 flex items-center justify-center shrink-0">
                 <i data-lucide="user-cog" class="w-5 h-5"></i>
             </div>
             <div>
@@ -94,14 +94,14 @@
                 <div class="relative">
                     <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Nama siswa, no pendaftaran, aksi..." 
-                           class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                           class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-pink-400">
                 </div>
             </div>
 
             <!-- Filter Jenis Aksi -->
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">Jenis Aktivitas</label>
-                <select name="aksi" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select name="aksi" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-pink-400">
                     <option value="">Semua Jenis</option>
                     @foreach($daftarAksi as $itemAksi)
                         <option value="{{ $itemAksi }}" {{ request('aksi') === $itemAksi ? 'selected' : '' }}>
@@ -114,7 +114,7 @@
             <!-- Filter Status -->
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">Status</label>
-                <select name="status" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select name="status" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-pink-400">
                     <option value="">Semua Status</option>
                     <option value="SUCCESS" {{ request('status') === 'SUCCESS' ? 'selected' : '' }}>Sukses (SUCCESS)</option>
                     <option value="FAILED" {{ request('status') === 'FAILED' ? 'selected' : '' }}>Gagal (FAILED)</option>
@@ -125,7 +125,7 @@
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">Tgl Mulai</label>
                 <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" 
-                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-pink-400">
             </div>
 
             <!-- Tanggal Akhir & Tombol Submit -->
@@ -133,7 +133,7 @@
                 <div class="flex-1">
                     <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">Tgl Akhir</label>
                     <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" 
-                           class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                           class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-pink-400">
                 </div>
                 <button type="submit" class="px-4 py-2 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs transition-colors shadow-sm shadow-pink-500/20" title="Terapkan Filter">
                     <i data-lucide="filter" class="w-4 h-4"></i>
@@ -152,7 +152,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="list-checks" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="list-checks" class="w-4 h-4 text-[#fa2f79]"></i>
                 Daftar Peristiwa & Catatan Log
             </h3>
             <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Total: {{ $logs->total() }} catatan</span>
@@ -190,10 +190,10 @@
                             <td class="py-3.5 px-4">
                                 @if($log->admin)
                                     <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 truncate">
-                                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+                                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-[#fa2f79] shrink-0"></i>
                                         <span class="truncate">{{ $log->admin->nama_admin }}</span>
                                     </div>
-                                    <span class="inline-block mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase {{ $log->admin->role === 'kepala_sekolah' ? 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' }}">
+                                    <span class="inline-block mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase {{ $log->admin->role === 'kepala_sekolah' ? 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300' : 'bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-300' }}">
                                         {{ $log->admin->role === 'kepala_sekolah' ? 'Kepala Sekolah' : 'Petugas TU' }}
                                     </span>
                                 @elseif($log->user)
@@ -235,7 +235,7 @@
                                     if(str_contains($aksi, 'LOGIN_GAGAL')) {
                                         $badgeClass = 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 font-bold';
                                     } elseif(str_contains($aksi, 'VERIFIKASI') || str_contains($aksi, 'PENGESAHAN')) {
-                                        $badgeClass = 'bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300 font-bold';
+                                        $badgeClass = 'bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300 font-bold';
                                     } elseif(str_contains($aksi, 'UNLOCK')) {
                                         $badgeClass = 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 font-black';
                                     } elseif(str_contains($aksi, 'LOGIN') || str_contains($aksi, 'LOGOUT')) {
@@ -270,7 +270,7 @@
                                         <i data-lucide="alert-circle" class="w-3 h-3"></i> Gagal
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-300">
                                         <i data-lucide="check-circle" class="w-3 h-3"></i> Sukses
                                     </span>
                                 @endif
@@ -325,7 +325,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
         <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="code" class="w-4 h-4 text-emerald-600"></i> Rincian Perubahan Data
+                <i data-lucide="code" class="w-4 h-4 text-[#fa2f79]"></i> Rincian Perubahan Data
             </h3>
             <button onclick="closeAdminLogModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                 <i data-lucide="x" class="w-5 h-5"></i>
@@ -338,7 +338,7 @@
                 <pre id="modalAdminLama" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[11px] overflow-x-auto max-h-40 border border-slate-200 dark:border-slate-700"></pre>
             </div>
             <div>
-                <span class="text-[11px] font-bold text-emerald-600 block mb-1">Data Sesudahnya:</span>
+                <span class="text-[11px] font-bold text-[#fa2f79] dark:text-pink-400 block mb-1">Data Sesudahnya:</span>
                 <pre id="modalAdminBaru" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[11px] overflow-x-auto max-h-40 border border-slate-200 dark:border-slate-700"></pre>
             </div>
         </div>

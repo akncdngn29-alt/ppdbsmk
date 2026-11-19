@@ -48,17 +48,19 @@ class SiswaDashboardController extends Controller
             $uploadedDocsCount = count(array_intersect($requiredDocs, $uploadedDocs));
             $allDocsUploaded = $uploadedDocsCount >= count($requiredDocs);
 
-            $stage = 2; // Form completed
-            if ($pendaftar->status_pembayaran === 'Paid') {
-                $stage = 3; // Paid → Upload Berkas
-                if ($allDocsUploaded) {
-                    $stage = 4; // All docs uploaded → Verifikasi
-                    if ($pendaftar->status_verifikasi === 'Terverifikasi') {
-                        $stage = 5; // Verified → Tes Seleksi
-                        if ($pendaftar->status_kelulusan !== 'Diproses') {
-                            $stage = 6; // Result announced → Kelulusan
-                            if ($pendaftar->status_daftar_ulang === 'Selesai') {
-                                $stage = 7; // Enrolled → Daftar Ulang complete
+            if ($pendaftar->is_locked) {
+                $stage = 2; // Form completed & finalized
+                if ($pendaftar->status_pembayaran === 'Paid') {
+                    $stage = 3; // Paid → Upload Berkas
+                    if ($allDocsUploaded) {
+                        $stage = 4; // All docs uploaded → Verifikasi
+                        if ($pendaftar->status_verifikasi === 'Terverifikasi') {
+                            $stage = 5; // Verified → Tes Seleksi
+                            if ($pendaftar->nilaiSeleksi || $pendaftar->status_kelulusan !== 'Diproses') {
+                                $stage = 6; // Tes Seleksi Selesai / Pengumuman → Kelulusan
+                                if ($pendaftar->status_kelulusan === 'Diterima') {
+                                    $stage = 7; // Lolos Kelulusan → Menuju / Selesai Daftar Ulang
+                                }
                             }
                         }
                     }
@@ -595,6 +597,29 @@ class SiswaDashboardController extends Controller
         $gelombang = $pendaftar->gelombang ?: Gelombang::where('status_aktif', true)->first();
         $pembayaran = $pendaftar->pembayaran;
 
+        // Auto-expire jika transaksi online sudah lebih dari 60 detik (1 menit)
+        $sisaDetik = 0;
+        if ($pembayaran && $pembayaran->status_transaksi === 'pending' && $pembayaran->tipe_bayar === 'midtrans') {
+            $waktuTrx = Carbon::parse($pembayaran->waktu_transaksi ?: $pembayaran->created_at);
+            $elapsed = Carbon::now()->diffInSeconds($waktuTrx);
+            if ($waktuTrx->copy()->addSeconds(60)->isPast()) {
+                $pembayaran->update([
+                    'status_transaksi' => 'expire',
+                    'catatan' => 'Batas waktu pembayaran (1 menit) telah habis. Tagihan otomatis dibatalkan.',
+                ]);
+                if ($pembayaran->id_voucher) {
+                    $v = \App\Models\VoucherPendaftaran::find($pembayaran->id_voucher);
+                    if ($v && $v->kuota_terpakai > 0) {
+                        $v->decrement('kuota_terpakai');
+                    }
+                }
+                $pembayaran->refresh();
+                $sisaDetik = 0;
+            } else {
+                $sisaDetik = max(0, 60 - $elapsed);
+            }
+        }
+
         // Ambil daftar voucher promo aktif yang masih berlaku dan kuota masih ada
         $promoVouchers = \App\Models\VoucherPendaftaran::where('status_aktif', true)
             ->where(function ($q) {
@@ -609,7 +634,7 @@ class SiswaDashboardController extends Controller
             ->orderBy('id_voucher', 'desc')
             ->get();
 
-        return view('siswa.pembayaran', compact('pendaftar', 'gelombang', 'pembayaran', 'promoVouchers'));
+        return view('siswa.pembayaran', compact('pendaftar', 'gelombang', 'pembayaran', 'promoVouchers', 'sisaDetik'));
     }
 
     public function prosesBayarTunai(Request $request)
@@ -853,6 +878,7 @@ class SiswaDashboardController extends Controller
                 'snap_token' => $snapData['token'] ?? null,
                 'redirect_url' => $snapData['redirect_url'] ?? null,
                 'is_simulated' => $snapData['is_simulated'] ?? false,
+                'sisa_detik' => 60,
                 'message' => 'Tagihan online berhasil dibuat. Silakan selesaikan transaksi melalui Midtrans.',
             ]);
         }
@@ -1019,6 +1045,7 @@ class SiswaDashboardController extends Controller
             'qr_code_url' => $qrisResult['qr_code_url'],
             'simulator_url' => $qrisResult['simulator_url'] ?? 'https://simulator.sandbox.midtrans.com/qris/index',
             'status' => 'pending',
+            'sisa_detik' => 60,
             'message' => 'Kode QRIS resmi berhasil diperoleh dari Midtrans.',
         ]);
     }
@@ -1043,8 +1070,68 @@ class SiswaDashboardController extends Controller
                 'success' => true,
                 'is_paid' => true,
                 'status' => 'settlement',
+                'sisa_detik' => 0,
                 'message' => 'Pembayaran Anda telah terverifikasi LUNAS.',
             ]);
+        }
+
+        // 1. Cek langsung status gateway terkini jika terkonfigurasi (utamakan status lunas)
+        $statusData = ['success' => false];
+        if ($midtransService->isConfigured()) {
+            $statusData = $midtransService->checkTransactionStatus($pembayaran->kode_transaksi);
+            if ($statusData['success'] && !empty($statusData['data'])) {
+                $midtransStatus = $statusData['data']['transaction_status'] ?? null;
+                if (in_array($midtransStatus, ['settlement', 'capture'])) {
+                    $midtransService->processNotification($statusData['data']);
+                    $pembayaran->refresh();
+                    $pendaftar->refresh();
+
+                    return response()->json([
+                        'success' => true,
+                        'configured' => true,
+                        'is_paid' => true,
+                        'status' => 'settlement',
+                        'sisa_detik' => 0,
+                        'message' => 'Alhamdulillah, pembayaran telah berhasil diverifikasi dan berstatus LUNAS!',
+                    ]);
+                }
+            }
+        }
+
+        // 2. Auto-expire jika transaksi online sudah lebih dari 60 detik (1 menit) dan belum lunas
+        $sisaDetik = 0;
+        if ($pembayaran->status_transaksi === 'pending' && $pembayaran->tipe_bayar === 'midtrans') {
+            $waktuTrx = Carbon::parse($pembayaran->waktu_transaksi ?: $pembayaran->created_at);
+            $elapsed = Carbon::now()->diffInSeconds($waktuTrx);
+            if ($waktuTrx->copy()->addSeconds(60)->isPast()) {
+                if ($midtransService->isConfigured()) {
+                    $midtransService->cancelTransaction($pembayaran->kode_transaksi);
+                }
+
+                $pembayaran->update([
+                    'status_transaksi' => 'expire',
+                    'catatan' => 'Batas waktu pembayaran (1 menit) telah habis. Tagihan otomatis dibatalkan.',
+                ]);
+                if ($pembayaran->id_voucher) {
+                    $v = \App\Models\VoucherPendaftaran::find($pembayaran->id_voucher);
+                    if ($v && $v->kuota_terpakai > 0) {
+                        $v->decrement('kuota_terpakai');
+                    }
+                }
+                $pembayaran->refresh();
+
+                return response()->json([
+                    'success' => true,
+                    'configured' => $midtransService->isConfigured(),
+                    'is_paid' => false,
+                    'is_expired' => true,
+                    'status' => 'expire',
+                    'sisa_detik' => 0,
+                    'message' => 'Batas waktu pembayaran (1 menit) telah habis. Tagihan otomatis dibatalkan.',
+                ]);
+            } else {
+                $sisaDetik = max(0, 60 - $elapsed);
+            }
         }
 
         if (!$midtransService->isConfigured()) {
@@ -1053,17 +1140,18 @@ class SiswaDashboardController extends Controller
                 'configured' => false,
                 'status' => $pembayaran->status_transaksi,
                 'is_paid' => false,
+                'sisa_detik' => $sisaDetik,
                 'message' => 'Midtrans Server Key belum dikonfigurasi pada sistem.',
             ]);
         }
 
-        $statusData = $midtransService->checkTransactionStatus($pembayaran->kode_transaksi);
         if (!$statusData['success'] || empty($statusData['data'])) {
             return response()->json([
                 'success' => false,
                 'configured' => true,
                 'status' => $pembayaran->status_transaksi,
                 'is_paid' => false,
+                'sisa_detik' => $sisaDetik,
                 'message' => $statusData['message'] ?? 'Transaksi belum ditemukan di server Midtrans.',
             ]);
         }
@@ -1087,6 +1175,7 @@ class SiswaDashboardController extends Controller
             'configured' => true,
             'is_paid' => $isPaid,
             'status' => $pembayaran->status_transaksi,
+            'sisa_detik' => $sisaDetik,
             'message' => $message,
         ]);
     }
@@ -1103,7 +1192,132 @@ class SiswaDashboardController extends Controller
 
         $pengaturan = PengaturanSekolah::getPengaturan();
         $pembayaranDaftarUlang = $pendaftar->pembayaranDaftarUlang;
-        return view('siswa.daftar_ulang', compact('user', 'pendaftar', 'pengaturan', 'pembayaranDaftarUlang'));
+
+        // Auto-expire jika transaksi online sudah lebih dari 60 detik (1 menit)
+        $sisaDetikDu = 0;
+        if ($pembayaranDaftarUlang && $pembayaranDaftarUlang->status_transaksi === 'pending' && $pembayaranDaftarUlang->tipe_bayar === 'midtrans') {
+            $waktuTrx = Carbon::parse($pembayaranDaftarUlang->waktu_transaksi ?: $pembayaranDaftarUlang->created_at);
+            $elapsed = Carbon::now()->diffInSeconds($waktuTrx);
+            if ($waktuTrx->copy()->addSeconds(60)->isPast()) {
+                $pembayaranDaftarUlang->update([
+                    'status_transaksi' => 'expire',
+                    'catatan' => 'Batas waktu pembayaran (1 menit) telah habis. Tagihan otomatis dibatalkan.',
+                ]);
+                $pembayaranDaftarUlang->refresh();
+                $sisaDetikDu = 0;
+            } else {
+                $sisaDetikDu = max(0, 60 - $elapsed);
+            }
+        }
+
+        return view('siswa.daftar_ulang', compact('user', 'pendaftar', 'pengaturan', 'pembayaranDaftarUlang', 'sisaDetikDu'));
+    }
+
+    public function createSnapDaftarUlangPayment(Request $request, MidtransService $midtransService)
+    {
+        $pendaftar = $this->getUserPendaftar();
+        if (!$pendaftar) {
+            return response()->json(['success' => false, 'message' => 'Data pendaftar tidak ditemukan.'], 404);
+        }
+
+        if ($pendaftar->status_kelulusan !== 'Diterima') {
+            return response()->json(['success' => false, 'message' => 'Fitur daftar ulang hanya untuk siswa yang dinyatakan diterima.'], 403);
+        }
+
+        $pengaturan = PengaturanSekolah::getPengaturan();
+        $nominal = (float) ($pengaturan->biaya_daftar_ulang ?? 1500000.00);
+        $metode = $request->input('metode_pembayaran', 'Midtrans Snap (Daftar Ulang)');
+
+        $channel = $request->input('channel');
+        $enabledPayments = null;
+        if (!empty($channel)) {
+            $channelMap = [
+                'bca_va' => ['bca_va'],
+                'bni_va' => ['bni_va'],
+                'bri_va' => ['bri_va'],
+                'mandiri' => ['echannel'],
+                'echannel' => ['echannel'],
+                'permata_va' => ['permata_va'],
+                'cimb_va' => ['cimb_va'],
+                'danamon_va' => ['danamon_va'],
+                'bsi_va' => ['other_va', 'bni_va'],
+                'seabank_va' => ['other_va'],
+                'qris' => ['qris'],
+                'gopay' => ['gopay'],
+                'shopeepay' => ['shopeepay'],
+                'ovo' => ['qris'],
+                'alfamart' => ['alfamart', 'cstore'],
+                'indomaret' => ['indomaret', 'cstore'],
+            ];
+            if (isset($channelMap[$channel])) {
+                $enabledPayments = $channelMap[$channel];
+            }
+        }
+
+        try {
+            $pembayaran = DB::transaction(function () use ($pendaftar, $nominal, $metode) {
+                $existingTrx = $pendaftar->pembayaranDaftarUlang;
+                $kodeTransaksi = $existingTrx ? $existingTrx->kode_transaksi : Pembayaran::generateKodeTransaksi('daftar_ulang');
+
+                $trx = Pembayaran::updateOrCreate(
+                    [
+                        'id_pendaftar' => $pendaftar->id_pendaftar,
+                        'jenis_pembayaran' => 'daftar_ulang',
+                    ],
+                    [
+                        'id_gelombang' => $pendaftar->id_gelombang,
+                        'kode_transaksi' => $kodeTransaksi,
+                        'nominal' => $nominal,
+                        'potongan' => 0.00,
+                        'total_bayar' => $nominal,
+                        'tipe_bayar' => 'midtrans',
+                        'metode_pembayaran' => $metode,
+                        'status_transaksi' => ($existingTrx && $existingTrx->status_transaksi === 'settlement') ? 'settlement' : 'pending',
+                        'waktu_transaksi' => Carbon::now(),
+                        'catatan' => 'Tagihan online daftar ulang dibuat. Menunggu penyelesaian pembayaran via Midtrans Snap.',
+                    ]
+                );
+
+                LogAktivitas::log('INSERT', 'Siswa membuat tagihan online Daftar Ulang Midtrans: ' . $kodeTransaksi, 'pembayaran', $trx->id_pembayaran);
+
+                return $trx;
+            });
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()], 500);
+        }
+
+        if ($pembayaran->status_transaksi === 'settlement') {
+            return response()->json([
+                'success' => true,
+                'is_paid' => true,
+                'status' => 'settlement',
+                'order_id' => $pembayaran->kode_transaksi,
+                'message' => 'Daftar ulang sudah lunas.',
+            ]);
+        }
+
+        $snapData = $midtransService->createSnapTransaction(
+            $pendaftar,
+            (float) $pembayaran->total_bayar,
+            $pembayaran->kode_transaksi,
+            $enabledPayments
+        );
+
+        if (!empty($snapData['token'])) {
+            $pembayaran->update(['snap_token' => $snapData['token']]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'order_id' => $pembayaran->kode_transaksi,
+            'nominal' => (float)$pembayaran->nominal,
+            'total_bayar' => (float)$pembayaran->total_bayar,
+            'snap_token' => $snapData['token'] ?? null,
+            'redirect_url' => $snapData['redirect_url'] ?? null,
+            'is_simulated' => $snapData['is_simulated'] ?? false,
+            'sisa_detik' => 60,
+            'message' => 'Tagihan online daftar ulang berhasil dibuat.',
+        ]);
     }
 
     public function generateQrisDaftarUlang(Request $request, MidtransService $midtransService)
@@ -1204,6 +1418,7 @@ class SiswaDashboardController extends Controller
             'qr_code_url' => $qrisResult['qr_code_url'],
             'simulator_url' => $qrisResult['simulator_url'] ?? 'https://simulator.sandbox.midtrans.com/qris/index',
             'status' => 'pending',
+            'sisa_detik' => 60,
             'message' => 'Kode QRIS resmi Daftar Ulang berhasil dibuat.',
         ]);
     }
@@ -1262,6 +1477,7 @@ class SiswaDashboardController extends Controller
                 'success' => true,
                 'is_paid' => true,
                 'status' => 'settlement',
+                'sisa_detik' => 0,
                 'message' => 'Pembayaran daftar ulang Anda telah terverifikasi LUNAS.',
             ]);
         }
@@ -1277,12 +1493,58 @@ class SiswaDashboardController extends Controller
         }
 
         $statusData = $midtransService->checkTransactionStatus($pembayaran->kode_transaksi);
+        if ($statusData['success'] && !empty($statusData['data'])) {
+            $midtransStatus = $statusData['data']['transaction_status'] ?? null;
+            if (in_array($midtransStatus, ['settlement', 'capture'])) {
+                $midtransService->processNotification($statusData['data']);
+                $pembayaran->refresh();
+                $pendaftar->refresh();
+
+                return response()->json([
+                    'success' => true,
+                    'configured' => true,
+                    'is_paid' => true,
+                    'status' => 'settlement',
+                    'sisa_detik' => 0,
+                    'message' => 'Alhamdulillah, pembayaran daftar ulang berhasil diverifikasi LUNAS!',
+                ]);
+            }
+        }
+
+        // Auto-expire jika transaksi online sudah lebih dari 60 detik (1 menit)
+        $sisaDetik = 0;
+        if ($pembayaran->status_transaksi === 'pending' && $pembayaran->tipe_bayar === 'midtrans') {
+            $waktuTrx = Carbon::parse($pembayaran->waktu_transaksi ?: $pembayaran->created_at);
+            $elapsed = Carbon::now()->diffInSeconds($waktuTrx);
+            if ($waktuTrx->copy()->addSeconds(60)->isPast()) {
+                $midtransService->cancelTransaction($pembayaran->kode_transaksi);
+                $pembayaran->update([
+                    'status_transaksi' => 'expire',
+                    'catatan' => 'Batas waktu pembayaran (1 menit) telah habis. Tagihan otomatis dibatalkan.',
+                ]);
+                $pembayaran->refresh();
+
+                return response()->json([
+                    'success' => true,
+                    'configured' => true,
+                    'is_paid' => false,
+                    'is_expired' => true,
+                    'status' => 'expire',
+                    'sisa_detik' => 0,
+                    'message' => 'Batas waktu pembayaran daftar ulang (1 menit) telah habis. Tagihan otomatis dibatalkan.',
+                ]);
+            } else {
+                $sisaDetik = max(0, 60 - $elapsed);
+            }
+        }
+
         if (!$statusData['success'] || empty($statusData['data'])) {
             return response()->json([
                 'success' => false,
                 'configured' => true,
                 'status' => $pembayaran->status_transaksi,
                 'is_paid' => false,
+                'sisa_detik' => $sisaDetik,
                 'message' => $statusData['message'] ?? 'Transaksi belum ditemukan di server Midtrans.',
             ]);
         }

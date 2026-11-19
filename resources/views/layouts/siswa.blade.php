@@ -21,11 +21,11 @@
                     },
                     colors: {
                         primary: {
-                            50: '#ecfdf5',
-                            100: '#d1fae5',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
+                            50: '#fff0f5',
+                            100: '#ffe0eb',
+                            500: '#fa2f79',
+                            600: '#e11d48',
+                            700: '#be123c',
                         }
                     }
                 }
@@ -59,7 +59,11 @@
     @php
         $user = Auth::user();
         $pendaftar = $user ? $user->pendaftar : null;
-        $activeGelombang = \App\Models\Gelombang::where('status_aktif', true)->first();
+        try {
+            $activeGelombang = \App\Models\Gelombang::where('status_aktif', true)->first();
+        } catch (\Throwable $e) {
+            $activeGelombang = null;
+        }
     @endphp
 
     <!-- Mobile Sidebar Backdrop -->
@@ -84,7 +88,7 @@
         <!-- Student Profile Card in Sidebar -->
         <div class="p-4 border-b border-slate-800/80 bg-slate-950/20">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-black text-sm flex items-center justify-center shrink-0">
+                <div class="w-10 h-10 rounded-full bg-pink-500/20 border border-pink-500/40 text-[#fa2f79] font-black text-sm flex items-center justify-center shrink-0">
                     {{ strtoupper(substr($user->nama ?? 'S', 0, 1)) }}
                 </div>
                 <div class="min-w-0 flex-1">
@@ -95,7 +99,7 @@
             @if($pendaftar)
                 <div class="mt-3 flex items-center justify-between text-[10px] px-2.5 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60">
                     <span class="text-slate-400">No. Daftar:</span>
-                    <span class="font-mono font-bold text-emerald-400">{{ $pendaftar->no_pendaftaran }}</span>
+                    <span class="font-mono font-bold text-[#fa2f79]">{{ $pendaftar->no_pendaftaran }}</span>
                 </div>
             @else
                 <div class="mt-3 px-2 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-400 font-medium text-center">
@@ -133,7 +137,7 @@
                     <span>Pembayaran PPDB</span>
                 </div>
                 @if($pendaftar && $pendaftar->status_pembayaran === 'Paid')
-                    <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-semibold">Lunas</span>
+                    <span class="text-[9px] bg-pink-500/20 text-[#fa2f79] px-1.5 py-0.5 rounded font-semibold">Lunas</span>
                 @endif
             </a>
 
@@ -144,7 +148,7 @@
                     <span>Upload Berkas</span>
                 </div>
                 @if($pendaftar && $pendaftar->status_verifikasi === 'Terverifikasi')
-                    <span class="w-2 h-2 rounded-full bg-emerald-400" title="Terverifikasi"></span>
+                    <span class="w-2 h-2 rounded-full bg-[#fa2f79]" title="Terverifikasi"></span>
                 @endif
             </a>
 
@@ -153,7 +157,7 @@
             <!-- Cetak Bukti Pendaftaran (Sesuai Gambar 19 Skripsi: "Bukti Pendaftaran") -->
             @if($pendaftar)
                 <a href="{{ route('siswa.cetak.formulir') }}" target="_blank" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors">
-                    <i data-lucide="printer" class="w-4 h-4 text-emerald-400"></i>
+                    <i data-lucide="printer" class="w-4 h-4 text-[#fa2f79]"></i>
                     <span>Cetak Formulir (PDF)</span>
                 </a>
 
@@ -193,6 +197,18 @@
             <a href="{{ route('siswa.pengaturan') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.pengaturan') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
                 <i data-lucide="settings" class="w-4 h-4"></i>
                 <span>Pengaturan Akun</span>
+            </a>
+
+            <!-- Riwayat Aktivitas -->
+            <a href="{{ route('siswa.riwayat_aktivitas') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.riwayat_aktivitas') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
+                <i data-lucide="history" class="w-4 h-4"></i>
+                <span>Riwayat Aktivitas</span>
+            </a>
+
+            <!-- Bantuan -->
+            <a href="{{ route('siswa.bantuan') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.bantuan') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                <span>Pusat Bantuan</span>
             </a>
 
         </nav>
@@ -258,12 +274,12 @@
         <!-- Flash Messages (Alerts) -->
         <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
             @if(session('success'))
-            <div class="p-4 mb-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs flex items-center justify-between">
+            <div class="p-4 mb-3 rounded-2xl bg-pink-50 dark:bg-pink-950/50 border border-pink-200 dark:border-pink-800 text-[#be123c] dark:text-pink-200 text-xs flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                    <i data-lucide="check-circle" class="w-4 h-4 text-[#fa2f79] shrink-0"></i>
                     <span>{{ session('success') }}</span>
                 </div>
-                <button onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-800">&times;</button>
+                <button onclick="this.parentElement.remove()" class="text-[#fa2f79] hover:text-[#be123c]">&times;</button>
             </div>
             @endif
 

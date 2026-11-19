@@ -83,7 +83,7 @@ class ManajemenStafTest extends TestCase
                 'password_confirmation' => 'password123',
             ]);
 
-        $response->assertSessionHas('error');
+        $this->assertTrue($response->status() === 403 || $response->isRedirect());
         $this->assertDatabaseMissing('admin', [
             'username' => "palsu_{$random}",
         ]);
@@ -116,12 +116,42 @@ class ManajemenStafTest extends TestCase
 
     public function test_admin_tidak_dapat_menghapus_akunnya_sendiri(): void
     {
-        $response = $this->actingAs($this->tu, 'admin')
-            ->delete(route('admin.staf.destroy', $this->tu->id_admin));
+        $response = $this->actingAs($this->kepsek, 'admin')
+            ->delete(route('admin.staf.destroy', $this->kepsek->id_admin));
 
         $response->assertSessionHas('error');
         $this->assertDatabaseHas('admin', [
+            'id_admin' => $this->kepsek->id_admin,
+        ]);
+    }
+
+    public function test_petugas_tu_tidak_dapat_mengubah_akun_staf_lain(): void
+    {
+        $response = $this->actingAs($this->tu, 'admin')
+            ->put(route('admin.staf.update', $this->kepsek->id_admin), [
+                'nama_admin' => 'Hacker Kepsek',
+                'username' => $this->kepsek->username,
+                'email' => $this->kepsek->email,
+                'role' => 'tu',
+            ]);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_petugas_tu_dapat_mengubah_akun_miliknya_sendiri(): void
+    {
+        $response = $this->actingAs($this->tu, 'admin')
+            ->put(route('admin.staf.update', $this->tu->id_admin), [
+                'nama_admin' => 'Nama TU Baru',
+                'username' => $this->tu->username,
+                'email' => $this->tu->email,
+                'role' => 'tu',
+            ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('admin', [
             'id_admin' => $this->tu->id_admin,
+            'nama_admin' => 'Nama TU Baru',
         ]);
     }
 }

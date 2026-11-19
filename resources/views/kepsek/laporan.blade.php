@@ -10,7 +10,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <div class="w-12 h-12 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-400 flex items-center justify-center shrink-0">
                     <i data-lucide="file-text" class="w-6 h-6"></i>
                 </div>
                 <div>
@@ -27,7 +27,7 @@
                     <i data-lucide="printer" class="w-4 h-4"></i> Cetak Seluruh Rekap PDF
                 </a>
                 <a href="{{ route('admin.ekspor.excel') }}" class="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700 font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
-                    <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-400"></i> Ekspor CSV / Excel
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4 text-pink-400"></i> Ekspor CSV / Excel
                 </a>
                 <a href="{{ route('admin.ekspor.dapodik') }}" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center gap-2 transition-colors">
                     <i data-lucide="download" class="w-4 h-4 text-sky-500"></i> Format Dapodik
@@ -40,7 +40,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="pie-chart" class="w-4 h-4 text-[#fa2f79]"></i>
                 Matriks Keterisian Kuota & Rekap Per Program Keahlian
             </h3>
             <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Tahun Ajaran 2026/2027</span>
@@ -81,7 +81,7 @@
                                     <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300">Nonaktif</span>
                                 @endif
                             </td>
-                            <td class="py-3.5 px-4 text-center font-mono font-bold text-emerald-600">
+                            <td class="py-3.5 px-4 text-center font-mono font-bold text-[#fa2f79]">
                                 {{ $j->kode_jurusan }}
                             </td>
                             <td class="py-3.5 px-4 text-center font-bold">
@@ -90,11 +90,11 @@
                             <td class="py-3.5 px-4 text-center">
                                 {{ $j->pendaftar_pilihan1_count }} Calon
                             </td>
-                            <td class="py-3.5 px-4 text-center font-black text-emerald-600 dark:text-emerald-400">
+                            <td class="py-3.5 px-4 text-center font-black text-[#fa2f79] dark:text-pink-400">
                                 {{ $j->siswa_diterima_count }}
                             </td>
                             <td class="py-3.5 px-4 text-center">
-                                <span class="px-2 py-0.5 rounded text-[11px] font-bold {{ $persen >= 100 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' }}">
+                                <span class="px-2 py-0.5 rounded text-[11px] font-bold {{ $persen >= 100 ? 'bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' }}">
                                     {{ $persen }}%
                                 </span>
                             </td>
@@ -104,7 +104,7 @@
                             <td class="py-3.5 px-4 text-center">
                                 <a href="{{ route('admin.laporan.rekap_pdf', ['jurusan' => $j->id_jurusan]) }}" target="_blank"
                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                                    <i data-lucide="printer" class="w-3.5 h-3.5 text-emerald-600"></i> Cetak Rekap
+                                    <i data-lucide="printer" class="w-3.5 h-3.5 text-[#fa2f79]"></i> Cetak Rekap
                                 </a>
                             </td>
                         </tr>
@@ -115,7 +115,7 @@
                         <td class="py-4 px-4 text-center">-</td>
                         <td class="py-4 px-4 text-center">{{ $grandTotalKuota }} Siswa</td>
                         <td class="py-4 px-4 text-center">{{ $grandTotalPeminat }} Calon</td>
-                        <td class="py-4 px-4 text-center text-emerald-600 dark:text-emerald-400">{{ $grandTotalDiterima }}</td>
+                        <td class="py-4 px-4 text-center text-[#fa2f79] dark:text-pink-400">{{ $grandTotalDiterima }}</td>
                         <td class="py-4 px-4 text-center">
                             {{ $grandTotalKuota > 0 ? round(($grandTotalDiterima / $grandTotalKuota) * 100, 1) : 0 }}%
                         </td>
@@ -135,7 +135,7 @@
     <!-- Pernyataan Pengesahan Kepala Sekolah -->
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-400 flex items-center justify-center shrink-0">
                 <i data-lucide="check-check" class="w-5 h-5"></i>
             </div>
             <div class="space-y-1">

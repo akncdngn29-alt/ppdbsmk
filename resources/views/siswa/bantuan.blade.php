@@ -16,7 +16,7 @@
             <h1 class="text-xl sm:text-2xl font-black tracking-tight leading-tight">
                 Pusat Bantuan & Panduan PPDB
             </h1>
-            <p class="text-xs sm:text-sm text-emerald-100/90 mt-2 leading-relaxed">
+            <p class="text-xs sm:text-sm text-slate-200 mt-2 leading-relaxed">
                 Temukan jawaban lengkap atas pertanyaan seputar pendaftaran, pengisian biodata, pembayaran biaya formulir, jadwal tes seleksi, hingga daftar ulang di SMK Islam Bina Khalifah Bangsa.
             </p>
         </div>
@@ -27,7 +27,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Loket TU -->
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
+            <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/60 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center mb-3">
                 <i data-lucide="map-pin" class="w-5 h-5"></i>
             </div>
             <h3 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Lokasi Kampus</h3>
@@ -67,13 +67,13 @@
     <!-- Alur Pendaftaran Langkah demi Langkah -->
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <h2 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2 mb-4">
-            <i data-lucide="git-merge" class="w-4 h-4 text-emerald-500"></i>
+            <i data-lucide="git-merge" class="w-4 h-4 text-[#fa2f79]"></i>
             7 Tahapan Alur PPDB SMK Islam Bina Khalifah Bangsa
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 mb-2">Tahap 1</span>
+                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 mb-2">Tahap 1</span>
                 <h4 class="text-xs font-bold text-slate-800 dark:text-white">Isi Formulir Biodata</h4>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                     Lengkapi biodata diri, data orang tua, dan pilihan program keahlian. Anda dapat menyimpan sebagai draft sebelum melakukan finalisasi data.
@@ -81,7 +81,7 @@
             </div>
 
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 mb-2">Tahap 2</span>
+                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 mb-2">Tahap 2</span>
                 <h4 class="text-xs font-bold text-slate-800 dark:text-white">Pembayaran Formulir</h4>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                     Selesaikan biaya pendaftaran via online gateway Midtrans (QRIS, VA Bank) atau tunai langsung di kasir loket TU sekolah.
@@ -89,7 +89,7 @@
             </div>
 
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 mb-2">Tahap 3</span>
+                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 mb-2">Tahap 3</span>
                 <h4 class="text-xs font-bold text-slate-800 dark:text-white">Upload Berkas Persyaratan</h4>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                     Unggah pindaian KK, Akta Kelahiran, Ijazah/SKL, dan Pasfoto. Pastikan dokumen jelas dan dapat terbaca.
@@ -97,7 +97,7 @@
             </div>
 
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 mb-2">Tahap 4</span>
+                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 mb-2">Tahap 4</span>
                 <h4 class="text-xs font-bold text-slate-800 dark:text-white">Verifikasi Dokumen oleh TU</h4>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                     Petugas Tata Usaha memeriksa dan memvalidasi keabsahan seluruh dokumen yang telah diunggah.
@@ -105,7 +105,7 @@
             </div>
 
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 mb-2">Tahap 5</span>
+                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 mb-2">Tahap 5</span>
                 <h4 class="text-xs font-bold text-slate-800 dark:text-white">Tes Seleksi & Wawancara</h4>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                     Cetak Kartu Ujian dan pantau ruangan tes pada menu Jadwal. Ikuti tes akademik, wawancara minat, dan tes buta warna sesuai jadwal.
@@ -113,7 +113,7 @@
             </div>
 
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 mb-2">Tahap 6</span>
+                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 mb-2">Tahap 6</span>
                 <h4 class="text-xs font-bold text-slate-800 dark:text-white">Pengumuman & SKL</h4>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                     Kepala Sekolah mengesahkan hasil seleksi. Calon siswa yang lolos dapat langsung mengunduh Surat Keterangan Lulus (SKL) resmi ber-QR Code.
@@ -121,7 +121,7 @@
             </div>
 
             <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 mb-2">Tahap 7</span>
+                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 mb-2">Tahap 7</span>
                 <h4 class="text-xs font-bold text-slate-800 dark:text-white">Konfirmasi Daftar Ulang</h4>
                 <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                     Lakukan konfirmasi kesediaan masuk melalui portal dan serahkan berkas fisik ke loket TU untuk pengukuran seragam dan nomor induk siswa.
@@ -133,7 +133,7 @@
     <!-- Accordion FAQ Interaktif -->
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <h2 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2 mb-4">
-            <i data-lucide="message-square-text" class="w-4 h-4 text-emerald-500"></i>
+            <i data-lucide="message-square-text" class="w-4 h-4 text-[#fa2f79]"></i>
             Pertanyaan yang Sering Diajukan (FAQ)
         </h2>
 

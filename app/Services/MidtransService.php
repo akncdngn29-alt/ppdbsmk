@@ -108,6 +108,11 @@ class MidtransService
             'qris' => [
                 'acquirer' => 'gopay',
             ],
+            'custom_expiry' => [
+                'order_time' => Carbon::now()->format('Y-m-d H:i:s O'),
+                'expiry_duration' => 1,
+                'unit' => 'minute',
+            ],
         ];
 
         try {
@@ -292,6 +297,15 @@ class MidtransService
                 ]
             ],
             'enabled_payments' => !empty($enabledPayments) ? $enabledPayments : $defaultEnabledPayments,
+            'expiry' => [
+                'start_time' => Carbon::now()->format('Y-m-d H:i:s O'),
+                'duration' => 1,
+                'unit' => 'minute',
+            ],
+            'page_expiry' => [
+                'duration' => 1,
+                'unit' => 'minute',
+            ],
         ];
 
         try {
@@ -320,6 +334,35 @@ class MidtransService
             'redirect_url' => route('siswa.pembayaran'),
             'is_simulated' => true,
         ];
+    }
+
+    /**
+     * Membatalkan transaksi di server Midtrans secara langsung (Core API /cancel).
+     */
+    public function cancelTransaction(string $orderId): array
+    {
+        if (!$this->isConfigured()) {
+            return ['success' => false, 'message' => 'Midtrans belum dikonfigurasi.'];
+        }
+
+        try {
+            $http = Http::withBasicAuth($this->getServerKey(), '')->timeout(10);
+            if (!$this->isProduction()) {
+                $http = $http->withoutVerifying();
+            }
+
+            $response = $http->post($this->getCoreApiBaseUrl() . '/' . $orderId . '/cancel');
+            $body = $response->json();
+
+            if ($response->successful() || ($body['status_code'] ?? '') === '200' || ($body['status_code'] ?? '') === '412') {
+                return ['success' => true, 'data' => $body];
+            }
+
+            return ['success' => false, 'message' => $body['status_message'] ?? $response->body()];
+        } catch (\Exception $e) {
+            Log::error("Midtrans cancel error for {$orderId}: " . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
 
     /**

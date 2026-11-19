@@ -10,7 +10,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 mb-1">
-                <a href="{{ route('admin.jadwal.index') }}" class="text-xs font-bold text-slate-500 hover:text-emerald-600 transition-colors">Jadwal Seleksi</a>
+                <a href="{{ route('admin.jadwal.index') }}" class="text-xs font-bold text-slate-500 hover:text-[#fa2f79] transition-colors">Jadwal Seleksi</a>
                 <span class="text-xs text-slate-400">/</span>
                 <span class="text-xs font-bold text-slate-800 dark:text-white">Alokasi & Penempatan</span>
             </div>
@@ -37,8 +37,8 @@
 
         <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
             <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sudah Ditempatkan</span>
-            <h3 class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">{{ $sudahDitempatkan->count() }}</h3>
-            <p class="text-[11px] text-emerald-600 font-medium mt-1">Telah memiliki ruang tes</p>
+            <h3 class="text-2xl font-black text-[#fa2f79] dark:text-pink-400 mt-0.5">{{ $sudahDitempatkan->count() }}</h3>
+            <p class="text-[11px] text-[#fa2f79] dark:text-pink-400 font-medium mt-1">Telah memiliki ruang tes</p>
         </div>
 
         <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -58,7 +58,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-4">
         <div class="flex items-center justify-between mb-3">
             <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Status Keterisian Tiap Ruang</h4>
-            <a href="{{ route('admin.ruang.index') }}" class="text-[11px] text-emerald-600 hover:underline font-bold">+ Kelola Ruang</a>
+            <a href="{{ route('admin.ruang.index') }}" class="text-[11px] text-[#fa2f79] hover:underline font-bold">+ Kelola Ruang</a>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             @forelse($ruangs as $ruang)
@@ -70,22 +70,22 @@
                 <div class="p-3 rounded-xl border {{ $isPenuh ? 'border-rose-200 bg-rose-50/30 dark:bg-rose-950/20' : 'border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40' }}">
                     <div class="flex items-center justify-between mb-1.5">
                         <span class="font-bold text-xs text-slate-800 dark:text-white">{{ $ruang->nama_ruang }}</span>
-                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded {{ $isPenuh ? 'bg-rose-100 text-rose-700 font-bold' : 'bg-emerald-100 text-emerald-700' }}">
+                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded {{ $isPenuh ? 'bg-rose-100 text-rose-700 font-bold' : 'bg-pink-100 text-pink-700' }}">
                             {{ $ruang->kode_ruang }}
                         </span>
                     </div>
                     <div class="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400 mb-1">
                         <span>Terisi: <strong class="text-slate-800 dark:text-white">{{ $terisi }}</strong> / {{ $ruang->kapasitas }}</span>
-                        <span class="font-bold {{ $isPenuh ? 'text-rose-600' : 'text-emerald-600' }}">{{ $persen }}%</span>
+                        <span class="font-bold {{ $isPenuh ? 'text-rose-600' : 'text-[#fa2f79]' }}">{{ $persen }}%</span>
                     </div>
                     <!-- Progress Bar -->
                     <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full {{ $isPenuh ? 'bg-rose-500' : 'bg-emerald-500' }}" style="width: {{ $persen }}%"></div>
+                        <div class="h-full {{ $isPenuh ? 'bg-rose-500' : 'bg-[#fa2f79]' }}" style="width: {{ $persen }}%"></div>
                     </div>
                     <div class="mt-2.5 flex items-center justify-between text-[10px]">
                         <span class="text-slate-400">{{ $ruang->gedung ?: 'Kampus' }}</span>
                         @if($terisi > 0)
-                        <a href="{{ route('admin.jadwal.cetak', [$jadwal->id_jadwal, $ruang->id_ruang]) }}" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold hover:underline">
+                        <a href="{{ route('admin.jadwal.cetak', [$jadwal->id_jadwal, $ruang->id_ruang]) }}" target="_blank" class="inline-flex items-center gap-1 text-[#fa2f79] dark:text-pink-400 font-bold hover:underline">
                             <i data-lucide="printer" class="w-3 h-3"></i>
                             <span>Cetak Hadir</span>
                         </a>
@@ -143,9 +143,9 @@
                         @foreach($belumDitempatkan as $p)
                         <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                             <td class="py-2.5 px-4 text-center">
-                                <input type="checkbox" name="pendaftar_ids[]" value="{{ $p->id_pendaftar }}" class="checkbox-peserta rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                <input type="checkbox" name="pendaftar_ids[]" value="{{ $p->id_pendaftar }}" class="checkbox-peserta rounded border-slate-300 text-[#fa2f79] focus:ring-pink-400">
                             </td>
-                            <td class="py-2.5 px-4 font-mono font-bold text-emerald-600">{{ $p->no_pendaftaran }}</td>
+                            <td class="py-2.5 px-4 font-mono font-bold text-[#fa2f79]">{{ $p->no_pendaftaran }}</td>
                             <td class="py-2.5 px-4 font-bold text-slate-800 dark:text-white uppercase">{{ $p->nama }}</td>
                             <td class="py-2.5 px-4 font-mono">{{ $p->nisn }}</td>
                             <td class="py-2.5 px-4 font-semibold text-slate-600 dark:text-slate-300">
@@ -153,7 +153,7 @@
                             </td>
                             <td class="py-2.5 px-4 text-slate-500">{{ $p->asal_sekolah }}</td>
                             <td class="py-2.5 px-4 text-right">
-                                <button type="button" onclick="openManualPlacement({{ $p->id_pendaftar }}, '{{ addslashes($p->nama) }}', '{{ $p->no_pendaftaran }}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-[11px] font-bold text-slate-700 transition-colors">
+                                <button type="button" onclick="openManualPlacement({{ $p->id_pendaftar }}, '{{ addslashes($p->nama) }}', '{{ $p->no_pendaftaran }}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-pink-50 hover:text-[#fa2f79] text-[11px] font-bold text-slate-700 transition-colors">
                                     Tetapkan Ruang &rarr;
                                 </button>
                             </td>
@@ -164,7 +164,7 @@
             </div>
             @else
             <div class="p-6 text-center text-slate-400">
-                <i data-lucide="check-check" class="w-8 h-8 mx-auto mb-1.5 text-emerald-500"></i>
+                <i data-lucide="check-check" class="w-8 h-8 mx-auto mb-1.5 text-[#fa2f79]"></i>
                 <p class="font-bold text-xs text-slate-700 dark:text-slate-300">Semua Calon Siswa Terverifikasi Sudah Memiliki Ruang Seleksi!</p>
                 <p class="text-[11px] text-slate-400 mt-0.5">Tidak ada antrean peserta yang belum mendapatkan ruang.</p>
             </div>
@@ -177,7 +177,7 @@
         <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-white flex items-center gap-2">
-                    <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i>
+                    <i data-lucide="users" class="w-4 h-4 text-[#fa2f79]"></i>
                     <span>Daftar Peserta yang Sudah Ditempatkan ({{ $penempatan->count() }} Orang)</span>
                 </h3>
                 <p class="text-[11px] text-slate-500">Peserta yang sudah terdaftar di ruang seleksi jadwal ini.</p>
@@ -185,7 +185,7 @@
             
             <!-- Filter Ruang -->
             <form method="GET" action="{{ route('admin.jadwal.penempatan', $jadwal->id_jadwal) }}" class="flex items-center gap-2">
-                <select name="ruang_filter" onchange="this.form.submit()" class="px-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <select name="ruang_filter" onchange="this.form.submit()" class="px-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                     <option value="">Semua Ruang</option>
                     @foreach($ruangs as $r)
                         <option value="{{ $r->id_ruang }}" {{ request('ruang_filter') == $r->id_ruang ? 'selected' : '' }}>
@@ -218,16 +218,16 @@
                     @forelse($penempatan as $idx => $pnt)
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-3 px-4 text-slate-400 font-mono">{{ $idx + 1 }}</td>
-                        <td class="py-3 px-4 font-mono font-bold text-emerald-600">{{ $pnt->pendaftar->no_pendaftaran ?? '-' }}</td>
+                        <td class="py-3 px-4 font-mono font-bold text-[#fa2f79]">{{ $pnt->pendaftar->no_pendaftaran ?? '-' }}</td>
                         <td class="py-3 px-4 font-bold text-slate-800 dark:text-white uppercase">{{ $pnt->pendaftar->nama ?? '-' }}</td>
                         <td class="py-3 px-4 font-semibold text-slate-600 dark:text-slate-300">
                             {{ $pnt->pendaftar && $pnt->pendaftar->jurusan1 ? $pnt->pendaftar->jurusan1->nama_jurusan : '-' }}
                         </td>
                         <td class="py-3 px-4">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-200/50">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 font-bold border border-pink-200/50">
                                 <i data-lucide="door-closed" class="w-3.5 h-3.5"></i>
                                 <span>{{ $pnt->ruang->nama_ruang ?? '-' }}</span>
-                                <span class="font-mono text-[10px] text-emerald-600">({{ $pnt->ruang->kode_ruang ?? '-' }})</span>
+                                <span class="font-mono text-[10px] text-[#fa2f79]">({{ $pnt->ruang->kode_ruang ?? '-' }})</span>
                             </span>
                         </td>
                         <td class="py-3 px-4 text-slate-400 text-[11px]">{{ $pnt->catatan ?: '-' }}</td>
@@ -280,14 +280,14 @@
             <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                 <span class="text-[10px] text-slate-400 font-bold uppercase block">Calon Siswa</span>
                 <span id="manual_nama_siswa" class="font-extrabold text-xs text-slate-800 dark:text-white block uppercase">-</span>
-                <span id="manual_no_daftar" class="font-mono text-emerald-600 text-[11px] font-bold block">-</span>
+                <span id="manual_no_daftar" class="font-mono text-[#fa2f79] text-[11px] font-bold block">-</span>
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                     Pilih Ruang Seleksi Tujuan <span class="text-rose-500">*</span>
                 </label>
-                <select id="manual_id_ruang" name="id_ruang" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <select id="manual_id_ruang" name="id_ruang" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                     <option value="">-- Pilih Ruang --</option>
                     @foreach($ruangs as $r)
                         @php
@@ -307,7 +307,7 @@
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                     Catatan Khusus (Opsional)
                 </label>
-                <input type="text" name="catatan" placeholder="Contoh: Meja baris depan / kebutuhan khusus" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" name="catatan" placeholder="Contoh: Meja baris depan / kebutuhan khusus" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
 
             <div class="border-t border-slate-100 dark:border-slate-800 pt-4 flex justify-end gap-2">

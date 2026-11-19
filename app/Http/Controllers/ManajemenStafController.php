@@ -48,6 +48,9 @@ class ManajemenStafController extends Controller
     public function store(Request $request)
     {
         $currentAdmin = auth('admin')->user();
+        if ($currentAdmin->role !== 'kepala_sekolah') {
+            abort(403, 'Akses ditolak. Hanya Kepala Sekolah yang berwenang menambahkan akun staf baru.');
+        }
 
         $request->validate([
             'nama_admin' => 'required|string|max:100',
@@ -61,12 +64,6 @@ class ManajemenStafController extends Controller
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'password.min' => 'Kata sandi minimal 6 karakter.',
         ]);
-
-        // Pencegahan privilege escalation: Petugas TU biasa tidak boleh membuat akun Kepala Sekolah
-        if ($currentAdmin->role === 'tu' && $request->role === 'kepala_sekolah') {
-            return back()->with('error', 'Hanya Kepala Sekolah yang berwenang menugaskan akun berstatus Kepala Sekolah.')
-                ->withInput();
-        }
 
         $adminBaru = Admin::create([
             'nama_admin' => trim($request->nama_admin),
@@ -124,12 +121,12 @@ class ManajemenStafController extends Controller
             'password.min' => 'Kata sandi minimal 6 karakter.',
         ]);
 
-        // Proteksi: TU tidak boleh mengubah role Kepala Sekolah atau mengangkat diri jadi Kepala Sekolah
+        // Proteksi Otorisasi: Petugas TU hanya dapat memperbarui akun miliknya sendiri
         if ($currentAdmin->role === 'tu') {
-            if ($targetAdmin->role === 'kepala_sekolah' && $targetAdmin->id_admin !== $currentAdmin->id_admin) {
-                return back()->with('error', 'Petugas TU tidak berwenang memodifikasi akun Kepala Sekolah.');
+            if ($targetAdmin->id_admin !== $currentAdmin->id_admin) {
+                abort(403, 'Akses ditolak. Petugas TU hanya berwenang memperbarui akun miliknya sendiri dan tidak dapat mengubah akun TU lain maupun Kepala Sekolah.');
             }
-            if ($request->role === 'kepala_sekolah' && $targetAdmin->role !== 'kepala_sekolah') {
+            if ($request->role === 'kepala_sekolah') {
                 return back()->with('error', 'Petugas TU tidak dapat menaikkan hak akses menjadi Kepala Sekolah.');
             }
         }
@@ -144,7 +141,11 @@ class ManajemenStafController extends Controller
         $targetAdmin->nama_admin = trim($request->nama_admin);
         $targetAdmin->username = strtolower(trim($request->username));
         $targetAdmin->email = strtolower(trim($request->email));
-        $targetAdmin->role = $request->role;
+
+        // Hanya Kepala Sekolah yang dapat mengubah role akun staf
+        if ($currentAdmin->role === 'kepala_sekolah') {
+            $targetAdmin->role = $request->role;
+        }
 
         if ($request->filled('password')) {
             $targetAdmin->password = Hash::make($request->password);
@@ -181,6 +182,10 @@ class ManajemenStafController extends Controller
     public function destroy($id)
     {
         $currentAdmin = auth('admin')->user();
+        if ($currentAdmin->role !== 'kepala_sekolah') {
+            abort(403, 'Akses ditolak. Hanya Kepala Sekolah yang memiliki wewenang menghapus akun staf.');
+        }
+
         $targetAdmin = Admin::findOrFail($id);
 
         // 1. Tidak boleh menghapus akun yang sedang aktif digunakan login
@@ -188,12 +193,7 @@ class ManajemenStafController extends Controller
             return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif login.');
         }
 
-        // 2. Petugas TU tidak berwenang menghapus akun Kepala Sekolah
-        if ($currentAdmin->role === 'tu' && $targetAdmin->role === 'kepala_sekolah') {
-            return back()->with('error', 'Petugas TU tidak memiliki wewenang menghapus akun Kepala Sekolah.');
-        }
-
-        // 3. Pastikan minimal ada 1 Kepala Sekolah tersisa di sistem
+        // 2. Pastikan minimal ada 1 Kepala Sekolah tersisa di sistem
         if ($targetAdmin->role === 'kepala_sekolah') {
             $totalKepsek = Admin::where('role', 'kepala_sekolah')->count();
             if ($totalKepsek <= 1) {

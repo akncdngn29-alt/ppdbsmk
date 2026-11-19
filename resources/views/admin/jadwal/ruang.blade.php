@@ -10,7 +10,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 mb-1">
-                <a href="{{ route('admin.jadwal.index') }}" class="text-xs font-bold text-slate-500 hover:text-emerald-600 transition-colors">Jadwal Seleksi</a>
+                <a href="{{ route('admin.jadwal.index') }}" class="text-xs font-bold text-slate-500 hover:text-[#fa2f79] transition-colors">Jadwal Seleksi</a>
                 <span class="text-xs text-slate-400">/</span>
                 <span class="text-xs font-bold text-slate-800 dark:text-white">Manajemen Ruang</span>
             </div>
@@ -41,10 +41,10 @@
         <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div>
                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ruang Aktif</span>
-                <h3 class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">{{ $ruangAktif }}</h3>
-                <p class="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 font-medium">Siap digunakan penempatan</p>
+                <h3 class="text-2xl font-black text-[#fa2f79] dark:text-pink-400 mt-0.5">{{ $ruangAktif }}</h3>
+                <p class="text-[11px] text-[#fa2f79] dark:text-pink-400 mt-1 font-medium">Siap digunakan penempatan</p>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <div class="w-12 h-12 rounded-2xl bg-pink-500/10 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center">
                 <i data-lucide="check-circle" class="w-6 h-6"></i>
             </div>
         </div>
@@ -85,7 +85,7 @@
                     @forelse($ruangs as $r)
                     <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
                         <td class="py-3.5 px-4">
-                            <span class="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-xs block">{{ $r->kode_ruang }}</span>
+                            <span class="font-mono font-bold text-[#fa2f79] dark:text-pink-400 text-xs block">{{ $r->kode_ruang }}</span>
                             <span class="font-bold text-slate-800 dark:text-white">{{ $r->nama_ruang }}</span>
                         </td>
                         <td class="py-3.5 px-4">
@@ -106,7 +106,7 @@
                         </td>
                         <td class="py-3.5 px-4 text-center">
                             @if($r->status_aktif)
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-pink-100 dark:bg-pink-950/60 text-pink-700 dark:text-pink-300">
                                 Aktif
                             </span>
                             @else
@@ -135,7 +135,7 @@
                         <td colspan="7" class="py-8 text-center text-slate-400">
                             <i data-lucide="door-closed" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
                             <p class="font-semibold text-xs">Belum ada ruang seleksi yang terdaftar.</p>
-                            <button onclick="document.getElementById('modal-tambah-ruang').classList.remove('hidden')" class="inline-block mt-2 text-emerald-600 hover:underline text-xs font-bold">+ Tambah Ruang Baru</button>
+                            <button onclick="document.getElementById('modal-tambah-ruang').classList.remove('hidden')" class="inline-block mt-2 text-[#fa2f79] hover:underline text-xs font-bold">+ Tambah Ruang Baru</button>
                         </td>
                     </tr>
                     @endforelse
@@ -167,36 +167,36 @@
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                     Kode Ruang <span class="text-rose-500">*</span>
                 </label>
-                <input type="text" name="kode_ruang" required placeholder="Contoh: R-LAB-01" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" name="kode_ruang" required placeholder="Contoh: R-LAB-01" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                     Nama Ruang <span class="text-rose-500">*</span>
                 </label>
-                <input type="text" name="nama_ruang" required placeholder="Contoh: Lab Komputer TKJ 1" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" name="nama_ruang" required placeholder="Contoh: Lab Komputer TKJ 1" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Gedung / Lantai
                     </label>
-                    <input type="text" name="gedung" placeholder="Gedung B Lt. 2" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                    <input type="text" name="gedung" placeholder="Gedung B Lt. 2" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Kapasitas Maksimal <span class="text-rose-500">*</span>
                     </label>
-                    <input type="number" name="kapasitas" min="1" max="500" value="30" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                    <input type="number" name="kapasitas" min="1" max="500" value="30" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                     Keterangan
                 </label>
-                <textarea name="keterangan" rows="2" placeholder="Fasilitas AC, 35 PC, Proyektor..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500"></textarea>
+                <textarea name="keterangan" rows="2" placeholder="Fasilitas AC, 35 PC, Proyektor..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400"></textarea>
             </div>
             <div class="flex items-center gap-2 pt-1">
-                <input type="checkbox" name="status_aktif" value="1" id="status_aktif_tambah" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                <input type="checkbox" name="status_aktif" value="1" id="status_aktif_tambah" checked class="rounded border-slate-300 text-[#fa2f79] focus:ring-pink-400">
                 <label for="status_aktif_tambah" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Ruang Aktif (dapat digunakan untuk penempatan)</label>
             </div>
             <div class="border-t border-slate-100 dark:border-slate-800 pt-4 flex justify-end gap-2">
@@ -223,36 +223,36 @@
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                     Kode Ruang <span class="text-rose-500">*</span>
                 </label>
-                <input type="text" id="edit_kode_ruang" name="kode_ruang" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" id="edit_kode_ruang" name="kode_ruang" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                     Nama Ruang <span class="text-rose-500">*</span>
                 </label>
-                <input type="text" id="edit_nama_ruang" name="nama_ruang" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                <input type="text" id="edit_nama_ruang" name="nama_ruang" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Gedung / Lantai
                     </label>
-                    <input type="text" id="edit_gedung" name="gedung" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                    <input type="text" id="edit_gedung" name="gedung" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Kapasitas Maksimal <span class="text-rose-500">*</span>
                     </label>
-                    <input type="number" id="edit_kapasitas" name="kapasitas" min="1" max="500" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                    <input type="number" id="edit_kapasitas" name="kapasitas" min="1" max="500" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                     Keterangan
                 </label>
-                <textarea id="edit_keterangan" name="keterangan" rows="2" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500"></textarea>
+                <textarea id="edit_keterangan" name="keterangan" rows="2" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400"></textarea>
             </div>
             <div class="flex items-center gap-2 pt-1">
-                <input type="checkbox" name="status_aktif" value="1" id="edit_status_aktif" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                <input type="checkbox" name="status_aktif" value="1" id="edit_status_aktif" class="rounded border-slate-300 text-[#fa2f79] focus:ring-pink-400">
                 <label for="edit_status_aktif" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Ruang Aktif (dapat digunakan untuk penempatan)</label>
             </div>
             <div class="border-t border-slate-100 dark:border-slate-800 pt-4 flex justify-end gap-2">

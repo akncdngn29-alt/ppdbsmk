@@ -39,7 +39,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Nama Jadwal / Agenda <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" name="nama_jadwal" value="{{ old('nama_jadwal', $jadwal->nama_jadwal ?? '') }}" required placeholder="Contoh: Tes Seleksi Masuk Gelombang 1 - Sesi Pagi" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="text" name="nama_jadwal" value="{{ old('nama_jadwal', $jadwal->nama_jadwal ?? '') }}" required placeholder="Contoh: Tes Seleksi Masuk Gelombang 1 - Sesi Pagi" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                     @error('nama_jadwal') <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -48,7 +48,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Jenis Seleksi <span class="text-rose-500">*</span>
                     </label>
-                    <select name="jenis_seleksi" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <select name="jenis_seleksi" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                         @php
                             $selectedJenis = old('jenis_seleksi', $jadwal->jenis_seleksi ?? 'Wawancara & Tahfiz');
                             $opsiJenis = [
@@ -71,7 +71,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Status Jadwal <span class="text-rose-500">*</span>
                     </label>
-                    <select name="status" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <select name="status" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                         <option value="aktif" {{ old('status', $jadwal->status ?? 'aktif') === 'aktif' ? 'selected' : '' }}>Aktif</option>
                         <option value="nonaktif" {{ old('status', $jadwal->status ?? '') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                     </select>
@@ -83,7 +83,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Tanggal Pelaksanaan <span class="text-rose-500">*</span>
                     </label>
-                    <input type="date" name="tanggal" value="{{ old('tanggal', isset($jadwal->tanggal) ? (is_string($jadwal->tanggal) ? $jadwal->tanggal : $jadwal->tanggal->format('Y-m-d')) : date('Y-m-d')) }}" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="date" name="tanggal" value="{{ old('tanggal', isset($jadwal->tanggal) ? (is_string($jadwal->tanggal) ? $jadwal->tanggal : $jadwal->tanggal->format('Y-m-d')) : date('Y-m-d')) }}" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                     @error('tanggal') <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -93,14 +93,14 @@
                         <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                             Jam Mulai <span class="text-rose-500">*</span>
                         </label>
-                        <input type="time" name="waktu_mulai" value="{{ old('waktu_mulai', isset($jadwal->waktu_mulai) ? substr($jadwal->waktu_mulai, 0, 5) : '08:00') }}" required class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <input type="time" name="waktu_mulai" value="{{ old('waktu_mulai', isset($jadwal->waktu_mulai) ? substr($jadwal->waktu_mulai, 0, 5) : '08:00') }}" required class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                         @error('waktu_mulai') <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                             Jam Selesai <span class="text-rose-500">*</span>
                         </label>
-                        <input type="time" name="waktu_selesai" value="{{ old('waktu_selesai', isset($jadwal->waktu_selesai) ? substr($jadwal->waktu_selesai, 0, 5) : '12:00') }}" required class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <input type="time" name="waktu_selesai" value="{{ old('waktu_selesai', isset($jadwal->waktu_selesai) ? substr($jadwal->waktu_selesai, 0, 5) : '12:00') }}" required class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                         @error('waktu_selesai') <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Lokasi / Kampus
                     </label>
-                    <input type="text" name="lokasi" value="{{ old('lokasi', $jadwal->lokasi ?? 'Kampus SMK Islam Bina Khalifah Bangsa, Kota Metro') }}" placeholder="Kampus SMK..." class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="text" name="lokasi" value="{{ old('lokasi', $jadwal->lokasi ?? 'Kampus SMK Islam Bina Khalifah Bangsa, Kota Metro') }}" placeholder="Kampus SMK..." class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                     @error('lokasi') <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -119,7 +119,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Gedung
                     </label>
-                    <input type="text" name="gedung" value="{{ old('gedung', $jadwal->gedung ?? 'Gedung Utama / Lantai 2') }}" placeholder="Gedung A / Lab Komputer..." class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="text" name="gedung" value="{{ old('gedung', $jadwal->gedung ?? 'Gedung Utama / Lantai 2') }}" placeholder="Gedung A / Lab Komputer..." class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">
                     @error('gedung') <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -128,7 +128,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
                         Keterangan Tambahan untuk Peserta
                     </label>
-                    <textarea name="keterangan" rows="3" placeholder="Informasi pakaian, perlengkapan yang dibawa, atau instruksi panitia..." class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">{{ old('keterangan', $jadwal->keterangan ?? 'Wajib membawa cetakan Kartu Peserta Ujian, mengenakan seragam SMP asal rapi & bersepatu, dan hadir 15 menit sebelum tes dimulai.') }}</textarea>
+                    <textarea name="keterangan" rows="3" placeholder="Informasi pakaian, perlengkapan yang dibawa, atau instruksi panitia..." class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400">{{ old('keterangan', $jadwal->keterangan ?? 'Wajib membawa cetakan Kartu Peserta Ujian, mengenakan seragam SMP asal rapi & bersepatu, dan hadir 15 menit sebelum tes dimulai.') }}</textarea>
                     @error('keterangan') <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>

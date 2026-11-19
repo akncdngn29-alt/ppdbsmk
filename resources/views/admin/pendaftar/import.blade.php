@@ -16,7 +16,7 @@
         </div>
         <div class="flex items-center gap-2">
             <a href="{{ route('admin.import.template') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-colors flex items-center gap-2 shadow-sm">
-                <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i> Unduh Template CSV
+                <i data-lucide="download" class="w-4 h-4 text-[#fa2f79]"></i> Unduh Template CSV
             </a>
             <a href="{{ route('admin.pendaftar') }}" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors flex items-center gap-2">
                 <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Pendaftar
@@ -26,12 +26,12 @@
 
     <!-- Alert Sukses / Gagal -->
     @if(session('success'))
-    <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 flex items-start gap-3 text-xs text-emerald-800 dark:text-emerald-200">
-        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+    <div class="p-4 rounded-xl bg-pink-50 dark:bg-pink-950/50 border border-pink-200 dark:border-pink-800 flex items-start gap-3 text-xs text-pink-800 dark:text-pink-200">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-[#fa2f79] shrink-0 mt-0.5"></i>
         <div>
             <span class="font-bold block text-sm">{{ session('success') }}</span>
             @if(session('import_stats'))
-                <span class="text-[11px] text-emerald-700 dark:text-emerald-300 mt-1 block">
+                <span class="text-[11px] text-pink-700 dark:text-pink-300 mt-1 block">
                     Total data diproses: {{ session('import_stats')['diproses'] }} &bull; Berhasil disimpan: {{ session('import_stats')['berhasil'] }} &bull; Dilewati/Duplikat: {{ session('import_stats')['dilewati'] }}
                 </span>
             @endif
@@ -66,7 +66,7 @@
         <!-- Formulir Upload Berkas (2 Kolom) -->
         <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <h2 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2 mb-4">
-                <i data-lucide="upload" class="w-4 h-4 text-emerald-500"></i> Unggah Berkas Pendaftar
+                <i data-lucide="upload" class="w-4 h-4 text-[#fa2f79]"></i> Unggah Berkas Pendaftar
             </h2>
 
             <form action="{{ route('admin.import.proses') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -76,7 +76,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Pilih Gelombang Pendaftaran Tujuan <span class="text-rose-500">*</span>
                     </label>
-                    <select name="id_gelombang" required class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-emerald-500">
+                    <select name="id_gelombang" required class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-pink-400">
                         @if($gelombangAktif)
                             <option value="{{ $gelombangAktif->id_gelombang }}" selected>
                                 {{ $gelombangAktif->nama_gelombang }} (Aktif - {{ $gelombangAktif->tahun_ajaran }})
@@ -129,13 +129,13 @@
 
             <div class="space-y-2 text-[11px] font-mono text-slate-600 dark:text-slate-400">
                 <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-800">
-                    <strong class="text-emerald-600 dark:text-emerald-400">nama</strong> : Nama lengkap siswa (Wajib)
+                    <strong class="text-[#fa2f79] dark:text-pink-400">nama</strong> : Nama lengkap siswa (Wajib)
                 </div>
                 <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-800">
-                    <strong class="text-emerald-600 dark:text-emerald-400">nisn</strong> : 10 digit NISN unik (Wajib)
+                    <strong class="text-[#fa2f79] dark:text-pink-400">nisn</strong> : 10 digit NISN unik (Wajib)
                 </div>
                 <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-800">
-                    <strong class="text-emerald-600 dark:text-emerald-400">kode_jurusan_1</strong> : Kode jurusan (Wajib)
+                    <strong class="text-[#fa2f79] dark:text-pink-400">kode_jurusan_1</strong> : Kode jurusan (Wajib)
                     <div class="text-[10px] text-slate-500 mt-1">
                         Pilihan: 
                         @foreach($daftarJurusan as $j)
@@ -170,7 +170,7 @@
 <script>
     function updateFileLabel(input) {
         if (input.files && input.files[0]) {
-            document.getElementById('file_label').innerHTML = '<strong class="text-emerald-600 dark:text-emerald-400 font-bold">' + input.files[0].name + '</strong> (' + Math.round(input.files[0].size / 1024) + ' KB)';
+            document.getElementById('file_label').innerHTML = '<strong class="text-[#fa2f79] dark:text-pink-400 font-bold">' + input.files[0].name + '</strong> (' + Math.round(input.files[0].size / 1024) + ' KB)';
         }
     }
 </script>

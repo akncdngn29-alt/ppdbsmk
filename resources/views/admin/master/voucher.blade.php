@@ -7,12 +7,12 @@
 <div class="space-y-6">
 
     @if(session('success'))
-    <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center justify-between">
+    <div class="p-4 rounded-2xl bg-pink-50 dark:bg-pink-950/60 border border-pink-200 dark:border-pink-800 text-pink-800 dark:text-pink-200 text-xs font-semibold flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+            <i data-lucide="check-circle" class="w-4 h-4 text-[#fa2f79]"></i>
             <span>{{ session('success') }}</span>
         </div>
-        <button type="button" onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-800">&times;</button>
+        <button type="button" onclick="this.parentElement.remove()" class="text-[#fa2f79] hover:text-pink-800">&times;</button>
     </div>
     @endif
 
@@ -42,7 +42,7 @@
     <!-- Statistic Cards -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-pink-50 dark:bg-pink-950/50 text-[#fa2f79] dark:text-pink-400 flex items-center justify-center shrink-0">
                 <i data-lucide="ticket" class="w-6 h-6"></i>
             </div>
             <div>
@@ -89,7 +89,7 @@
         <!-- Form Tambah Voucher Baru -->
         <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
             <div class="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
-                <div class="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center">
+                <div class="w-8 h-8 rounded-xl bg-pink-100 dark:bg-pink-950/60 text-[#fa2f79] flex items-center justify-center">
                     <i data-lucide="plus-circle" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -104,19 +104,19 @@
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Kode Voucher <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" name="kode_voucher" value="{{ old('kode_voucher') }}" required placeholder="Contoh: TAHFIZ100, DISMP25" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-emerald-500">
+                    <input type="text" name="kode_voucher" value="{{ old('kode_voucher') }}" required placeholder="Contoh: TAHFIZ100, DISMP25" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-[#fa2f79]">
                     <span class="text-[10px] text-slate-400">Kode unik huruf kapital & angka tanpa spasi.</span>
                 </div>
 
                 <div>
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Nama Promo / Keterangan Singkat</label>
-                    <input type="text" name="nama_voucher" value="{{ old('nama_voucher') }}" placeholder="Contoh: Beasiswa Tahfiz 30 Juz / Diskon Gelombang 1" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                    <input type="text" name="nama_voucher" value="{{ old('nama_voucher') }}" placeholder="Contoh: Beasiswa Tahfiz 30 Juz / Diskon Gelombang 1" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Jenis Diskon <span class="text-rose-500">*</span></label>
-                        <select name="tipe" id="create_tipe" onchange="toggleTipeInput('create')" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-emerald-500">
+                        <select name="tipe" id="create_tipe" onchange="toggleTipeInput('create')" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-[#fa2f79]">
                             <option value="nominal" {{ old('tipe') === 'nominal' ? 'selected' : '' }}>Nominal (Rp)</option>
                             <option value="persen" {{ old('tipe') === 'persen' ? 'selected' : '' }}>Persentase (%)</option>
                         </select>
@@ -126,7 +126,7 @@
                         <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                             Besaran Potongan <span class="text-rose-500">*</span>
                         </label>
-                        <input type="number" name="nilai_potongan" id="create_nilai_potongan" value="{{ old('nilai_potongan', 50000) }}" required min="1" step="any" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-emerald-500">
+                        <input type="number" name="nilai_potongan" id="create_nilai_potongan" value="{{ old('nilai_potongan', 50000) }}" required min="1" step="any" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-[#fa2f79]">
                         <span id="create_nilai_hint" class="text-[10px] text-slate-400">Nominal rupiah dipotong langsung.</span>
                     </div>
                 </div>
@@ -135,30 +135,30 @@
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Batas Penggunaan (Kuota) <span class="text-rose-500">*</span>
                     </label>
-                    <input type="number" name="kuota_voucher" value="{{ old('kuota_voucher', 50) }}" required min="1" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-emerald-500">
+                    <input type="number" name="kuota_voucher" value="{{ old('kuota_voucher', 50) }}" required min="1" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-[#fa2f79]">
                     <span class="text-[10px] text-slate-400">Batas maksimal berapa kali voucher ini dapat digunakan.</span>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Berlaku Mulai</label>
-                        <input type="date" name="berlaku_mulai" value="{{ old('berlaku_mulai', date('Y-m-d')) }}" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                        <input type="date" name="berlaku_mulai" value="{{ old('berlaku_mulai', date('Y-m-d')) }}" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Berlaku Sampai</label>
-                        <input type="date" name="berlaku_sampai" value="{{ old('berlaku_sampai') }}" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                        <input type="date" name="berlaku_sampai" value="{{ old('berlaku_sampai') }}" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]">
                     </div>
                 </div>
                 <span class="text-[10px] text-slate-400 block -mt-1">Kosongkan 'Berlaku Sampai' jika berlaku tanpa batas waktu.</span>
 
                 <div>
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Deskripsi / Syarat Ketentuan Promo</label>
-                    <textarea name="deskripsi" rows="2" placeholder="Informasi promo yang ditampilkan kepada calon siswa..." class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">{{ old('deskripsi') }}</textarea>
+                    <textarea name="deskripsi" rows="2" placeholder="Informasi promo yang ditampilkan kepada calon siswa..." class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]">{{ old('deskripsi') }}</textarea>
                 </div>
 
                 <div class="pt-2">
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="status_aktif" value="1" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                        <input type="checkbox" name="status_aktif" value="1" checked class="rounded border-slate-300 text-[#fa2f79] focus:ring-[#fa2f79]">
                         <span class="font-bold text-slate-800 dark:text-slate-200">Aktifkan Voucher Ini Sekarang</span>
                     </label>
                 </div>
@@ -174,7 +174,7 @@
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div>
                     <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i data-lucide="tags" class="w-5 h-5 text-emerald-600"></i>
+                        <i data-lucide="tags" class="w-5 h-5 text-[#fa2f79]"></i>
                         Daftar Voucher & Ketentuan Promo
                     </h3>
                     <p class="text-xs text-slate-400">Kelola status aktif, edit masa berlaku, dan pantau batas penggunaan voucher</p>
@@ -206,7 +206,7 @@
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
                             <td class="p-3">
                                 <div class="flex items-center gap-1.5">
-                                    <span class="font-mono font-extrabold text-emerald-600 dark:text-emerald-400 text-sm tracking-wide">
+                                    <span class="font-mono font-extrabold text-[#fa2f79] dark:text-pink-400 text-sm tracking-wide">
                                         {{ $v->kode_voucher }}
                                     </span>
                                 </div>
@@ -258,7 +258,7 @@
                                     <span class="text-[10px] text-slate-400">({{ $v->sisaKuota() }} sisa)</span>
                                 </div>
                                 <div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full {{ $persenPakai >= 100 ? 'bg-rose-500' : ($persenPakai > 70 ? 'bg-amber-500' : 'bg-emerald-500') }}" style="width: {{ $persenPakai }}%"></div>
+                                    <div class="h-full rounded-full {{ $persenPakai >= 100 ? 'bg-rose-500' : ($persenPakai > 70 ? 'bg-amber-500' : 'bg-[#fa2f79]') }}" style="width: {{ $persenPakai }}%"></div>
                                 </div>
                             </td>
 
@@ -276,8 +276,8 @@
                                         Kuota Habis
                                     </span>
                                 @else
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 flex items-center gap-1 w-fit">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Aktif
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300 flex items-center gap-1 w-fit">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span> Aktif
                                     </span>
                                 @endif
                             </td>
@@ -287,7 +287,7 @@
                                     <!-- Toggle Status Button -->
                                     <form action="{{ route('admin.master.voucher.toggle', $v->id_voucher) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin {{ $v->status_aktif ? 'menonaktifkan' : 'mengaktifkan' }} voucher {{ $v->kode_voucher }}?')">
                                         @csrf
-                                        <button type="submit" title="{{ $v->status_aktif ? 'Klik untuk Menonaktifkan' : 'Klik untuk Mengaktifkan' }}" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 {{ $v->status_aktif ? 'bg-amber-50 hover:bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' }}">
+                                        <button type="submit" title="{{ $v->status_aktif ? 'Klik untuk Menonaktifkan' : 'Klik untuk Mengaktifkan' }}" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 {{ $v->status_aktif ? 'bg-amber-50 hover:bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800' : 'bg-pink-50 hover:bg-pink-100 text-[#fa2f79] dark:bg-pink-950/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800' }}">
                                             <i data-lucide="{{ $v->status_aktif ? 'power-off' : 'power' }}" class="w-3.5 h-3.5"></i>
                                             <span>{{ $v->status_aktif ? 'Nonaktifkan' : 'Aktifkan' }}</span>
                                         </button>
@@ -326,12 +326,12 @@
         
         <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+                <div class="w-8 h-8 rounded-xl bg-[#fa2f79] text-white flex items-center justify-center">
                     <i data-lucide="edit" class="w-4 h-4"></i>
                 </div>
                 <div>
                     <h3 class="text-sm font-extrabold" id="editModalTitle">Edit Voucher Diskon</h3>
-                    <span class="text-[10px] text-emerald-400 font-medium">Ubah parameter, masa berlaku, atau batas kuota voucher</span>
+                    <span class="text-[10px] text-pink-300 font-medium">Ubah parameter, masa berlaku, atau batas kuota voucher</span>
                 </div>
             </div>
             <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-white transition-colors">
@@ -347,18 +347,18 @@
                 <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                     Kode Voucher <span class="text-rose-500">*</span>
                 </label>
-                <input type="text" id="edit_kode_voucher" name="kode_voucher" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-emerald-500">
+                <input type="text" id="edit_kode_voucher" name="kode_voucher" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-[#fa2f79]">
             </div>
 
             <div>
                 <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Nama Promo / Keterangan Singkat</label>
-                <input type="text" id="edit_nama_voucher" name="nama_voucher" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                <input type="text" id="edit_nama_voucher" name="nama_voucher" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]">
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Jenis Diskon <span class="text-rose-500">*</span></label>
-                    <select name="tipe" id="edit_tipe" onchange="toggleTipeInput('edit')" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-emerald-500">
+                    <select name="tipe" id="edit_tipe" onchange="toggleTipeInput('edit')" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-[#fa2f79]">
                         <option value="nominal">Nominal Rupiah (Rp)</option>
                         <option value="persen">Persentase (%)</option>
                     </select>
@@ -368,7 +368,7 @@
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Besaran Potongan <span class="text-rose-500">*</span>
                     </label>
-                    <input type="number" name="nilai_potongan" id="edit_nilai_potongan" required min="1" step="any" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-emerald-500">
+                    <input type="number" name="nilai_potongan" id="edit_nilai_potongan" required min="1" step="any" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-[#fa2f79]">
                     <span id="edit_nilai_hint" class="text-[10px] text-slate-400">Nominal rupiah.</span>
                 </div>
             </div>
@@ -377,29 +377,29 @@
                 <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                     Batas Penggunaan (Kuota) <span class="text-rose-500">*</span>
                 </label>
-                <input type="number" id="edit_kuota_voucher" name="kuota_voucher" required min="1" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-emerald-500">
+                <input type="number" id="edit_kuota_voucher" name="kuota_voucher" required min="1" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold focus:outline-none focus:border-[#fa2f79]">
                 <span id="edit_kuota_hint" class="text-[10px] text-slate-400 block mt-0.5">Jumlah kuota batas penggunaan total.</span>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Masa Berlaku Mulai</label>
-                    <input type="date" id="edit_berlaku_mulai" name="berlaku_mulai" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                    <input type="date" id="edit_berlaku_mulai" name="berlaku_mulai" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]">
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Masa Berlaku Sampai</label>
-                    <input type="date" id="edit_berlaku_sampai" name="berlaku_sampai" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                    <input type="date" id="edit_berlaku_sampai" name="berlaku_sampai" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]">
                 </div>
             </div>
 
             <div>
                 <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Deskripsi / Syarat Ketentuan Promo</label>
-                <textarea id="edit_deskripsi" name="deskripsi" rows="2" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500"></textarea>
+                <textarea id="edit_deskripsi" name="deskripsi" rows="2" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-[#fa2f79]"></textarea>
             </div>
 
             <div class="pt-2">
                 <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" id="edit_status_aktif" name="status_aktif" value="1" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                    <input type="checkbox" id="edit_status_aktif" name="status_aktif" value="1" class="rounded border-slate-300 text-[#fa2f79] focus:ring-[#fa2f79]">
                     <span class="font-bold text-slate-800 dark:text-slate-200">Voucher Aktif</span>
                 </label>
             </div>
