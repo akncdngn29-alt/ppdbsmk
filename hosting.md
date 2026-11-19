@@ -108,28 +108,116 @@ Simpan string yang dihasilkan (contoh: `base64:xxxx...`), ini akan dimasukkan ke
 
 ## ⚙️ Langkah 4: Konfigurasi Environment Variables di Vercel
 
-Masuk ke **Project Settings** -> **Environment Variables** di dashboard Vercel, lalu tambahkan variabel berikut:
+Masuk ke **Project Settings** -> **Environment Variables** di dashboard Vercel. Anda dapat menambahkan variabel satu per satu atau memilih opsi **"Paste .env file contents"** untuk langsung menempelkan seluruh variabel.
+
+Berikut adalah daftar lengkap Environment Variables yang diperlukan:
+
+### 1. Konfigurasi Aplikasi Inti (Wajib)
+| Key | Value (Contoh) | Keterangan |
+| :--- | :--- | :--- |
+| `APP_NAME` | `"PPDB SMK Bina Khalifah"` | Nama aplikasi Anda |
+| `APP_ENV` | `production` | Mode produksi |
+| `APP_DEBUG` | `false` | Nonaktifkan debug untuk keamanan di produksi |
+| `APP_KEY` | `base64:xxxx...` | Hasil perintah `php artisan key:generate --show` |
+| `APP_URL` | `https://nama-projek-anda.vercel.app` | URL domain Vercel yang didapatkan setelah deploy |
+
+### 2. Koneksi Database Cloud (Wajib)
+*Pilih salah satu sesuai jenis database cloud Anda (MySQL / TiDB / Aiven / Supabase Postgres):*
 
 | Key | Value (Contoh) | Keterangan |
 | :--- | :--- | :--- |
-| `APP_NAME` | `PPDB SMK` | Nama aplikasi |
-| `APP_ENV` | `production` | Mode aplikasi |
-| `APP_DEBUG` | `false` | Nonaktifkan debug di production |
-| `APP_KEY` | `base64:xxxx...` | Hasil dari `key:generate --show` |
-| `APP_URL` | `https://nama-projek-anda.vercel.app` | URL domain Vercel Anda |
-| `DB_CONNECTION` | `mysql` atau `pgsql` | Sesuai database cloud yang dipilih |
-| `DB_HOST` | `gateway.xxxx.aivencloud.com` | Host database cloud |
-| `DB_PORT` | `3306` atau `5432` | Port database |
-| `DB_DATABASE` | `nama_database` | Nama database |
-| `DB_USERNAME` | `user_database` | Username database |
-| `DB_PASSWORD` | `password_database` | Password database |
-| `SESSION_DRIVER` | `cookie` | Aman untuk serverless |
-| `CACHE_STORE` | `array` | Memori sementara |
-| `LOG_CHANNEL` | `stderr` | Agar log tampil di log Vercel |
+| `DB_CONNECTION` | `mysql` *(atau `pgsql`)* | Driver database |
+| `DB_HOST` | `gateway.xxxx.aivencloud.com` | Host / Endpoint database cloud |
+| `DB_PORT` | `3306` *(atau `5432` untuk Postgres)* | Port database |
+| `DB_DATABASE` | `defaultdb` | Nama database |
+| `DB_USERNAME` | `avnadmin` | Username database |
+| `DB_PASSWORD` | `password_rahasia_anda` | Password database |
+| `DB_SSLMODE` | `require` *(opsional, untuk Postgres)* | Diperlukan oleh Supabase / Neon jika SSL wajib |
 
-*(Tambahkan juga variabel Midtrans / Mailer jika aplikasi Anda menggunakannya).*
+### 3. Payment Gateway Midtrans (Wajib jika menggunakan pembayaran online)
+Dapatkan kunci dari [Midtrans Dashboard](https://dashboard.midtrans.com/) (Menu **Settings** -> **Access Keys**):
 
-Setelah menambahkan Environment Variables, lakukan **Redeploy** pada deployment terakhir Anda.
+| Key | Value (Contoh) | Keterangan |
+| :--- | :--- | :--- |
+| `MIDTRANS_SERVER_KEY` | `SB-Mid-server-xxxx` | Server Key dari Midtrans (Sandbox diawali `SB-`, Production diawali `Mid-`) |
+| `MIDTRANS_CLIENT_KEY` | `SB-Mid-client-xxxx` | Client Key dari Midtrans |
+| `MIDTRANS_IS_PRODUCTION` | `false` | `false` untuk mode Sandbox / Testing, `true` jika sudah akun Production aktif |
+
+> 💡 **Pengaturan Webhook Notification URL di Midtrans Dashboard**:
+> Buka Midtrans Dashboard -> **Settings** -> **Configuration** -> masukkan URL:
+> `https://nama-projek-anda.vercel.app/api/midtrans/notification`
+
+### 4. Optimalisasi Serverless Vercel (Wajib)
+Mengarahkan session, cache, dan log agar aman dan kompatibel dengan lingkungan stateless serverless:
+
+| Key | Value | Keterangan |
+| :--- | :--- | :--- |
+| `SESSION_DRIVER` | `cookie` | Simpan sesi pengguna di cookie browser terenkripsi (bebas dari read-only disk) |
+| `CACHE_STORE` | `array` | Cache memori sementara per request |
+| `QUEUE_CONNECTION` | `sync` | Eksekusi antrean langsung (tanpa worker background) |
+| `LOG_CHANNEL` | `stderr` | Kirim error/log ke Vercel Function Logs |
+
+### 5. Penyimpanan Berkas & Dokumen Upload (Opsional / Rekomendasi)
+Karena serverless Vercel bersifat ephemeral (file di disk lokal akan hilang saat instance refresh), untuk penyimpanan dokumen berkas siswa secara permanen dianjurkan menggunakan Cloud Storage (AWS S3 atau Supabase Storage S3-compatible):
+
+| Key | Value (Contoh) | Keterangan |
+| :--- | :--- | :--- |
+| `FILESYSTEM_DISK` | `local` *(atau `s3`)* | Gunakan `s3` jika mengaktifkan S3 bucket |
+| `AWS_ACCESS_KEY_ID` | `xxxx` | Kunci akses cloud storage |
+| `AWS_SECRET_ACCESS_KEY` | `xxxx` | Secret cloud storage |
+| `AWS_DEFAULT_REGION` | `ap-southeast-1` | Wilayah cloud storage |
+| `AWS_BUCKET` | `ppdb-smk-berkas` | Nama bucket dokumen |
+| `AWS_ENDPOINT` | `https://xxxx.supabase.co/storage/v1/s3` | Diisi jika menggunakan Supabase S3 / MinIO |
+
+### 6. Email Notifikasi / SMTP (Opsional)
+Jika Anda ingin mengirimkan email bukti pendaftaran atau reset password via SMTP:
+
+| Key | Value (Contoh) | Keterangan |
+| :--- | :--- | :--- |
+| `MAIL_MAILER` | `smtp` *(atau `log` untuk mematikan)* | Driver mailer |
+| `MAIL_HOST` | `smtp.gmail.com` | Host SMTP |
+| `MAIL_PORT` | `587` | Port SMTP (587 TLS / 465 SSL) |
+| `MAIL_USERNAME` | `admin@sekolah.sch.id` | Username / Email |
+| `MAIL_PASSWORD` | `xxxx-xxxx-xxxx-xxxx` | Password aplikasi (App Password) |
+| `MAIL_ENCRYPTION` | `tls` | Enkripsi email |
+| `MAIL_FROM_ADDRESS` | `admin@sekolah.sch.id` | Alamat pengirim |
+| `MAIL_FROM_NAME` | `"PPDB SMK Bina Khalifah"` | Nama pengirim |
+
+---
+
+### 📋 Template Siap Copy-Paste untuk Vercel:
+
+Salin teks di bawah ini dan paste langsung di Vercel Dashboard (**Project Settings** -> **Environment Variables** -> klik **"Paste .env file contents"**):
+
+```env
+APP_NAME="PPDB SMK Bina Khalifah"
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:MASUKKAN_APP_KEY_ANDA_DISINI
+APP_URL=https://nama-projek-anda.vercel.app
+
+DB_CONNECTION=mysql
+DB_HOST=gateway.xxxx.aivencloud.com
+DB_PORT=3306
+DB_DATABASE=nama_database_anda
+DB_USERNAME=username_database_anda
+DB_PASSWORD=password_database_anda
+
+MIDTRANS_SERVER_KEY=SB-Mid-server-MASUKKAN_SERVER_KEY
+MIDTRANS_CLIENT_KEY=SB-Mid-client-MASUKKAN_CLIENT_KEY
+MIDTRANS_IS_PRODUCTION=false
+
+SESSION_DRIVER=cookie
+CACHE_STORE=array
+QUEUE_CONNECTION=sync
+LOG_CHANNEL=stderr
+
+FILESYSTEM_DISK=local
+MAIL_MAILER=log
+```
+
+> **Catatan Setelah Mengubah Variabel**:
+> Setiap kali Anda menambahkan atau mengubah Environment Variables di Vercel, pastikan untuk melakukan **Redeploy** (pada menu Deployments -> klik icon titik tiga -> Redeploy) agar variabel baru terbaca.
 
 ---
 
