@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pendaftar;
 use App\Models\Jurusan;
+use App\Models\Gelombang;
+use App\Models\Pembayaran;
 use App\Models\Terima;
 use App\Models\LogAktivitas;
 use App\Models\PengaturanSekolah;
@@ -42,6 +44,21 @@ class KepalaSekolahController extends Controller
             ->reverse();
 
         $pengaturan = PengaturanSekolah::getPengaturan();
+
+        if (auth('admin')->check() && auth('admin')->user()->role === 'kepala_sekolah') {
+            LogAktivitas::log(
+                'PENGAWASAN',
+                'Kepala Sekolah memantau ringkasan statistik dan tren dashboard PPDB',
+                null,
+                null,
+                null,
+                null,
+                'SUCCESS',
+                null,
+                auth('admin')->id(),
+                'kepala_sekolah'
+            );
+        }
 
         return view('kepsek.dashboard', compact(
             'totalPendaftar',
@@ -119,16 +136,201 @@ class KepalaSekolahController extends Controller
         $totalDiterima = Pendaftar::where('status_kelulusan', 'Diterima')->count();
         $pengaturan = PengaturanSekolah::getPengaturan();
 
+        if (auth('admin')->check() && auth('admin')->user()->role === 'kepala_sekolah') {
+            LogAktivitas::log(
+                'PENGAWASAN',
+                'Kepala Sekolah meninjau laporan rekapitulasi PPDB',
+                null,
+                null,
+                null,
+                null,
+                'SUCCESS',
+                null,
+                auth('admin')->id(),
+                'kepala_sekolah'
+            );
+        }
+
         return view('kepsek.laporan', compact('jurusan', 'totalPendaftar', 'totalDiterima', 'pengaturan'));
     }
 
-    public function auditLog()
+    /**
+     * Halaman Riwayat Aktivitas & Audit Trail Eksekutif Kepala Sekolah (Tahap 2).
+     * Memiliki hak pengawasan penuh atas seluruh aktivitas: Calon Siswa, Petugas TU, & Kepala Sekolah.
+     */
+    public function auditLog(Request $request)
     {
-        $logs = LogAktivitas::with(['admin', 'user'])
-            ->orderBy('id_log', 'desc')
-            ->paginate(25);
+        abort_if(!auth('admin')->check() || auth('admin')->user()->role !== 'kepala_sekolah', 403, 'Akses khusus Kepala Sekolah.');
 
-        return view('kepsek.audit_log', compact('logs'));
+        $query = LogAktivitas::with(['admin', 'user.pendaftar']);
+
+        // 1. Filter Pencarian Teks Bebas
+        if ($request->filled('q')) {
+            $q = trim($request->q);
+            $query->where(function ($sub) use ($q) {
+                $sub->where('deskripsi', 'LIKE', "%{$q}%")
+                    ->orWhere('aksi', 'LIKE', "%{$q}%")
+                    ->orWhere('ip_address', 'LIKE', "%{$q}%")
+                    ->orWhereHas('user', function ($u) use ($q) {
+                        $u->where('nama', 'LIKE', "%{$q}%")
+                          ->orWhere('nisn', 'LIKE', "%{$q}%")
+                          ->orWhere('username', 'LIKE', "%{$q}%")
+                          ->orWhereHas('pendaftar', function ($p) use ($q) {
+                              $p->where('no_pendaftaran', 'LIKE', "%{$q}%")
+                                ->orWhere('nama', 'LIKE', "%{$q}%");
+                          });
+                    })
+                    ->orWhereHas('admin', function ($a) use ($q) {
+                        $a->where('nama_admin', 'LIKE', "%{$q}%")
+                          ->orWhere('username', 'LIKE', "%{$q}%");
+                    });
+            });
+        }
+
+        // 2. Filter Berdasarkan Role / Aktor
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        // 3. Filter Berdasarkan Jenis Aktivitas
+        if ($request->filled('aksi')) {
+            $query->where('aksi', $request->aksi);
+        }
+
+        // 4. Filter Berdasarkan Status
+        if ($request->filled('status')) {
+            $query->where('status', strtoupper($request->status));
+        }
+
+        // 5. Filter Rentang Tanggal
+        if ($request->filled('tanggal_mulai')) {
+            $query->whereDate('created_at', '>=', $request->tanggal_mulai);
+        }
+        if ($request->filled('tanggal_akhir')) {
+            $query->whereDate('created_at', '<=', $request->tanggal_akhir);
+        }
+
+        $logs = $query->orderBy('id_log', 'desc')->paginate(25)->withQueryString();
+
+        // Statistik Pengawasan untuk Kepala Sekolah
+        $stats = [
+            'total' => LogAktivitas::count(),
+            'siswa' => LogAktivitas::where('role', 'calon_siswa')->count(),
+            'tu' => LogAktivitas::where('role', 'tu')->count(),
+            'kepsek' => LogAktivitas::where('role', 'kepala_sekolah')->count(),
+            'gagal' => LogAktivitas::where('status', 'FAILED')->count(),
+        ];
+
+        // Daftar jenis aksi unik untuk opsi filter dropdown
+        $daftarAksi = LogAktivitas::distinct()->pluck('aksi')->filter()->values();
+
+        return view('kepsek.audit_log', compact('logs', 'stats', 'daftarAksi'));
+    }
+
+    /**
+     * Halaman Ringkasan Keuangan PPDB Eksekutif Kepala Sekolah.
+     * Menyajikan metrik pendapatan riil, breakdown tunai vs online, potongan voucher,
+     * serta log transaksi pembayaran yang valid.
+     */
+    public function keuangan(Request $request)
+    {
+        abort_if(!auth('admin')->check() || auth('admin')->user()->role !== 'kepala_sekolah', 403, 'Akses khusus Kepala Sekolah.');
+
+        // 1. KPI Metrik Keuangan Real-Time (Status Settlement)
+        $totalPendapatan = Pembayaran::where('status_transaksi', 'settlement')->sum('total_bayar');
+        $pendapatanTunai = Pembayaran::where('status_transaksi', 'settlement')->whereIn('tipe_bayar', ['tunai', 'tunai_tu'])->sum('total_bayar');
+        $pendapatanOnline = Pembayaran::where('status_transaksi', 'settlement')->where('tipe_bayar', 'midtrans')->sum('total_bayar');
+        $totalPotongan = Pembayaran::where('status_transaksi', 'settlement')->sum('potongan');
+        $totalTransaksiLunas = Pembayaran::where('status_transaksi', 'settlement')->count();
+        $totalTransaksiPending = Pembayaran::where('status_transaksi', 'pending')->count();
+
+        // 2. Breakdown per Gelombang
+        $gelombangStats = Gelombang::withCount([
+            'pembayaran as transaksi_lunas_count' => function ($q) {
+                $q->where('status_transaksi', 'settlement');
+            }
+        ])->get()->map(function ($g) {
+            $g->total_nominal = Pembayaran::where('id_gelombang', $g->id_gelombang)
+                ->where('status_transaksi', 'settlement')
+                ->sum('total_bayar');
+            return $g;
+        });
+
+        // 3. Breakdown per Jurusan Pilihan 1
+        $jurusanStats = Jurusan::all()->map(function ($j) {
+            $j->total_lunas = Pembayaran::whereHas('pendaftar', function ($p) use ($j) {
+                $p->where('id_jurusan_1', $j->id_jurusan);
+            })->where('status_transaksi', 'settlement')->sum('total_bayar');
+
+            $j->pendaftar_lunas_count = Pembayaran::whereHas('pendaftar', function ($p) use ($j) {
+                $p->where('id_jurusan_1', $j->id_jurusan);
+            })->where('status_transaksi', 'settlement')->count();
+            return $j;
+        });
+
+        // 4. Query Transaksi dengan Filter & Pencarian
+        $query = Pembayaran::with(['pendaftar.jurusan1', 'gelombang', 'voucher']);
+
+        if ($request->filled('q')) {
+            $q = trim($request->q);
+            $query->where(function ($sub) use ($q) {
+                $sub->where('kode_transaksi', 'LIKE', "%{$q}%")
+                    ->orWhereHas('pendaftar', function ($p) use ($q) {
+                        $p->where('nama', 'LIKE', "%{$q}%")
+                          ->orWhere('no_pendaftaran', 'LIKE', "%{$q}%")
+                          ->orWhere('nisn', 'LIKE', "%{$q}%");
+                    });
+            });
+        }
+
+        if ($request->filled('tipe_bayar')) {
+            $query->where('tipe_bayar', $request->tipe_bayar);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status_transaksi', $request->status);
+        }
+
+        if ($request->filled('gelombang')) {
+            $query->where('id_gelombang', $request->gelombang);
+        }
+
+        if ($request->filled('tanggal_mulai')) {
+            $query->whereDate('waktu_transaksi', '>=', $request->tanggal_mulai);
+        }
+
+        if ($request->filled('tanggal_akhir')) {
+            $query->whereDate('waktu_transaksi', '<=', $request->tanggal_akhir);
+        }
+
+        $transaksi = $query->orderBy('waktu_transaksi', 'desc')->paginate(20)->withQueryString();
+        $daftarGelombang = Gelombang::all();
+
+        LogAktivitas::log(
+            'PENGAWASAN',
+            'Kepala Sekolah memantau ringkasan keuangan dan transaksi pembayaran PPDB',
+            null,
+            null,
+            null,
+            null,
+            'SUCCESS',
+            null,
+            auth('admin')->id(),
+            'kepala_sekolah'
+        );
+
+        return view('kepsek.keuangan', compact(
+            'totalPendapatan',
+            'pendapatanTunai',
+            'pendapatanOnline',
+            'totalPotongan',
+            'totalTransaksiLunas',
+            'totalTransaksiPending',
+            'gelombangStats',
+            'jurusanStats',
+            'transaksi',
+            'daftarGelombang'
+        ));
     }
 }
 

@@ -13,7 +13,7 @@
                 <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Total Pendaftar</span>
                 <div class="text-2xl font-black text-slate-900 dark:text-white mt-1">{{ $totalPendaftar }}</div>
             </div>
-            <div class="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <div class="w-11 h-11 rounded-xl bg-pink-50 dark:bg-pink-950/60 text-[#fa2f79] flex items-center justify-center">
                 <i data-lucide="users" class="w-6 h-6"></i>
             </div>
         </div>
@@ -67,19 +67,26 @@
         @endphp
         <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
             <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                    {{ $j->kode_jurusan }}
-                </span>
+                <div class="flex items-center gap-1.5">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        {{ $j->kode_jurusan }}
+                    </span>
+                    @if(!$j->status_aktif)
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
+                        Nonaktif
+                    </span>
+                    @endif
+                </div>
                 <span class="text-xs font-bold text-slate-500">{{ $j->pendaftar_pilihan1_count }} / {{ $j->kuota }} Siswa</span>
             </div>
             <h3 class="text-sm font-bold text-slate-900 dark:text-white truncate" title="{{ $j->nama_jurusan }}">{{ $j->nama_jurusan }}</h3>
             <!-- Progress Bar -->
             <div>
                 <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div class="h-full bg-emerald-500 rounded-full" style="width: {{ min(100, $percent) }}%"></div>
+                    <div class="h-full @if($percent >= 90) bg-[#fa2f79] @elseif($percent >= 75) bg-sky-500 @else bg-emerald-500 @endif rounded-full" style="width: {{ min(100, $percent) }}%"></div>
                 </div>
                 <div class="flex items-center justify-between text-[11px] text-slate-400 mt-1">
-                    <span>Terisi {{ $percent }}%</span>
+                    <span class="@if($percent >= 90) text-[#fa2f79] font-bold @endif">Terisi {{ $percent }}%</span>
                     <span>Sisa: {{ max(0, $j->kuota - $j->pendaftar_pilihan1_count) }} Kursi</span>
                 </div>
             </div>
@@ -94,7 +101,7 @@
                 <h2 class="text-base font-bold text-slate-900 dark:text-white">Pendaftar Terbaru</h2>
                 <p class="text-xs text-slate-500 dark:text-slate-400">Daftar calon siswa yang baru saja menyelesaikan registrasi.</p>
             </div>
-            <a href="{{ route('admin.pendaftar') }}" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+            <a href="{{ route('admin.pendaftar') }}" class="text-xs font-bold text-[#fa2f79] hover:underline flex items-center gap-1">
                 Lihat Seluruh Pendaftar &rarr;
             </a>
         </div>
@@ -121,7 +128,7 @@
                             <span class="text-[10px] text-slate-400 font-mono">{{ $rp->nisn }}</span>
                         </td>
                         <td class="p-3 text-slate-600 dark:text-slate-300">{{ $rp->asal_sekolah }}</td>
-                        <td class="p-3 font-medium text-slate-800 dark:text-slate-200">{{ $rp->jurusan1->nama_jurusan }}</td>
+                        <td class="p-3 font-medium text-slate-800 dark:text-slate-200">{{ $rp->jurusan1 ? $rp->jurusan1->nama_jurusan : 'Belum dipilih' }}</td>
                         <td class="p-3">
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold 
                                 {{ $rp->status_pembayaran === 'Paid' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' }}">
@@ -137,7 +144,7 @@
                             </span>
                         </td>
                         <td class="p-3">
-                            <a href="{{ route('admin.pendaftar.detail', $rp->id_pendaftar) }}" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-700 dark:text-slate-300 font-bold transition-colors inline-block">
+                            <a href="{{ route('admin.pendaftar.detail', $rp->id_pendaftar) }}" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-[#fa2f79] hover:text-white text-slate-700 dark:text-slate-300 font-bold transition-colors inline-block">
                                 Detail / Periksa
                             </a>
                         </td>

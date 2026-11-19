@@ -17,6 +17,13 @@ class Jurusan extends Model
         'kode_jurusan',
         'kuota',
         'deskripsi',
+        'prospek_kerja',
+        'status_aktif',
+    ];
+
+    protected $casts = [
+        'kuota' => 'integer',
+        'status_aktif' => 'boolean',
     ];
 
     public function pendaftarPilihan1()
@@ -33,5 +40,47 @@ class Jurusan extends Model
     {
         return $this->hasMany(Terima::class, 'id_jurusan', 'id_jurusan');
     }
-}
 
+    /**
+     * Scope query untuk hanya mengambil jurusan yang berstatus aktif.
+     */
+    public function scopeAktif($query)
+    {
+        return $query->where('status_aktif', true);
+    }
+
+    /**
+     * Cek apakah jurusan aktif.
+     */
+    public function isAktif(): bool
+    {
+        return (bool) $this->status_aktif;
+    }
+
+    /**
+     * Label status manusiawi.
+     */
+    public function getStatusLabelAttribute(): string
+    {
+        return $this->status_aktif ? 'Aktif' : 'Nonaktif';
+    }
+
+    /**
+     * Perhitungan sisa kuota penerimaan.
+     */
+    public function getSisaKuotaAttribute(): int
+    {
+        $count = $this->pendaftar_pilihan1_count ?? $this->pendaftarPilihan1()->count();
+        return max(0, $this->kuota - $count);
+    }
+
+    /**
+     * Cek apakah jurusan sudah memiliki pendaftar (pilihan 1, pilihan 2, atau siswa diterima).
+     */
+    public function hasPendaftar(): bool
+    {
+        return $this->pendaftarPilihan1()->exists()
+            || $this->pendaftarPilihan2()->exists()
+            || $this->siswaDiterima()->exists();
+    }
+}

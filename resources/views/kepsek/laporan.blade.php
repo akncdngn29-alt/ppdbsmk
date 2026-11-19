@@ -23,7 +23,7 @@
 
             <!-- Global Action Buttons -->
             <div class="flex flex-wrap items-center gap-2 shrink-0">
-                <a href="{{ route('admin.laporan.rekap_pdf') }}" target="_blank" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
+                <a href="{{ route('admin.laporan.rekap_pdf') }}" target="_blank" class="px-4 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-pink-500/20 transition-colors">
                     <i data-lucide="printer" class="w-4 h-4"></i> Cetak Seluruh Rekap PDF
                 </a>
                 <a href="{{ route('admin.ekspor.excel') }}" class="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700 font-bold text-xs flex items-center gap-2 shadow-sm transition-colors">
@@ -77,6 +77,9 @@
                         <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                             <td class="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
                                 {{ $j->nama_jurusan }}
+                                @if(!$j->status_aktif)
+                                    <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300">Nonaktif</span>
+                                @endif
                             </td>
                             <td class="py-3.5 px-4 text-center font-mono font-bold text-emerald-600">
                                 {{ $j->kode_jurusan }}
@@ -119,7 +122,7 @@
                         <td class="py-4 px-4 text-center">{{ max(0, $grandTotalKuota - $grandTotalDiterima) }}</td>
                         <td class="py-4 px-4 text-center">
                             <a href="{{ route('admin.laporan.rekap_pdf') }}" target="_blank"
-                               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-700 transition-colors shadow-sm">
+                               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#fa2f79] text-white text-[11px] font-bold hover:bg-[#e11d48] transition-colors shadow-sm shadow-pink-500/20">
                                 <i data-lucide="printer" class="w-3.5 h-3.5"></i> Cetak Semua
                             </a>
                         </td>

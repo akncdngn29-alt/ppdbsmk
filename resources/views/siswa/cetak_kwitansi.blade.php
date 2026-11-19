@@ -56,7 +56,7 @@
             </tr>
             <tr>
                 <td class="py-1.5 font-bold text-slate-600">Program Keahlian</td>
-                <td class="font-semibold text-slate-900">: {{ $pendaftar->jurusan1->nama_jurusan }}</td>
+                <td class="font-semibold text-slate-900">: {{ $pendaftar->jurusan1 ? $pendaftar->jurusan1->nama_jurusan : '-' }}</td>
             </tr>
             <tr>
                 <td class="py-1.5 font-bold text-slate-600">Untuk Pembayaran</td>
@@ -66,6 +66,12 @@
                 <td class="py-1.5 font-bold text-slate-600">Metode Transaksi</td>
                 <td class="font-medium text-slate-900">: {{ $pendaftar->pembayaran ? $pendaftar->pembayaran->metode_pembayaran : 'Midtrans' }}</td>
             </tr>
+            @if($pendaftar->pembayaran && $pendaftar->pembayaran->potongan > 0)
+            <tr>
+                <td class="py-1.5 font-bold text-slate-600">Voucher Diskon</td>
+                <td class="font-mono font-bold text-emerald-700">: {{ $pendaftar->pembayaran->voucher ? $pendaftar->pembayaran->voucher->kode_voucher : 'VOUCHER PROMO' }} (Potongan Rp {{ number_format($pendaftar->pembayaran->potongan, 0, ',', '.') }})</td>
+            </tr>
+            @endif
             <tr>
                 <td class="py-1.5 font-bold text-slate-600">Status Transaksi</td>
                 <td class="font-bold text-emerald-700">: LUNAS / SETTLEMENT (TERVERIFIKASI)</td>
@@ -73,31 +79,22 @@
         </table>
 
         <!-- Amount Box -->
-        <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-xl flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-900 uppercase">Jumlah Uang:</span>
-            <span class="text-xl font-extrabold text-emerald-800 font-mono">
-                Rp {{ number_format($pendaftar->pembayaran ? $pendaftar->pembayaran->total_bayar : 0, 0, ',', '.') }}
-            </span>
-        </div>
-
-        <!-- Footer Signatures -->
-        <div class="pt-4 flex justify-between items-end text-center">
-            <div class="text-left text-[10px] text-slate-400">
-                Catatan: Kwitansi ini sah dan dihasilkan secara otomatis<br>oleh Sistem Keuangan PPDB SMK IB Khalifah Bangsa.
+        <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-xl space-y-1">
+            @if($pendaftar->pembayaran && $pendaftar->pembayaran->potongan > 0)
+            <div class="flex items-center justify-between text-[11px] text-slate-600 border-b border-emerald-200 pb-1">
+                <span>Biaya Formulir Awal:</span>
+                <span class="font-mono">Rp {{ number_format($pendaftar->pembayaran->nominal, 0, ',', '.') }}</span>
             </div>
-
-            <div class="space-y-12 text-xs">
-                <div>
-                    Kota Metro, {{ $pendaftar->pembayaran && $pendaftar->pembayaran->waktu_transaksi ? $pendaftar->pembayaran->waktu_transaksi->translatedFormat('d F Y') : date('d F Y') }}<br>
-                    <strong>Petugas Kasir / Bendahara TU,</strong>
-                </div>
-                <div class="font-bold underline">
-                    Budi Santoso, S.Kom
-                </div>
+            <div class="flex items-center justify-between text-[11px] text-emerald-700 font-semibold border-b border-emerald-200 pb-1">
+                <span>Potongan Diskon ({{ $pendaftar->pembayaran->voucher ? $pendaftar->pembayaran->voucher->kode_voucher : 'PROMO' }}):</span>
+                <span class="font-mono">- Rp {{ number_format($pendaftar->pembayaran->potongan, 0, ',', '.') }}</span>
+            </div>
+            @endif
+            <div class="flex items-center justify-between pt-1">
+                <span class="text-xs font-bold text-emerald-900 uppercase">Jumlah Uang Dibayar:</span>
+                <span class="text-xl font-extrabold text-emerald-800 font-mono">
+                    Rp {{ number_format($pendaftar->pembayaran ? $pendaftar->pembayaran->total_bayar : 0, 0, ',', '.') }}
+                </span>
             </div>
         </div>
-    </div>
-
-</body>
-</html>
 

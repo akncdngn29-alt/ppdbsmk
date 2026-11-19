@@ -70,12 +70,10 @@
         
         <!-- Brand Header (Logo & Nama Sekolah) -->
         <div class="h-20 flex items-center gap-3 px-5 border-b border-slate-800 bg-slate-950/50">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-600/30 shrink-0">
-                <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-            </div>
+            <img src="{{ asset('images/logo-sekolah.png') }}" alt="Logo SMK IB Khalifah Bangsa" class="w-10 h-10 object-contain shrink-0">
             <div class="truncate">
                 <span class="block text-sm font-extrabold text-white tracking-tight leading-tight">SMK IB KHALIFAH</span>
-                <span class="block text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Panel Calon Siswa</span>
+                <span class="block text-[10px] font-bold text-[#fa2f79] uppercase tracking-wider">Panel Calon Siswa</span>
             </div>
             <!-- Close Button for Mobile -->
             <button onclick="toggleSidebar()" class="md:hidden ml-auto p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
@@ -112,13 +110,13 @@
             <div class="text-[10px] uppercase text-slate-400 font-bold px-3 pt-2 pb-1">Menu Utama</div>
             
             <!-- 1. Dashboard -->
-            <a href="{{ route('siswa.dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.dashboard') ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
+            <a href="{{ route('siswa.dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.dashboard') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
                 <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                 <span>Dashboard Utama</span>
             </a>
 
             <!-- 2. Formulir Pendaftaran (Mulai Pendaftaran 1 di Skripsi) -->
-            <a href="{{ route('siswa.formulir') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.formulir') ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
+            <a href="{{ route('siswa.formulir') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.formulir') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
                 <div class="flex items-center gap-3">
                     <i data-lucide="file-text" class="w-4 h-4"></i>
                     <span>Formulir Biodata</span>
@@ -128,25 +126,25 @@
                 @endif
             </a>
 
-            <!-- 3. Berkas Digital -->
-            <a href="{{ route('siswa.berkas') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.berkas') ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="upload-cloud" class="w-4 h-4"></i>
-                    <span>Upload Berkas</span>
-                </div>
-                @if($pendaftar && $pendaftar->status_verifikasi === 'Terverifikasi')
-                    <span class="w-2 h-2 rounded-full bg-emerald-400" title="Terverifikasi"></span>
-                @endif
-            </a>
-
-            <!-- 4. Pembayaran Formulir -->
-            <a href="{{ route('siswa.pembayaran') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.pembayaran') ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
+            <!-- 3. Pembayaran Formulir -->
+            <a href="{{ route('siswa.pembayaran') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.pembayaran') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
                 <div class="flex items-center gap-3">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
                     <span>Pembayaran PPDB</span>
                 </div>
                 @if($pendaftar && $pendaftar->status_pembayaran === 'Paid')
                     <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-semibold">Lunas</span>
+                @endif
+            </a>
+
+            <!-- 4. Berkas Digital -->
+            <a href="{{ route('siswa.berkas') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.berkas') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                    <span>Upload Berkas</span>
+                </div>
+                @if($pendaftar && $pendaftar->status_verifikasi === 'Terverifikasi')
+                    <span class="w-2 h-2 rounded-full bg-emerald-400" title="Terverifikasi"></span>
                 @endif
             </a>
 
@@ -186,13 +184,13 @@
             <div class="text-[10px] uppercase text-slate-400 font-bold px-3 pt-4 pb-1">Pasca Seleksi & Akun</div>
 
             <!-- Daftar Ulang -->
-            <a href="{{ route('siswa.daftar_ulang') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.daftar_ulang') ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
+            <a href="{{ route('siswa.daftar_ulang') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.daftar_ulang') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
                 <i data-lucide="check-circle-2" class="w-4 h-4"></i>
                 <span>Daftar Ulang</span>
             </a>
 
             <!-- Pengaturan Akun -->
-            <a href="{{ route('siswa.pengaturan') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.pengaturan') ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
+            <a href="{{ route('siswa.pengaturan') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-colors {{ request()->routeIs('siswa.pengaturan') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : 'text-slate-300 hover:text-white hover:bg-slate-800/80' }}">
                 <i data-lucide="settings" class="w-4 h-4"></i>
                 <span>Pengaturan Akun</span>
             </a>
@@ -236,8 +234,8 @@
             <!-- Right Header: Gelombang Badge & Actions -->
             <div class="flex items-center gap-2 sm:gap-3">
                 @if($activeGelombang)
-                <div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <div class="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#f8bbd0]/90 dark:bg-pink-950/50 border border-pink-300 dark:border-pink-800/60 text-[11px] font-bold text-slate-900 dark:text-pink-200 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-[#fa2f79] animate-pulse"></span>
                     <span>{{ $activeGelombang->nama_gelombang }} ({{ $activeGelombang->tahun_ajaran }})</span>
                 </div>
                 @endif

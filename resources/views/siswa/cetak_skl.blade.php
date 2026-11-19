@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Surat Keterangan Lulus (SKL) - {{ $pendaftar->nama }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <style>
         @media print {
             .no-print { display: none !important; }
@@ -16,9 +17,15 @@
 <body class="bg-slate-100 text-slate-900 font-sans p-4 md:p-8">
 
     <div class="max-w-3xl mx-auto mb-6 flex items-center justify-between no-print">
+        @if(!empty($adminMode))
+        <a href="{{ route('admin.pendaftar.detail', $pendaftar->id_pendaftar) }}" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-300">
+            &larr; Kembali ke Detail Pendaftar
+        </a>
+        @else
         <a href="{{ route('siswa.dashboard') }}" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-300">
             &larr; Kembali ke Dashboard
         </a>
+        @endif
         <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">
             Cetak SKL Resmi (PDF)
         </button>
@@ -81,7 +88,7 @@
             <div class="text-xs font-bold text-slate-800 pt-1">
                 Sebagai Peserta Didik Baru pada Program Keahlian:
                 <span class="block text-base text-emerald-900 font-extrabold mt-0.5">
-                    {{ $pendaftar->terima ? $pendaftar->terima->jurusan->nama_jurusan : $pendaftar->jurusan1->nama_jurusan }}
+                    {{ $pendaftar->terima ? $pendaftar->terima->jurusan->nama_jurusan : ($pendaftar->jurusan1 ? $pendaftar->jurusan1->nama_jurusan : '-') }}
                 </span>
             </div>
         </div>
@@ -91,31 +98,3 @@
         </p>
 
         <!-- Signatures & Official Stamp -->
-        <div class="pt-6 grid grid-cols-2 items-end">
-            <!-- QR Verification -->
-            <div class="flex items-center gap-3">
-                <div class="w-20 h-20 border border-black bg-slate-900 p-1 flex items-center justify-center text-white text-[8px] font-mono text-center">
-                    QR DOKUMEN SAH<br>{{ substr($pendaftar->no_pendaftaran, -8) }}
-                </div>
-                <div class="text-[10px] text-slate-500">
-                    Pindai QR Code untuk memverifikasi<br>keaslian surat keputusan kelulusan ini<br>secara online melalui portal sekolah.
-                </div>
-            </div>
-
-            <!-- Headmaster Signature -->
-            <div class="text-center space-y-16">
-                <div>
-                    {{ $pengaturan->kota }}, {{ $pendaftar->terima ? $pendaftar->terima->tgl_diterima->translatedFormat('d F Y') : date('d F Y') }}<br>
-                    <strong>Kepala Sekolah,</strong>
-                </div>
-                <div>
-                    <strong class="block text-sm uppercase underline">{{ $pengaturan->nama_kepsek }}</strong>
-                    <span class="block text-[11px] text-slate-600">NIP. {{ $pengaturan->nip_kepsek ?: '197805122005011003' }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</body>
-</html>
-

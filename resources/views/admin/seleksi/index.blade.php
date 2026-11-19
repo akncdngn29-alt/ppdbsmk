@@ -36,7 +36,7 @@
                             <span class="text-[10px] text-slate-400 font-mono">{{ $p->no_pendaftaran }} | {{ $p->asal_sekolah }}</span>
                         </td>
                         <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">
-                            {{ $p->jurusan1->nama_jurusan }}
+                            {{ $p->jurusan1 ? $p->jurusan1->nama_jurusan : '-' }}
                         </td>
                         <form action="{{ route('admin.seleksi.simpan', $p->id_pendaftar) }}" method="POST">
                             @csrf
@@ -57,7 +57,7 @@
                                 {{ $nilai ? number_format($nilai->total_nilai, 2) : '-' }}
                             </td>
                             <td class="p-3">
-                                <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-colors">
+                                <button type="submit" class="px-3 py-1.5 rounded-lg bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs shadow-sm shadow-pink-500/20 transition-colors">
                                     Simpan Nilai
                                 </button>
                             </td>

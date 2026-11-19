@@ -17,7 +17,7 @@ class LandingController extends Controller
     {
         $pengaturan = PengaturanSekolah::getPengaturan();
         $banner = Pengumuman::getActiveBanner();
-        $jurusan = Jurusan::all();
+        $jurusan = Jurusan::where('status_aktif', true)->get();
         $gelombangAktif = Gelombang::where('status_aktif', true)
             ->where('tgl_buka', '<=', Carbon::today())
             ->where('tgl_tutup', '>=', Carbon::today())
@@ -65,7 +65,7 @@ class LandingController extends Controller
                 'nisn' => $pendaftar->nisn,
                 'no_pendaftaran' => $pendaftar->no_pendaftaran,
                 'asal_sekolah' => $pendaftar->asal_sekolah,
-                'jurusan_1' => $pendaftar->jurusan1->nama_jurusan,
+                'jurusan_1' => $pendaftar->jurusan1 ? $pendaftar->jurusan1->nama_jurusan : '-',
                 'status_kelulusan' => $pendaftar->status_kelulusan,
                 'jurusan_diterima' => $pendaftar->terima ? $pendaftar->terima->jurusan->nama_jurusan : null,
                 'no_skl' => $pendaftar->terima ? $pendaftar->terima->no_surat_kelulusan : null,
@@ -77,35 +77,48 @@ class LandingController extends Controller
     public function checkVoucher(Request $request)
     {
         $request->validate([
-            'kode_voucher' => 'required|string',
-            'nominal_asli' => 'required|numeric',
+            'kode_voucher' => 'required|string|max:50',
+            'nominal_asli' => 'required|numeric|min:0',
         ]);
 
         $kode = strtoupper(trim($request->kode_voucher));
-        $voucher = VoucherPendaftaran::where('kode_voucher', $kode)
-            ->where('status_aktif', true)
-            ->first();
+        $voucher = VoucherPendaftaran::where('kode_voucher', $kode)->first();
 
-        if (!$voucher || !$voucher->isAvailable()) {
+        if (!$voucher) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kode voucher tidak valid atau kuota telah habis.',
+                'message' => "Kode voucher '{$kode}' tidak ditemukan. Pastikan kode yang dimasukkan benar.",
             ], 400);
         }
 
-        $potongan = $voucher->tipe === 'nominal'
-            ? $voucher->nilai_potongan
-            : ($request->nominal_asli * ($voucher->nilai_potongan / 100));
+        $check = $voucher->validateAvailability();
+        if (!$check['valid']) {
+            return response()->json([
+                'success' => false,
+                'message' => $check['message'],
+            ], 400);
+        }
 
-        $potongan = min($potongan, $request->nominal_asli);
-        $totalBayar = max(0, $request->nominal_asli - $potongan);
+        $nominalAsli = (float) $request->nominal_asli;
+        $potongan = $voucher->hitungPotongan($nominalAsli);
+        $totalBayar = $voucher->hitungTotalBayar($nominalAsli);
+
+        $potonganFormat = $voucher->tipe === 'persen'
+            ? rtrim(rtrim(number_format((float)$voucher->nilai_potongan, 2, ',', '.'), '0'), ',') . '%'
+            : 'Rp ' . number_format((float)$voucher->nilai_potongan, 0, ',', '.');
 
         return response()->json([
             'success' => true,
-            'message' => 'Kode voucher berhasil diterapkan!',
+            'message' => "Voucher {$voucher->kode_voucher} berhasil diterapkan! Potongan {$potonganFormat} (Hemat Rp " . number_format($potongan, 0, ',', '.') . ").",
             'id_voucher' => $voucher->id_voucher,
+            'kode_voucher' => $voucher->kode_voucher,
+            'nama_voucher' => $voucher->nama_voucher ?: $voucher->kode_voucher,
+            'tipe' => $voucher->tipe,
+            'nilai_potongan' => (float)$voucher->nilai_potongan,
+            'biaya_awal' => $nominalAsli,
             'potongan' => $potongan,
             'total_bayar' => $totalBayar,
+            'sisa_kuota' => $voucher->sisaKuota(),
         ]);
     }
 }

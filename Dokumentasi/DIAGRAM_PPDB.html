@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumentasi Diagram PPDB — SMK Islam Bina Khalifah Bangsa</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+  <style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#f1f5f9;line-height:1.6}
+header{background:#1e293b;border-bottom:1px solid #334155;position:sticky;top:0;z-index:100}
+.hdr{max-width:1400px;margin:0 auto;padding:.9rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem}
+.brand{display:flex;align-items:center;gap:.75rem}
+.logo{width:42px;height:42px;background:linear-gradient(135deg,#0284c7,#38bdf8);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:#fff;box-shadow:0 3px 12px rgba(2,132,199,.4)}
+.brand-text h1{font-size:1.05rem;font-weight:800}
+.brand-text p{font-size:.75rem;color:#94a3b8}
+.hdr-btn{padding:.45rem .9rem;font-size:.8rem;font-weight:600;border-radius:7px;cursor:pointer;border:1px solid #334155;background:#0f172a;color:#f1f5f9;text-decoration:none}
+.hdr-btn:hover{border-color:#38bdf8;color:#38bdf8}
+.hdr-btn.primary{background:#0284c7;border-color:#0284c7;color:#fff}
+.hdr-btn.primary:hover{background:#0369a1}
+
+.nav-tabs{background:#1e293b;border-bottom:1px solid #334155;overflow-x:auto;white-space:nowrap}
+.nav-inner{max-width:1400px;margin:0 auto;padding:.4rem 1.5rem;display:flex;gap:.35rem}
+.tab-btn{padding:.55rem 1rem;font-size:.8rem;font-weight:600;border:none;background:transparent;color:#94a3b8;border-radius:7px;cursor:pointer;white-space:nowrap}
+.tab-btn:hover{color:#f1f5f9;background:#0f172a}
+.tab-btn.active{background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(99,102,241,.15));color:#38bdf8;border:1px solid rgba(56,189,248,.3)}
+
+main{max-width:1400px;margin:0 auto;padding:1.5rem}
+.banner{background:linear-gradient(135deg,rgba(244,63,94,.08),rgba(245,158,11,.08));border:1px solid rgba(244,63,94,.25);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:.85rem;align-items:flex-start}
+.banner-badge{background:#f43f5e;color:#fff;font-size:.68rem;font-weight:800;padding:.2rem .55rem;border-radius:5px;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+.banner-text h3{font-size:.9rem;font-weight:700;color:#fb7185;margin-bottom:.2rem}
+.banner-text p{font-size:.8rem;color:#94a3b8}
+code{font-family:'Fira Code','Cascadia Code',monospace;color:#38bdf8;background:rgba(56,189,248,.1);padding:.1rem .35rem;border-radius:4px;font-size:.78rem}
+
+.tab-pane{display:none}
+.tab-pane.active{display:block;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.card{background:#1e293b;border:1px solid #334155;border-radius:13px;padding:1.5rem;margin-bottom:1.5rem}
+.card-header{border-bottom:1px solid #334155;padding-bottom:.9rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap}
+.card-title h2{font-size:1.1rem;font-weight:800}
+.card-title p{font-size:.8rem;color:#94a3b8;margin-top:.2rem}
+
+.diagram-wrap{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:1.5rem;min-height:200px;overflow-x:auto;display:flex;justify-content:center;align-items:center;position:relative}
+.diagram-wrap svg{max-width:100%;height:auto}
+.error-box{background:#450a0a;border:1px solid #991b1b;border-radius:8px;padding:1rem;color:#fca5a5;font-size:.82rem;width:100%}
+.error-box pre{margin-top:.5rem;font-size:.75rem;overflow-x:auto;white-space:pre-wrap}
+.loading{color:#64748b;font-size:.85rem}
+
+.tbl-wrap{overflow-x:auto;border-radius:9px;border:1px solid #334155;margin-top:1.25rem}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#0f172a;color:#f1f5f9;font-weight:700;padding:.75rem .9rem;border-bottom:1px solid #334155;white-space:nowrap}
+td{padding:.65rem .9rem;border-bottom:1px solid #1e293b;color:#94a3b8;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(56,189,248,.03);color:#f1f5f9}
+.badge{display:inline-flex;padding:.18rem .45rem;border-radius:4px;font-size:.7rem;font-weight:700;font-family:monospace}
+.pk{background:rgba(244,63,94,.15);color:#fda4af;border:1px solid rgba(244,63,94,.3)}
+.fk{background:rgba(56,189,248,.12);color:#7dd3fc;border:1px solid rgba(56,189,248,.3)}
+.uk{background:rgba(16,185,129,.12);color:#6ee7b7;border:1px solid rgba(16,185,129,.3)}
+
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1rem;margin-top:1.25rem}
+.info-box{background:#0f172a;border:1px solid #334155;border-radius:9px;padding:1.1rem}
+.info-box h4{font-size:.88rem;font-weight:700;margin-bottom:.45rem}
+.info-box p{font-size:.8rem;color:#94a3b8}
+
+@media print{header,.nav-tabs,.tab-btn{display:none!important}.tab-pane{display:block!important;page-break-after:always}body{background:#fff!important;color:#000!important}.card{border:1px solid #ccc!important;background:#fff!important}.diagram-wrap{background:#f9fafb!important;border:1px solid #ddd!important}}
+
+body.light{background:#f8fafc;color:#0f172a}
+body.light header,body.light .nav-tabs{background:#fff;border-color:#e2e8f0}
+body.light .tab-btn{color:#64748b}
+body.light .tab-btn:hover{background:#f1f5f9;color:#0f172a}
+body.light .tab-btn.active{background:linear-gradient(135deg,rgba(2,132,199,.1),rgba(99,102,241,.1));color:#0284c7;border-color:rgba(2,132,199,.3)}
+body.light .card{background:#fff;border-color:#e2e8f0}
+body.light .diagram-wrap{background:#f8fafc;border-color:#e2e8f0}
+body.light th{background:#f1f5f9;color:#0f172a}
+body.light td{color:#475569}
+body.light .info-box{background:#f1f5f9;border-color:#e2e8f0}
+body.light .info-box p{color:#475569}
+body.light code{color:#0369a1;background:rgba(2,132,199,.08)}
+</style>
+</head>
+<body>
+  <header>
+    <div class="hdr">
+      <div class="brand">
+        <div class="logo">BK</div>
+        <div class="brand-text">
+          <h1>PPDB SMK Islam Bina Khalifah Bangsa</h1>
+          <p>Dokumentasi Arsitektur Sistem — ERD (PK Eksplisit), Use Case, Activity, Flowchart, Sequence, Class, State &amp; Deployment</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="hdr-btn" id="themeBtn" onclick="toggleTheme()">☀️ Mode Terang</button>
+        <button class="hdr-btn primary" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-tabs">
+    <div class="nav-inner">
+      <button class="tab-btn active" onclick="switchTab('tab-erd', this)">📊 ERD & Kamus Data PK</button>
+<button class="tab-btn " onclick="switchTab('tab-usecase', this)">👥 Use Case Diagram</button>
+<button class="tab-btn " onclick="switchTab('tab-activity', this)">⚡ Activity Diagram</button>
+<button class="tab-btn " onclick="switchTab('tab-flowchart', this)">🔀 Flowchart Terpadu</button>
+<button class="tab-btn " onclick="switchTab('tab-sequence', this)">⏱️ Sequence Diagram</button>
+<button class="tab-btn " onclick="switchTab('tab-class', this)">🧩 Class & State Machine</button>
+<button class="tab-btn " onclick="switchTab('tab-deploy', this)">🏛️ Arsitektur & Deployment</button>
+
+    </div>
+  </div>
+
+  <main>
+    <div class="banner">
+      <div class="banner-badge">Konvensi Primary Key</div>
+      <div class="banner-text">
+        <h3>Primary Key Eksplisit: <code>id_&lt;nama_tabel&gt;</code></h3>
+        <p>Semua tabel memiliki PK berformat eksplisit: <code>id_user</code>, <code>id_admin</code>, <code>id_jurusan</code>, <code>id_gelombang</code>, <code>id_pendaftar</code>, <code>id_berkas</code>, <code>id_pembayaran</code>, <code>id_terima</code>, <code>id_jadwal</code>, <code>id_ruang</code>, <code>id_penempatan</code>, <code>id_nilai</code>, <code>id_log</code>, <code>id_voucher</code>, <code>id_prestasi</code>. FK mereferensikan langsung nama PK tabel asal (Normalisasi 3NF).</p>
+      </div>
+    </div>
+
+    
+    <div id="tab-erd" class="tab-pane active">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>ERD — Entity Relationship Diagram 3NF</h2>
+              <p>Diagram #1 &mdash; Tipe: <code>erDiagram</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-0">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">erDiagram
+    user ||--o{ pendaftar : "mendaftar"
+    gelombang ||--o{ pendaftar : "menaungi"
+    jurusan ||--o{ pendaftar : "dipilih_1"
+    jurusan ||--o{ pendaftar : "dipilih_2"
+    pendaftar ||--o{ berkas_pendaftar : "mengunggah"
+    pendaftar ||--o{ pembayaran : "melakukan"
+    gelombang ||--o{ pembayaran : "acuan_tarif"
+    voucher_pendaftaran ||--o{ pembayaran : "diskon"
+    pendaftar ||--o{ prestasi_pendaftar : "memiliki"
+    pendaftar ||--o| nilai_seleksi : "dinilai"
+    pendaftar ||--o| penempatan_peserta : "ditempatkan"
+    jadwal_seleksi ||--o{ penempatan_peserta : "jadwal"
+    ruang_seleksi ||--o{ penempatan_peserta : "ruangan"
+    pendaftar ||--o| terima : "ditetapkan"
+    jurusan ||--o{ terima : "jurusan_diterima"
+    admin ||--o{ terima : "disahkan_oleh"
+    admin ||--o{ pengumuman : "menerbitkan"
+    admin ||--o{ log_aktivitas : "audit_admin"
+    user ||--o{ log_aktivitas : "audit_user"
+
+    user {
+        BIGINT id_user PK
+        VARCHAR nisn "Unik-Nomor Induk Siswa"
+        VARCHAR nama
+        VARCHAR username "Unik-Username"
+        VARCHAR email "Unik-Email"
+        VARCHAR password
+    }
+    admin {
+        BIGINT id_admin PK
+        VARCHAR nama_admin
+        VARCHAR username "Unik"
+        VARCHAR email "Unik"
+        ENUM role "tu atau kepala_sekolah"
+    }
+    jurusan {
+        BIGINT id_jurusan PK
+        VARCHAR kode_jurusan "Unik: FKK/TKJ/TKR/TBSM"
+        VARCHAR nama_jurusan
+        INT kuota
+    }
+    gelombang {
+        BIGINT id_gelombang PK
+        VARCHAR nama_gelombang
+        VARCHAR tahun_ajaran
+        DATE tgl_buka
+        DATE tgl_tutup
+        DECIMAL biaya_pendaftaran
+        BOOLEAN status_aktif
+    }
+    voucher_pendaftaran {
+        BIGINT id_voucher PK
+        VARCHAR kode_voucher "Unik"
+        ENUM tipe_potongan "nominal atau persen"
+        DECIMAL nilai_potongan
+        INT kuota
+        INT kuota_terpakai
+        DATE tgl_berlaku_mulai
+        DATE tgl_berlaku_sampai
+        BOOLEAN is_active
+    }
+    pendaftar {
+        BIGINT id_pendaftar PK
+        BIGINT id_user FK
+        BIGINT id_gelombang FK
+        BIGINT id_jurusan_1 FK
+        BIGINT id_jurusan_2 FK
+        VARCHAR no_pendaftaran "Unik: REG-2026-XXXXX"
+        VARCHAR nisn
+        VARCHAR nama
+        DATE tanggal_lahir
+        ENUM jenis_kelamin
+        BOOLEAN is_locked
+        ENUM status_pembayaran "Pending/Paid/Free"
+        ENUM status_verifikasi "Menunggu/Terverifikasi/Ditolak"
+        ENUM status_kelulusan "Diproses/Diterima/Tidak Lolos"
+    }
+    berkas_pendaftar {
+        BIGINT id_berkas PK
+        BIGINT id_pendaftar FK
+        ENUM jenis_berkas "ijazah/kk/pasfoto/akta"
+        VARCHAR path_file
+        ENUM status_berkas "Menunggu/Valid/Tidak Valid"
+        VARCHAR catatan
+    }
+    pembayaran {
+        BIGINT id_pembayaran PK
+        BIGINT id_pendaftar FK
+        BIGINT id_gelombang FK
+        BIGINT id_voucher FK
+        VARCHAR kode_transaksi "Unik: TRX-PPDB-XXXXX"
+        DECIMAL nominal
+        VARCHAR metode_pembayaran
+        ENUM status_transaksi "pending/settlement/expire/cancel"
+    }
+    prestasi_pendaftar {
+        BIGINT id_prestasi PK
+        BIGINT id_pendaftar FK
+        VARCHAR nama_prestasi
+        ENUM tingkat "Sekolah/Kota/Provinsi/Nasional"
+        VARCHAR tahun
+    }
+    jadwal_seleksi {
+        BIGINT id_jadwal PK
+        BIGINT id_gelombang FK
+        VARCHAR nama_kegiatan
+        DATE tanggal_seleksi
+        TIME jam_mulai
+        TIME jam_selesai
+    }
+    ruang_seleksi {
+        BIGINT id_ruang PK
+        VARCHAR kode_ruang "Unik"
+        VARCHAR nama_ruang
+        INT kapasitas
+        VARCHAR lokasi
+    }
+    penempatan_peserta {
+        BIGINT id_penempatan PK
+        BIGINT id_pendaftar FK
+        BIGINT id_jadwal FK
+        BIGINT id_ruang FK
+        VARCHAR no_peserta "Unik: NO-UJIAN-XXXX"
+        VARCHAR no_kursi
+    }
+    nilai_seleksi {
+        BIGINT id_nilai PK
+        BIGINT id_pendaftar FK
+        DECIMAL nilai_akademik
+        DECIMAL nilai_wawancara
+        DECIMAL nilai_baca_quran
+        DECIMAL nilai_akhir
+        TEXT catatan_penguji
+    }
+    terima {
+        BIGINT id_terima PK
+        BIGINT id_pendaftar FK
+        BIGINT id_jurusan FK
+        BIGINT id_admin_pengesah FK
+        VARCHAR no_surat_kelulusan "Unik: SK-LULUS-2026"
+        DATE tgl_diterima
+    }
+    pengumuman {
+        BIGINT id_pengumuman PK
+        BIGINT id_admin FK
+        VARCHAR judul
+        TEXT isi
+        BOOLEAN is_published
+    }
+    log_aktivitas {
+        BIGINT id_log PK
+        BIGINT id_admin FK
+        BIGINT id_user FK
+        VARCHAR role
+        VARCHAR aktivitas
+        TEXT detail
+        VARCHAR ip_address
+    }
+    pengaturan_sekolah {
+        BIGINT id_pengaturan PK
+        VARCHAR nama_sekolah
+        VARCHAR nama_kepsek
+        VARCHAR kontak_resmi
+        TEXT alamat_sekolah
+    }</div>
+        </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <h2>Kamus Data Lengkap — Primary Key, Foreign Key, dan Unique Key</h2>
+        <p>Spesifikasi 18 tabel basis data sistem PPDB dalam normalisasi 3NF</p>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th><th>Nama Tabel</th><th>Primary Key (PK)</th><th>Tipe Data</th>
+            <th>Foreign Key (FK)</th><th>Unique Key (UK)</th><th>Fungsi Tabel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><code>user</code></td><td><span class="badge pk">id_user</span></td><td>BIGINT UNSIGNED</td><td>—</td><td><code>nisn</code>, <code>username</code>, <code>email</code></td><td>Akun autentikasi calon siswa</td></tr>
+          <tr><td>2</td><td><code>admin</code></td><td><span class="badge pk">id_admin</span></td><td>BIGINT UNSIGNED</td><td>—</td><td><code>username</code>, <code>email</code></td><td>Akun staf (Petugas TU &amp; Kepala Sekolah)</td></tr>
+          <tr><td>3</td><td><code>jurusan</code></td><td><span class="badge pk">id_jurusan</span></td><td>BIGINT UNSIGNED</td><td>—</td><td><code>kode_jurusan</code></td><td>Master 4 program keahlian &amp; kuota daya tampung</td></tr>
+          <tr><td>4</td><td><code>gelombang</code></td><td><span class="badge pk">id_gelombang</span></td><td>BIGINT UNSIGNED</td><td>—</td><td>—</td><td>Periode pendaftaran, jadwal, dan tarif biaya</td></tr>
+          <tr><td>5</td><td><code>voucher_pendaftaran</code></td><td><span class="badge pk">id_voucher</span></td><td>BIGINT UNSIGNED</td><td>—</td><td><code>kode_voucher</code></td><td>Kupon diskon / pembebasan biaya pendaftaran</td></tr>
+          <tr><td>6</td><td><code>pendaftar</code></td><td><span class="badge pk">id_pendaftar</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_user</span> <span class="badge fk">id_gelombang</span> <span class="badge fk">id_jurusan_1</span> <span class="badge fk">id_jurusan_2</span></td><td><code>no_pendaftaran</code></td><td>Biodata utama, status 7 tahap &amp; kunci formulir</td></tr>
+          <tr><td>7</td><td><code>berkas_pendaftar</code></td><td><span class="badge pk">id_berkas</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_pendaftar</span></td><td>—</td><td>Dokumen digital: ijazah, KK, pasfoto, akta</td></tr>
+          <tr><td>8</td><td><code>pembayaran</code></td><td><span class="badge pk">id_pembayaran</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_pendaftar</span> <span class="badge fk">id_gelombang</span> <span class="badge fk">id_voucher</span></td><td><code>kode_transaksi</code></td><td>Transaksi keuangan: Midtrans / QRIS / Tunai</td></tr>
+          <tr><td>9</td><td><code>prestasi_pendaftar</code></td><td><span class="badge pk">id_prestasi</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_pendaftar</span></td><td>—</td><td>Riwayat prestasi akademik / non-akademik</td></tr>
+          <tr><td>10</td><td><code>jadwal_seleksi</code></td><td><span class="badge pk">id_jadwal</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_gelombang</span></td><td>—</td><td>Sesi tes akademik, wawancara, tilawati</td></tr>
+          <tr><td>11</td><td><code>ruang_seleksi</code></td><td><span class="badge pk">id_ruang</span></td><td>BIGINT UNSIGNED</td><td>—</td><td><code>kode_ruang</code></td><td>Master ruang ujian dengan kapasitas kursi</td></tr>
+          <tr><td>12</td><td><code>penempatan_peserta</code></td><td><span class="badge pk">id_penempatan</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_pendaftar</span> <span class="badge fk">id_jadwal</span> <span class="badge fk">id_ruang</span></td><td><code>no_peserta</code></td><td>Plotting nomor peserta &amp; kursi ujian</td></tr>
+          <tr><td>13</td><td><code>nilai_seleksi</code></td><td><span class="badge pk">id_nilai</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_pendaftar</span></td><td>—</td><td>Skor tes: akademik, wawancara, tilawati Al-Quran</td></tr>
+          <tr><td>14</td><td><code>terima</code></td><td><span class="badge pk">id_terima</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_pendaftar</span> <span class="badge fk">id_jurusan</span> <span class="badge fk">id_admin_pengesah</span></td><td><code>id_pendaftar</code>, <code>no_surat_kelulusan</code></td><td>Penetapan kelulusan resmi tanpa redundansi 3NF</td></tr>
+          <tr><td>15</td><td><code>pengumuman</code></td><td><span class="badge pk">id_pengumuman</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_admin</span></td><td>—</td><td>Siaran informasi dan berita dari pihak sekolah</td></tr>
+          <tr><td>16</td><td><code>log_aktivitas</code></td><td><span class="badge pk">id_log</span></td><td>BIGINT UNSIGNED</td><td><span class="badge fk">id_admin</span> <span class="badge fk">id_user</span></td><td>—</td><td>Audit trail: login, verifikasi, unlock, ekspor, dll</td></tr>
+          <tr><td>17</td><td><code>pengaturan_sekolah</code></td><td><span class="badge pk">id_pengaturan</span></td><td>BIGINT UNSIGNED</td><td>—</td><td>—</td><td>Profil sekolah, nama Kepala Sekolah, kontak</td></tr>
+          <tr><td>18</td><td><code>pendaftaran_sequences</code></td><td><span class="badge pk">id_sequence</span></td><td>BIGINT UNSIGNED</td><td>—</td><td>tahun + jenis</td><td>Counter atomik anti-race condition untuk nomor REG</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>🔒 Konvensi Primary Key (3NF)</h4>
+        <p>Setiap tabel memiliki PK eksplisit berformat <code>id_&lt;nama_tabel&gt;</code>. FK selalu mereferensikan nama PK tabel asal. Tidak ada composite key — semua PK bersifat single auto-increment BIGINT.</p>
+      </div>
+      <div class="info-box">
+        <h4>🛡️ Keamanan File Upload</h4>
+        <p>Dokumen disimpan di <code>storage/app/private/berkas/</code>. Akses hanya lewat controller terautentikasi (Secure Stream). Tidak bisa dibuka langsung via URL publik.</p>
+      </div>
+      <div class="info-box">
+        <h4>⚡ Anti Race Condition</h4>
+        <p>Nomor pendaftaran <code>REG-2026-XXXXX</code> dibuat melalui tabel <code>pendaftaran_sequences</code> dengan <code>lockForUpdate()</code> (Pessimistic Locking) agar tidak ada nomor duplikat meski ribuan siswa daftar bersamaan.</p>
+      </div>
+    </div>
+  </div>
+
+    </div>
+
+    <div id="tab-usecase" class="tab-pane ">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Use Case Diagram — Tiga Aktor Utama PPDB</h2>
+              <p>Diagram #2 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-1">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart LR
+    Siswa(["Calon Siswa"])
+    TU(["Petugas TU"])
+    Kepsek(["Kepala Sekolah"])
+
+    subgraph Portal_Siswa["Portal Calon Siswa"]
+        UC1["Registrasi Akun"]
+        UC2["Login Sistem"]
+        UC3["Isi dan Simpan Draft Formulir"]
+        UC4["Finalisasi Formulir"]
+        UC5["Upload 4 Berkas Wajib"]
+        UC6["Bayar PPDB via Midtrans"]
+        UC7["Cetak Kartu Ujian"]
+        UC8["Lacak Status 7 Tahap"]
+        UC9["Lihat Pengumuman"]
+        UC10["Daftar Ulang"]
+    end
+
+    subgraph Panel_TU["Panel Petugas TU"]
+        UC11["Verifikasi Biodata dan Berkas"]
+        UC12["Buka Kunci Formulir"]
+        UC13["Validasi Pembayaran"]
+        UC14["Kelola Jurusan dan Kuota"]
+        UC15["Kelola Gelombang"]
+        UC16["Kelola Jadwal dan Ruang Seleksi"]
+        UC17["Penempatan Peserta Ujian"]
+        UC18["Input Nilai Seleksi"]
+        UC19["Cetak Laporan"]
+        UC20["Kelola Pengumuman"]
+    end
+
+    subgraph Panel_Kepsek["Panel Kepala Sekolah"]
+        UC21["Dashboard Eksekutif"]
+        UC22["Monitoring Pendaftar"]
+        UC23["Monitoring Keuangan"]
+        UC24["Persetujuan Kelulusan"]
+        UC25["Pengesahan SK Kelulusan"]
+        UC26["Audit Trail Log Aktivitas"]
+    end
+
+    Siswa --> UC1
+    Siswa --> UC2
+    Siswa --> UC3
+    Siswa --> UC4
+    Siswa --> UC5
+    Siswa --> UC6
+    Siswa --> UC7
+    Siswa --> UC8
+    Siswa --> UC9
+    Siswa --> UC10
+
+    TU --> UC2
+    TU --> UC11
+    TU --> UC12
+    TU --> UC13
+    TU --> UC14
+    TU --> UC15
+    TU --> UC16
+    TU --> UC17
+    TU --> UC18
+    TU --> UC19
+    TU --> UC20
+
+    Kepsek --> UC2
+    Kepsek --> UC21
+    Kepsek --> UC22
+    Kepsek --> UC23
+    Kepsek --> UC24
+    Kepsek --> UC25
+    Kepsek --> UC26</div>
+        </div>
+    </div>
+
+    <div id="tab-activity" class="tab-pane ">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Activity Diagram 1 — Alur 7 Tahap Calon Siswa</h2>
+              <p>Diagram #3 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-2">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart TD
+    A([Mulai]) --> B["Registrasi Akun NISN dan Email"]
+    B --> C["Login ke Portal Siswa"]
+    C --> D["Isi Draft Formulir Biodata"]
+    D --> E{"Semua kolom wajib terisi?"}
+    E -- Belum --> D
+    E -- Sudah --> F["Klik Finalisasi - Formulir Terkunci"]
+    F --> G{"Ada voucher pendaftaran?"}
+    G -- Ya --> H["Klaim Kode Voucher Diskon"]
+    H --> I{"Tagihan menjadi nol?"}
+    I -- Ya --> J["Status Pembayaran: Free"]
+    I -- Tidak --> K["Bayar sisa via Midtrans atau QRIS"]
+    G -- Tidak --> K
+    K --> L["Pembayaran Dikonfirmasi - Status: Paid"]
+    J --> M["Upload 4 Berkas Wajib"]
+    L --> M
+    M --> N{"4 dokumen sudah terunggah?"}
+    N -- Belum --> M
+    N -- Sudah --> O["Antrean Verifikasi Petugas TU"]
+    O --> P{"Dokumen dinyatakan valid?"}
+    P -- Ditolak --> Q["TU memberi catatan penolakan"]
+    Q --> R["Siswa upload ulang berkas"]
+    R --> P
+    P -- Valid --> S["Status Verifikasi: Terverifikasi"]
+    S --> T["Sistem plot ruang dan jadwal ujian"]
+    T --> U["Siswa cetak Kartu Tanda Peserta"]
+    U --> V["Siswa ikut Tes Seleksi"]
+    V --> W["Penguji input nilai akademik dan wawancara"]
+    W --> X["Kepala Sekolah tinjau rekap nilai"]
+    X --> Y{"Memenuhi kuota jurusan?"}
+    Y -- Diterima --> Z["Status: Diterima - SK Kelulusan Diterbitkan"]
+    Y -- Tidak Lolos --> AA["Status: Tidak Lolos"]
+    Z --> AB["Siswa Daftar Ulang"]
+    AB --> AC([Selesai - Resmi Siswa Baru])
+    AA --> AD([Selesai - Tidak Diterima])</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Activity Diagram 2 — Buka Kunci Formulir oleh TU</h2>
+              <p>Diagram #4 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-3">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart TD
+    A(["Formulir Terkunci: is_locked = true"]) --> B["Siswa mengajukan permohonan koreksi ke TU"]
+    B --> C["Petugas TU buka detail pendaftar di panel admin"]
+    C --> D["TU memeriksa alasan permohonan"]
+    D --> E{"Alasan valid dan dapat disetujui?"}
+    E -- Tidak --> F["TU menolak dan memberi catatan penolakan"]
+    F --> G(["Formulir tetap terkunci"])
+    E -- Ya --> H["TU klik tombol Buka Kunci"]
+    H --> I["Sistem update: is_locked = false"]
+    I --> J["Sistem catat log: UNLOCK_FORMULIR oleh TU"]
+    J --> K["Formulir terbuka kembali di dashboard siswa"]
+    K --> L["Siswa memperbaiki data biodata"]
+    L --> M["Siswa klik Finalisasi ulang"]
+    M --> N["Formulir terkunci kembali: is_locked = true"]
+    N --> O(["Selesai"])</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Activity Diagram 3 — Penempatan Peserta ke Ruang Ujian</h2>
+              <p>Diagram #5 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-4">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart TD
+    A(["Mulai"]) --> B["Admin buka modul Penjadwalan dan Ruang"]
+    B --> C["Admin pilih Penempatan Otomatis"]
+    C --> D["Sistem ambil daftar siswa terverifikasi tanpa kursi"]
+    D --> E["Sistem ambil daftar ruang seleksi aktif"]
+    E --> F{"Masih ada ruang dengan kursi kosong?"}
+    F -- Ya --> G["Alokasikan siswa ke ruangan"]
+    G --> H["Generate nomor peserta: NO-UJIAN-XXXX"]
+    H --> I["Simpan ke tabel penempatan_peserta"]
+    I --> J{"Semua peserta sudah terplotting?"}
+    J -- Belum --> F
+    J -- Selesai --> K["Tampilkan rekapitulasi alokasi ruang"]
+    F -- Kapasitas penuh --> L["Alert: tambahkan ruang seleksi baru"]
+    L --> M["Admin tambah ruang baru"]
+    M --> F
+    K --> N(["Peserta siap cetak Kartu Ujian"])</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Activity Diagram 4 — Pengesahan SK Kelulusan oleh Kepala Sekolah</h2>
+              <p>Diagram #6 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-5">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart TD
+    A(["TU selesai input nilai seluruh peserta"]) --> B["Kepala Sekolah login ke panel eksekutif"]
+    B --> C["Buka menu Persetujuan Kelulusan"]
+    C --> D["Sistem tampilkan peringkat nilai per jurusan"]
+    D --> E{"Pelamar melebihi kuota jurusan?"}
+    E -- Ya --> F["Peringkat 1 sampai kuota diterima di Pilihan 1"]
+    F --> G["Sisa dievaluasi ke Pilihan 2"]
+    G --> H{"Kuota Pilihan 2 masih tersedia?"}
+    H -- Ya --> I["Diterima di Jurusan Pilihan 2"]
+    H -- Tidak --> J["Ditetapkan: Cadangan atau Tidak Lolos"]
+    E -- Tidak --> K["Semua peserta memenuhi passing grade"]
+    I --> L["Kepala Sekolah tinjau draf SK"]
+    J --> L
+    K --> L
+    L --> M{"Kepala Sekolah setuju semua hasil?"}
+    M -- Ada penyesuaian --> N["Sesuaikan status secara manual"]
+    N --> L
+    M -- Setuju --> O["Klik Sahkan SK Kelulusan Terpadu"]
+    O --> P["Sistem generate nomor SK: SK-LULUS-2026-XXXX"]
+    P --> Q["Simpan ke tabel terima"]
+    Q --> R["Update status_kelulusan di tabel pendaftar"]
+    R --> S["Catat log pengesahan oleh ID Kepala Sekolah"]
+    S --> T["Publikasi pengumuman aktif di portal siswa"]
+    T --> U(["Selesai - SK Siap Diunduh"])</div>
+        </div>
+    </div>
+
+    <div id="tab-flowchart" class="tab-pane ">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Flowchart 1 — Alur Logika Sistem PPDB End-to-End</h2>
+              <p>Diagram #7 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-6">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart TD
+    Z1(["Mulai"]) --> Z2["Cek apakah ada gelombang pendaftaran aktif"]
+    Z2 --> Z3{"Gelombang aktif tersedia?"}
+    Z3 -- Tidak --> Z4["Tampilkan pesan: Pendaftaran Ditutup"]
+    Z4 --> Z5(["Selesai"])
+    Z3 -- Ya --> Z6["Siswa mengisi form registrasi: NISN, nama, email, password"]
+    Z6 --> Z7{"NISN dan email belum terdaftar?"}
+    Z7 -- Sudah ada --> Z8["Tampilkan pesan: Akun sudah terdaftar"]
+    Z8 --> Z6
+    Z7 -- Baru --> Z9["Buat akun di tabel user"]
+    Z9 --> Z10["Login dan masuk dashboard siswa"]
+    Z10 --> Z11["Isi biodata lengkap di formulir pendaftaran"]
+    Z11 --> Z12["Simpan sebagai draft: is_locked = 0"]
+    Z12 --> Z13{"Siap untuk finalisasi?"}
+    Z13 -- Belum --> Z11
+    Z13 -- Ya --> Z14{"Semua field wajib terisi?"}
+    Z14 -- Tidak --> Z15["Tampilkan field yang masih kosong"]
+    Z15 --> Z11
+    Z14 -- Lengkap --> Z16["Kunci formulir: is_locked = 1 dan generate nomor pendaftaran"]
+    Z16 --> Z17{"Gunakan voucher diskon?"}
+    Z17 -- Ya --> Z18{"Voucher valid dan kuota tersedia?"}
+    Z18 -- Tidak --> Z19["Tampilkan pesan: Voucher tidak valid atau habis"]
+    Z19 --> Z17
+    Z18 -- Valid --> Z20["Hitung potongan dan update kuota_terpakai"]
+    Z17 -- Tidak --> Z21["Inisiasi pembayaran via Midtrans atau QRIS"]
+    Z20 --> Z22{"Tagihan menjadi nol?"}
+    Z22 -- Ya --> Z23["status_pembayaran = Free"]
+    Z22 -- Tidak --> Z21
+    Z21 --> Z24{"Status transaksi settlement?"}
+    Z24 -- Gagal atau expire --> Z17
+    Z24 -- Sukses --> Z25["status_pembayaran = Paid"]
+    Z23 --> Z26["Upload 4 dokumen wajib"]
+    Z25 --> Z26
+    Z26 --> Z27{"Semua 4 berkas terunggah?"}
+    Z27 -- Belum --> Z26
+    Z27 -- Lengkap --> Z28["Masuk antrian verifikasi TU"]
+    Z28 --> Z29{"Dokumen dinyatakan valid oleh TU?"}
+    Z29 -- Ditolak --> Z30["TU beri catatan penolakan"]
+    Z30 --> Z31["Siswa upload ulang berkas yang ditolak"]
+    Z31 --> Z28
+    Z29 -- Valid --> Z32["status_verifikasi = Terverifikasi"]
+    Z32 --> Z33["Sistem plot jadwal dan ruang ujian"]
+    Z33 --> Z34["Siswa unduh dan cetak kartu tanda peserta"]
+    Z34 --> Z35["Siswa ikut tes seleksi"]
+    Z35 --> Z36["Penguji input nilai: akademik, wawancara, tilawati"]
+    Z36 --> Z37["Hitung nilai akhir rata-rata terbobot"]
+    Z37 --> Z38["Kepala Sekolah evaluasi peringkat dan kuota"]
+    Z38 --> Z39{"Memenuhi kuota jurusan?"}
+    Z39 -- Tidak Lolos --> Z40["status_kelulusan = Tidak Lolos"]
+    Z39 -- Lolos --> Z41["status_kelulusan = Diterima dan terbitkan SK"]
+    Z40 --> Z42["Publikasikan hasil ke portal siswa"]
+    Z41 --> Z42
+    Z42 --> Z43["Siswa yang lolos melakukan daftar ulang"]
+    Z43 --> Z44(["Selesai"])</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Flowchart 2 — Algoritma Seleksi Kuota Jurusan</h2>
+              <p>Diagram #8 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-7">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart TD
+    A(["Mulai Seleksi"]) --> B["Ambil semua siswa terverifikasi dengan nilai seleksi"]
+    B --> C["Urutkan berdasarkan nilai akhir tertinggi (descending)"]
+    C --> D["Ambil peserta berikutnya dari daftar"]
+    D --> E{"Sisa kuota Jurusan Pilihan 1 masih tersedia?"}
+    E -- Ya --> F["Terima di Jurusan Pilihan 1"]
+    F --> G["Kurangi sisa kuota Jurusan Pilihan 1"]
+    G --> H["Simpan rekomendasi kelulusan"]
+    E -- Tidak --> I{"Peserta memiliki Pilihan Jurusan 2?"}
+    I -- Tidak --> J["Status: Tidak Lolos"]
+    I -- Ya --> K{"Sisa kuota Jurusan Pilihan 2 masih tersedia?"}
+    K -- Ya --> L["Terima di Jurusan Pilihan 2"]
+    L --> M["Kurangi sisa kuota Jurusan Pilihan 2"]
+    M --> H
+    K -- Tidak --> N["Status: Cadangan atau Tidak Lolos"]
+    N --> H
+    J --> H
+    H --> O{"Masih ada peserta lain dalam daftar?"}
+    O -- Ya --> D
+    O -- Tidak --> P["Kirim rekap ke sidang Kepala Sekolah"]
+    P --> Q(["Selesai"])</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Flowchart 3 — Validasi Berkas dan Keamanan File Privat</h2>
+              <p>Diagram #9 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-8">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart TD
+    A(["Upload Berkas Siswa"]) --> B["Validasi MIME Type: PDF, JPG, atau PNG"]
+    B --> C{"Tipe file diizinkan dan ukuran di bawah 2MB?"}
+    C -- Tidak --> D["Tolak: Format atau ukuran file tidak sesuai"]
+    D --> A
+    C -- Ya --> E["Simpan ke Private Storage: app/private/berkas"]
+    E --> F["Catat path file ke tabel berkas_pendaftar"]
+    F --> G["Petugas TU akses dokumen via Secure Stream Controller"]
+    G --> H{"Petugas memiliki hak akses?"}
+    H -- Tidak --> I["Abort 403: Akses Tidak Diizinkan"]
+    H -- Ya --> J["Stream file dengan header keamanan yang aman"]
+    J --> K{"Hasil penilaian dokumen oleh TU?"}
+    K -- Dokumen sah --> L["Update status_berkas = Valid"]
+    K -- Buram atau salah --> M["Update status_berkas = Tidak Valid beserta catatan"]
+    L --> N{"Semua 4 berkas sudah valid?"}
+    N -- Ya --> O["Update status_verifikasi = Terverifikasi"]
+    N -- Belum --> P["Menunggu pemeriksaan berkas lain"]
+    M --> Q["Update status_verifikasi = Ditolak"]
+    O --> R(["Selesai"])
+    Q --> R</div>
+        </div>
+    </div>
+
+    <div id="tab-sequence" class="tab-pane ">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Sequence Diagram 1 — Registrasi, Draft, dan Finalisasi Formulir</h2>
+              <p>Diagram #10 &mdash; Tipe: <code>sequence</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-9">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">sequenceDiagram
+    autonumber
+    actor Siswa as "Calon Siswa"
+    participant Auth as "AuthController"
+    participant FormCtrl as "FormulirController"
+    participant DB_User as "Tabel user"
+    participant DB_Pend as "Tabel pendaftar"
+    participant DB_Seq as "Tabel sequences"
+    participant DB_Log as "LogAktivitas"
+
+    Siswa->>Auth: Kirim form registrasi (NISN, nama, email, password)
+    Auth->>DB_User: Cek keunikan NISN dan email
+    DB_User-->>Auth: Data unik, boleh daftar
+    Auth->>DB_User: INSERT user baru
+    DB_User-->>Auth: id_user baru
+    Auth->>DB_Log: Catat log REGISTRASI_SISWA
+    Auth-->>Siswa: Berhasil terdaftar, silakan login
+
+    Siswa->>Auth: Login dengan NISN dan password
+    Auth-->>Siswa: Session aktif, masuk dashboard
+
+    Siswa->>FormCtrl: Simpan biodata draft (sebagian atau lengkap)
+    FormCtrl->>DB_Pend: Cek record pendaftar by id_user
+    alt Belum ada record
+        FormCtrl->>DB_Pend: INSERT pendaftar baru (is_locked=0)
+    else Sudah ada draft
+        FormCtrl->>DB_Pend: UPDATE pendaftar SET biodata, is_locked=0
+    end
+    DB_Pend-->>FormCtrl: Draft tersimpan
+    FormCtrl->>DB_Log: Catat log SIMPAN_DRAFT
+    FormCtrl-->>Siswa: Flash message: Draft berhasil disimpan
+
+    Siswa->>FormCtrl: Klik tombol Finalisasi Pendaftaran
+    FormCtrl->>DB_Pend: Validasi seluruh field wajib
+    alt Ada field kosong
+        DB_Pend-->>FormCtrl: Validasi gagal
+        FormCtrl-->>Siswa: Error: Lengkapi data wajib terlebih dahulu
+    else Semua valid
+        FormCtrl->>DB_Seq: Ambil nomor urut berikutnya (Lock For Update)
+        DB_Seq-->>FormCtrl: Nomor: REG-2026-0012
+        FormCtrl->>DB_Pend: UPDATE set is_locked=1 dan no_pendaftaran
+        DB_Pend-->>FormCtrl: Formulir terkunci
+        FormCtrl->>DB_Log: Catat log FINALISASI_PENDAFTARAN
+        FormCtrl-->>Siswa: Berhasil! Lanjut ke pembayaran
+    end</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Sequence Diagram 2 — Pembayaran PPDB via Midtrans</h2>
+              <p>Diagram #11 &mdash; Tipe: <code>sequence</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-10">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">sequenceDiagram
+    autonumber
+    actor Siswa as "Calon Siswa"
+    participant PayCtrl as "PembayaranController"
+    participant Midtrans as "Midtrans Snap API"
+    participant DB_Vouch as "Tabel voucher"
+    participant DB_Pay as "Tabel pembayaran"
+    participant DB_Pend as "Tabel pendaftar"
+    participant DB_Log as "LogAktivitas"
+
+    opt Pakai Voucher
+        Siswa->>PayCtrl: Input kode voucher
+        PayCtrl->>DB_Vouch: Validasi kode, masa berlaku, dan kuota
+        DB_Vouch-->>PayCtrl: Voucher valid, potongan 100%
+        PayCtrl->>DB_Vouch: UPDATE kuota_terpakai + 1
+        PayCtrl->>DB_Pay: INSERT pembayaran nominal=0, status=settlement
+        PayCtrl->>DB_Pend: UPDATE status_pembayaran = Free
+        PayCtrl-->>Siswa: Pembayaran berhasil via voucher bebas biaya
+    end
+
+    Siswa->>PayCtrl: Pilih metode bayar QRIS atau Bank Transfer
+    PayCtrl->>Midtrans: Request Snap Token (Order ID dan nominal)
+    Midtrans-->>PayCtrl: Snap Token diterima
+    PayCtrl->>DB_Pay: INSERT pembayaran (status=pending)
+    PayCtrl-->>Siswa: Tampilkan pop-up Snap Midtrans
+
+    Siswa->>Midtrans: Bayar via scan QRIS atau transfer
+    Midtrans->>PayCtrl: Webhook callback status=settlement
+    PayCtrl->>PayCtrl: Verifikasi signature key Midtrans
+    PayCtrl->>DB_Pay: UPDATE status_transaksi = settlement
+    PayCtrl->>DB_Pend: UPDATE status_pembayaran = Paid
+    PayCtrl->>DB_Log: Catat log PEMBAYARAN_LUNAS
+    PayCtrl-->>Midtrans: HTTP 200 OK
+    Siswa->>PayCtrl: Refresh halaman status
+    PayCtrl-->>Siswa: Status: LUNAS dan tombol cetak kwitansi aktif</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Sequence Diagram 3 — Pengesahan SK Kelulusan Kepala Sekolah</h2>
+              <p>Diagram #12 &mdash; Tipe: <code>sequence</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-11">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">sequenceDiagram
+    autonumber
+    actor TU as "Petugas TU"
+    actor Kepsek as "Kepala Sekolah"
+    participant KelCtrl as "KelulusanController"
+    participant DB_Nilai as "Tabel nilai_seleksi"
+    participant DB_Jur as "Tabel jurusan"
+    participant DB_Terima as "Tabel terima"
+    participant DB_Pend as "Tabel pendaftar"
+    participant DB_Log as "LogAktivitas"
+    actor Siswa as "Calon Siswa"
+
+    TU->>KelCtrl: Finalisasi rekap nilai seluruh peserta
+    KelCtrl->>DB_Nilai: Ambil nilai rata-rata semua peserta
+    KelCtrl->>DB_Jur: Ambil kuota tersedia per jurusan
+    KelCtrl-->>Kepsek: Tampilkan draft rangking seleksi
+
+    Kepsek->>KelCtrl: Tinjau alokasi jurusan dan beri persetujuan
+    Kepsek->>KelCtrl: Klik Sahkan SK Kelulusan PPDB
+
+    loop Untuk setiap siswa yang lolos
+        KelCtrl->>DB_Terima: INSERT terima (id_pendaftar, id_jurusan, id_admin_pengesah, no_surat)
+        KelCtrl->>DB_Pend: UPDATE status_kelulusan = Diterima
+    end
+
+    loop Untuk setiap siswa yang tidak lolos
+        KelCtrl->>DB_Pend: UPDATE status_kelulusan = Tidak Lolos
+    end
+
+    KelCtrl->>DB_Log: Catat log PENGESAHAN_KELULUSAN_KEPSEK
+    KelCtrl-->>Kepsek: Notifikasi: SK diterbitkan dan pengumuman aktif
+
+    Siswa->>KelCtrl: Akses menu pengumuman
+    KelCtrl->>DB_Terima: JOIN pendaftar dan jurusan WHERE id_user
+    DB_Terima-->>KelCtrl: Data kelulusan ditemukan
+    KelCtrl-->>Siswa: Selamat Diterima dan tombol unduh SK (PDF)</div>
+        </div>
+    </div>
+
+    <div id="tab-class" class="tab-pane ">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Class Diagram — Eloquent Model Laravel</h2>
+              <p>Diagram #13 &mdash; Tipe: <code>class</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-12">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">classDiagram
+    class User {
+        +BigInt id_user
+        +String nisn
+        +String nama
+        +String username
+        +String email
+        +String password
+        +pendaftar()
+        +logAktivitas()
+    }
+    class Admin {
+        +BigInt id_admin
+        +String nama_admin
+        +String username
+        +String email
+        +String password
+        +String role
+        +pengumuman()
+        +terimaDisahkan()
+        +logAktivitas()
+    }
+    class Jurusan {
+        +BigInt id_jurusan
+        +String kode_jurusan
+        +String nama_jurusan
+        +Int kuota
+        +pendaftarPilihan1()
+        +pendaftarPilihan2()
+        +siswaDiterima()
+    }
+    class Gelombang {
+        +BigInt id_gelombang
+        +String nama_gelombang
+        +String tahun_ajaran
+        +Date tgl_buka
+        +Date tgl_tutup
+        +Decimal biaya_pendaftaran
+        +Boolean status_aktif
+        +pendaftar()
+        +jadwalSeleksi()
+    }
+    class VoucherPendaftaran {
+        +BigInt id_voucher
+        +String kode_voucher
+        +String tipe_potongan
+        +Decimal nilai_potongan
+        +Int kuota
+        +Int kuota_terpakai
+        +Boolean is_active
+        +pembayaran()
+    }
+    class Pendaftar {
+        +BigInt id_pendaftar
+        +BigInt id_user
+        +BigInt id_gelombang
+        +BigInt id_jurusan_1
+        +BigInt id_jurusan_2
+        +String no_pendaftaran
+        +String nisn
+        +String nama
+        +Date tanggal_lahir
+        +String jenis_kelamin
+        +Boolean is_locked
+        +String status_pembayaran
+        +String status_verifikasi
+        +String status_kelulusan
+        +String status_daftar_ulang
+        +user()
+        +gelombang()
+        +jurusanPilihan1()
+        +jurusanPilihan2()
+        +berkas()
+        +pembayaran()
+        +prestasi()
+        +nilaiSeleksi()
+        +penempatanPeserta()
+        +terima()
+    }
+    class BerkasPendaftar {
+        +BigInt id_berkas
+        +BigInt id_pendaftar
+        +String jenis_berkas
+        +String path_file
+        +String status_berkas
+        +String catatan
+        +pendaftar()
+    }
+    class Pembayaran {
+        +BigInt id_pembayaran
+        +BigInt id_pendaftar
+        +BigInt id_gelombang
+        +BigInt id_voucher
+        +String kode_transaksi
+        +String snap_token
+        +Decimal nominal
+        +String metode_pembayaran
+        +String status_transaksi
+        +pendaftar()
+        +gelombang()
+        +voucher()
+    }
+    class PrestasiPendaftar {
+        +BigInt id_prestasi
+        +BigInt id_pendaftar
+        +String nama_prestasi
+        +String tingkat
+        +String tahun
+        +pendaftar()
+    }
+    class JadwalSeleksi {
+        +BigInt id_jadwal
+        +BigInt id_gelombang
+        +String nama_kegiatan
+        +Date tanggal_seleksi
+        +Time jam_mulai
+        +penempatan()
+    }
+    class RuangSeleksi {
+        +BigInt id_ruang
+        +String kode_ruang
+        +String nama_ruang
+        +Int kapasitas
+        +penempatan()
+    }
+    class PenempatanPeserta {
+        +BigInt id_penempatan
+        +BigInt id_pendaftar
+        +BigInt id_jadwal
+        +BigInt id_ruang
+        +String no_peserta
+        +String no_kursi
+        +pendaftar()
+        +jadwal()
+        +ruang()
+    }
+    class NilaiSeleksi {
+        +BigInt id_nilai
+        +BigInt id_pendaftar
+        +Decimal nilai_akademik
+        +Decimal nilai_wawancara
+        +Decimal nilai_baca_quran
+        +Decimal nilai_akhir
+        +pendaftar()
+    }
+    class Terima {
+        +BigInt id_terima
+        +BigInt id_pendaftar
+        +BigInt id_jurusan
+        +BigInt id_admin_pengesah
+        +String no_surat_kelulusan
+        +Date tgl_diterima
+        +pendaftar()
+        +jurusan()
+        +pengesah()
+    }
+    class LogAktivitas {
+        +BigInt id_log
+        +BigInt id_admin
+        +BigInt id_user
+        +String role
+        +String aktivitas
+        +String detail
+        +String ip_address
+    }
+    class PengaturanSekolah {
+        +BigInt id_pengaturan
+        +String nama_sekolah
+        +String nama_kepsek
+        +String kontak_resmi
+        +Text alamat_sekolah
+    }
+
+    User "1" --> "1" Pendaftar
+    User "1" --> "*" LogAktivitas
+    Admin "1" --> "*" Terima
+    Admin "1" --> "*" LogAktivitas
+    Gelombang "1" --> "*" Pendaftar
+    Gelombang "1" --> "*" JadwalSeleksi
+    Jurusan "1" --> "*" Pendaftar
+    Jurusan "1" --> "*" Terima
+    VoucherPendaftaran "1" --> "*" Pembayaran
+    Pendaftar "1" --> "*" BerkasPendaftar
+    Pendaftar "1" --> "*" Pembayaran
+    Pendaftar "1" --> "*" PrestasiPendaftar
+    Pendaftar "1" --> "1" NilaiSeleksi
+    Pendaftar "1" --> "1" PenempatanPeserta
+    Pendaftar "1" --> "1" Terima
+    JadwalSeleksi "1" --> "*" PenempatanPeserta
+    RuangSeleksi "1" --> "*" PenempatanPeserta</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>State Machine 1 — Siklus Hidup Pendaftar</h2>
+              <p>Diagram #14 &mdash; Tipe: <code>state</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-13">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">stateDiagram-v2
+    [*] --> Draft : Buat akun dan isi formulir
+    Draft --> Draft : Simpan cicilan data
+    Draft --> TerkunciMenungguBayar : Finalisasi formulir berhasil
+    TerkunciMenungguBayar --> PembayaranLunas : Bayar via Midtrans atau Voucher
+    PembayaranLunas --> BerkasLengkap : Upload 4 dokumen wajib selesai
+    BerkasLengkap --> VerifikasiMenunggu : Masuk antrian verifikasi TU
+    VerifikasiMenunggu --> BerkasDitolak : TU menolak dokumen
+    BerkasDitolak --> BerkasLengkap : Siswa upload ulang berkas
+    VerifikasiMenunggu --> Terverifikasi : TU menyetujui dokumen
+    Terverifikasi --> Draft : TU membuka kunci formulir
+    Terverifikasi --> SiapUjian : Sistem plot ruang dan jadwal
+    SiapUjian --> SelesaiTes : Siswa ikut ujian dan nilai diinput
+    SelesaiTes --> LolosDiterima : Disahkan Kepala Sekolah memenuhi kuota
+    SelesaiTes --> TidakLolos : Tidak memenuhi kuota passing grade
+    LolosDiterima --> SiswaResmi : Konfirmasi daftar ulang selesai
+    TidakLolos --> [*]
+    SiswaResmi --> [*]</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>State Machine 2 — Siklus Status Transaksi Pembayaran</h2>
+              <p>Diagram #15 &mdash; Tipe: <code>state</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-14">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">stateDiagram-v2
+    [*] --> TagihanBaru : Formulir berhasil difinalisasi
+    TagihanBaru --> PendingGateway : Generate Snap Token Midtrans
+    TagihanBaru --> BebasBiaya : Klaim voucher 100 persen
+    PendingGateway --> Lunas : Webhook settlement diterima
+    PendingGateway --> Kadaluarsa : Batas waktu 24 jam terlewati
+    PendingGateway --> Dibatalkan : Dibatalkan oleh pengguna
+    Kadaluarsa --> PendingGateway : Siswa generate ulang pembayaran
+    Dibatalkan --> PendingGateway : Siswa inisiasi ulang
+    Lunas --> DikonfirmasiKasir : TU validasi rekonsiliasi
+    DikonfirmasiKasir --> KwitansiTerbit : Kwitansi sah siap dicetak
+    BebasBiaya --> KwitansiTerbit
+    KwitansiTerbit --> [*]</div>
+        </div>
+    </div>
+
+    <div id="tab-deploy" class="tab-pane ">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Arsitektur Sistem dan Deployment (3-Tier)</h2>
+              <p>Diagram #16 &mdash; Tipe: <code>flowchart</code></p>
+            </div>
+          </div>
+          <div class="diagram-wrap" id="diagram-render-15">
+            <span class="loading">Memuat...</span>
+          </div>
+          <!-- hidden source -->
+          <div class="mermaid-src" style="display:none">flowchart TB
+    subgraph Client["Lapisan 1 — Presentasi Client"]
+        BrSiswa["Browser Calon Siswa (Mobile atau Desktop)"]
+        BrTU["Browser Petugas TU (Workstation)"]
+        BrKepsek["Browser Kepala Sekolah (Executive Display)"]
+    end
+
+    subgraph Gateway["Lapisan 2 — Security dan Web Server"]
+        Nginx["Nginx atau Apache Web Server dengan SSL TLS 1.3"]
+        CSRF["CSRF Token Protection dan Rate Limiting"]
+        AuthMW["Role-Based Middleware: User Guard vs Admin Guard"]
+    end
+
+    subgraph App["Lapisan 3 — Logika Aplikasi Laravel 11 PHP 8.5"]
+        direction TB
+        subgraph Ctrl["Controllers dan Service Layer"]
+            C1["AuthController: Login, Registrasi, Forgot Password"]
+            C2["FormulirController: Draft dan Lock Engine"]
+            C3["VerifikasiController: TU Review dan Unlock"]
+            C4["PembayaranController dan Midtrans Gateway"]
+            C5["PenempatanController: Algoritma Auto-Seat"]
+            C6["KelulusanController: SK dan Sidang Pleno"]
+            C7["AuditLogService: IP dan Activity Tracker"]
+        end
+        subgraph ORM["Data Mapping Layer"]
+            Eloquent["Eloquent ORM Models dengan PK id_tabel eksplisit"]
+        end
+    end
+
+    subgraph Data["Lapisan 4 — Data dan Persistensi"]
+        MySQL[("MySQL InnoDB: Normalisasi 3NF dan Audit Trail")]
+        Storage[("Private Storage: app/private/berkas/ — Secure Stream")]
+        Midtrans[("Midtrans: Snap Token API, QRIS, dan Webhook")]
+    end
+
+    BrSiswa --> Nginx
+    BrTU --> Nginx
+    BrKepsek --> Nginx
+    Nginx --> CSRF
+    CSRF --> AuthMW
+    AuthMW --> Ctrl
+    Ctrl --> Eloquent
+    Eloquent --> MySQL
+    C3 --> Storage
+    C4 --> Midtrans</div>
+        </div>
+    </div>
+
+  </main>
+
+  <script>
+  
+// Mermaid initialisation – dark theme, isolated error handling
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'dark',
+  securityLevel: 'loose',
+  fontFamily: 'Segoe UI, system-ui, sans-serif',
+  logLevel: 'error',
+  flowchart: { curve: 'basis', htmlLabels: true },
+  er: { layoutDirection: 'TB', entityPadding: 16 }
+});
+
+// Render every .mermaid-src div individually so one error doesn't kill others
+async function renderAllDiagrams() {
+  const divs = document.querySelectorAll('.mermaid-src');
+  for (let i = 0; i < divs.length; i++) {
+    const src = divs[i];
+    const target = document.getElementById('diagram-render-' + i);
+    if (!target) continue;
+    const code = src.textContent.trim();
+    target.innerHTML = '<span class="loading">Memuat diagram...</span>';
+    try {
+      const id = 'mmd-' + i + '-' + Date.now();
+      const { svg } = await mermaid.render(id, code);
+      target.innerHTML = svg;
+    } catch(e) {
+      target.innerHTML = `<div class="error-box">
+        <strong>Diagram ${i+1}: Gagal di-render</strong>
+        <pre>${escapeHtml(e.message || String(e))}</pre>
+        <details style="margin-top:.5rem"><summary style="cursor:pointer;font-size:.75rem;color:#fca5a5">Lihat kode sumber</summary>
+        <pre style="margin-top:.35rem;font-size:.72rem;color:#cbd5e1">${escapeHtml(code)}</pre></details>
+      </div>`;
+      console.error('Diagram', i, 'error:', e);
+    }
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  document.getElementById('themeBtn').textContent = isLight ? '🌙 Mode Gelap' : '☀️ Mode Terang';
+}
+
+window.addEventListener('load', renderAllDiagrams);
+
+  </script>
+</body>
+</html>

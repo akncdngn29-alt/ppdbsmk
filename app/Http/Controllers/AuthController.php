@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Gelombang;
@@ -22,7 +24,19 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect()->route('siswa.dashboard');
         }
-        return view('auth.login');
+        $sampleStudents = User::with(['pendaftar.jurusan1'])->latest('id_user')->take(10)->get();
+        $adminTU = Admin::where('role', 'tu')->first();
+        $kepsek = Admin::where('role', 'kepala_sekolah')->first();
+        return view('auth.login', compact('sampleStudents', 'adminTU', 'kepsek'));
+    }
+
+    /**
+     * Buat kunci unik rate limiting berdasarkan guard, identitas akun, dan IP pengguna.
+     */
+    protected function throttleKey(Request $request, string $guard): string
+    {
+        $identifier = Str::lower(trim((string) $request->input('login')));
+        return 'login:' . $guard . ':' . Str::transliterate($identifier) . '|' . $request->ip();
     }
 
     public function login(Request $request)
@@ -32,13 +46,44 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
+        $throttleKey = $this->throttleKey($request, 'web');
+
+        // Batasi maksimal 5 percobaan gagal dengan jeda 60 detik
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()->withErrors([
+                'login' => "Terlalu banyak percobaan login. Silakan coba lagi dalam {$seconds} detik.",
+            ])->onlyInput('login');
+        }
+
         $field = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : (is_numeric($request->login) ? 'nisn' : 'username');
 
         // Login Calon Siswa (Web Guard)
         if (Auth::guard('web')->attempt([$field => $request->login, 'password' => $request->password], $request->filled('remember'))) {
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
-            LogAktivitas::log('LOGIN', 'Calon Siswa login ke sistem');
+            LogAktivitas::log('LOGIN', 'Calon Siswa login ke sistem: ' . Auth::user()->nama, 'user', Auth::id(), null, null, 'SUCCESS', Auth::id(), null, 'calon_siswa');
             return redirect()->intended(route('siswa.dashboard'))->with('success', 'Selamat datang kembali, ' . Auth::user()->nama . '!');
+        }
+
+        // Catat percobaan gagal ke RateLimiter
+        RateLimiter::hit($throttleKey, 60);
+
+        // Catat login gagal jika akun siswa ditemukan
+        $failedUser = User::where($field, $request->login)->first();
+        if ($failedUser) {
+            LogAktivitas::log(
+                'LOGIN_GAGAL',
+                'Percobaan login gagal untuk akun calon siswa: ' . $failedUser->nama,
+                'user',
+                $failedUser->id_user,
+                null,
+                null,
+                'FAILED',
+                $failedUser->id_user,
+                null,
+                'calon_siswa'
+            );
         }
 
         // Jika terdeteksi akun admin, tolak dan beri tahu halaman yang benar
@@ -59,7 +104,7 @@ class AuthController extends Controller
             return redirect()->route('siswa.dashboard');
         }
         $gelombang = Gelombang::where('status_aktif', true)->first();
-        $jurusan = Jurusan::all();
+        $jurusan = Jurusan::where('status_aktif', true)->get();
         return view('auth.register', compact('gelombang', 'jurusan'));
     }
 
@@ -88,14 +133,17 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        LogAktivitas::log('INSERT', 'Pendaftaran akun calon siswa baru', 'user', $user->id_user);
+        LogAktivitas::log('DAFTAR_AKUN', 'Pendaftaran akun calon siswa baru: ' . $user->nama, 'user', $user->id_user, null, null, 'SUCCESS', $user->id_user, null, 'calon_siswa');
 
         return redirect()->route('siswa.dashboard')->with('success', 'Akun berhasil dibuat! Silakan lengkapi formulir pendaftaran Anda.');
     }
 
     public function logout(Request $request)
     {
-        LogAktivitas::log('LOGOUT', 'Calon Siswa keluar dari sistem');
+        $user = Auth::user();
+        if ($user) {
+            LogAktivitas::log('LOGOUT', 'Calon Siswa keluar dari sistem: ' . $user->nama, 'user', $user->id_user, null, null, 'SUCCESS', $user->id_user, null, 'calon_siswa');
+        }
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -110,7 +158,63 @@ class AuthController extends Controller
             $role = Auth::guard('admin')->user()->role;
             return $role === 'kepala_sekolah' ? redirect()->route('kepsek.dashboard') : redirect()->route('admin.dashboard');
         }
-        return view('auth.admin_login');
+        $sampleStudents = User::with(['pendaftar.jurusan1'])->latest('id_user')->take(10)->get();
+        $adminTU = Admin::where('role', 'tu')->first();
+        $kepsek = Admin::where('role', 'kepala_sekolah')->first();
+        return view('auth.admin_login', compact('sampleStudents', 'adminTU', 'kepsek'));
+    }
+
+    /**
+     * Jalur pintasan atau akses masuk cepat tanpa mengetik kata sandi (Demo/Pengujian).
+     */
+    public function quickLogin(Request $request)
+    {
+        if ((app()->environment('production') || config('app.env') === 'production') && !config('app.debug')) {
+            return back()->withErrors(['login' => 'Akses pintasan login dinonaktifkan pada lingkungan produksi demi keamanan.']);
+        }
+
+        $request->validate([
+            'role' => 'required|in:admin,tu,kepala_sekolah,siswa',
+            'user_id' => 'nullable|exists:user,id_user',
+        ]);
+
+        $role = $request->input('role');
+
+        if (in_array($role, ['admin', 'tu'])) {
+            $admin = Admin::where('role', 'tu')->first() ?? Admin::first();
+            if (!$admin) {
+                return back()->withErrors(['login' => 'Akun Petugas TU tidak ditemukan di database.']);
+            }
+            Auth::guard('admin')->login($admin);
+            $request->session()->regenerate();
+            LogAktivitas::log('LOGIN', 'Pintasan Masuk Cepat: Petugas TU (' . $admin->nama_admin . ')', 'admin', $admin->id_admin, null, null, 'SUCCESS', null, $admin->id_admin, 'tu');
+            return redirect()->intended(route('admin.dashboard'))->with('success', 'Selamat bertugas di Panel TU, ' . $admin->nama_admin . ' (Akses Cepat).');
+        }
+
+        if ($role === 'kepala_sekolah') {
+            $kepsek = Admin::where('role', 'kepala_sekolah')->first();
+            if (!$kepsek) {
+                return back()->withErrors(['login' => 'Akun Kepala Sekolah tidak ditemukan di database.']);
+            }
+            Auth::guard('admin')->login($kepsek);
+            $request->session()->regenerate();
+            LogAktivitas::log('LOGIN', 'Pintasan Masuk Cepat: Kepala Sekolah (' . $kepsek->nama_admin . ')', 'admin', $kepsek->id_admin, null, null, 'SUCCESS', null, $kepsek->id_admin, 'kepala_sekolah');
+            return redirect()->intended(route('kepsek.dashboard'))->with('success', 'Selamat datang di Panel Eksekutif, Bapak/Ibu Kepala Sekolah (Akses Cepat).');
+        }
+
+        if ($role === 'siswa') {
+            $userId = $request->input('user_id');
+            $user = $userId ? User::find($userId) : User::first();
+            if (!$user) {
+                return back()->withErrors(['login' => 'Akun Calon Siswa tidak ditemukan di database.']);
+            }
+            Auth::guard('web')->login($user);
+            $request->session()->regenerate();
+            LogAktivitas::log('LOGIN', 'Pintasan Masuk Cepat: Calon Siswa (' . $user->nama . ')', 'user', $user->id_user, null, null, 'SUCCESS', $user->id_user, null, 'calon_siswa');
+            return redirect()->intended(route('siswa.dashboard'))->with('success', 'Selamat datang kembali, ' . $user->nama . ' (Akses Cepat)!');
+        }
+
+        return back()->withErrors(['login' => 'Peran akun tidak valid.']);
     }
 
     public function adminLogin(Request $request)
@@ -120,17 +224,48 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
+        $throttleKey = $this->throttleKey($request, 'admin');
+
+        // Batasi maksimal 5 percobaan gagal dengan jeda 60 detik
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()->withErrors([
+                'login' => "Terlalu banyak percobaan login administrator. Silakan coba lagi dalam {$seconds} detik.",
+            ])->onlyInput('login');
+        }
+
         $field = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         if (Auth::guard('admin')->attempt([$field => $request->login, 'password' => $request->password], $request->filled('remember'))) {
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
             $admin = Auth::guard('admin')->user();
-            LogAktivitas::log('LOGIN', 'Admin login ke panel: ' . $admin->nama_admin);
+            LogAktivitas::log('LOGIN', 'Admin login ke panel: ' . $admin->nama_admin, 'admin', $admin->id_admin, null, null, 'SUCCESS', null, $admin->id_admin, $admin->role);
 
             if ($admin->role === 'kepala_sekolah') {
                 return redirect()->intended(route('kepsek.dashboard'))->with('success', 'Selamat datang di Panel Eksekutif, Bapak/Ibu Kepala Sekolah.');
             }
             return redirect()->intended(route('admin.dashboard'))->with('success', 'Selamat bertugas di Panel TU, ' . $admin->nama_admin . '.');
+        }
+
+        // Catat percobaan gagal ke RateLimiter
+        RateLimiter::hit($throttleKey, 60);
+
+        // Catat login gagal jika akun admin ditemukan
+        $failedAdmin = Admin::where($field, $request->login)->first();
+        if ($failedAdmin) {
+            LogAktivitas::log(
+                'LOGIN_GAGAL',
+                'Percobaan login administrator gagal: ' . $failedAdmin->nama_admin,
+                'admin',
+                $failedAdmin->id_admin,
+                null,
+                null,
+                'FAILED',
+                null,
+                $failedAdmin->id_admin,
+                $failedAdmin->role
+            );
         }
 
         // Tolak jika akun terdeteksi sebagai akun Calon Siswa
@@ -148,7 +283,10 @@ class AuthController extends Controller
 
     public function adminLogout(Request $request)
     {
-        LogAktivitas::log('LOGOUT', 'Admin keluar dari sistem');
+        $admin = Auth::guard('admin')->user();
+        if ($admin) {
+            LogAktivitas::log('LOGOUT', 'Admin keluar dari sistem: ' . $admin->nama_admin, 'admin', $admin->id_admin, null, null, 'SUCCESS', null, $admin->id_admin, $admin->role);
+        }
         Auth::guard('admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

@@ -93,7 +93,7 @@ class XlsxExportService
             $colIdx = 0;
             foreach ($headers as $headerText) {
                 $cellRef = $this->getColumnLetter($colIdx) . $rowIdx;
-                $escaped = htmlspecialchars((string)$headerText, ENT_XML1, 'UTF-8');
+                $escaped = $this->sanitizeXmlString($headerText);
                 $sheetXml .= '<c r="' . $cellRef . '" t="inlineStr" s="1"><is><t>' . $escaped . '</t></is></c>';
                 $colIdx++;
             }
@@ -107,7 +107,7 @@ class XlsxExportService
             $colIdx = 0;
             foreach ($row as $val) {
                 $cellRef = $this->getColumnLetter($colIdx) . $rowIdx;
-                $escaped = htmlspecialchars((string)$val, ENT_XML1, 'UTF-8');
+                $escaped = $this->sanitizeXmlString($val);
                 $sheetXml .= '<c r="' . $cellRef . '" t="inlineStr" s="0"><is><t>' . $escaped . '</t></is></c>';
                 $colIdx++;
             }
@@ -129,6 +129,30 @@ class XlsxExportService
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ]);
+    }
+
+    /**
+     * Sanitasi string untuk kepatuhan standar XML 1.0 OpenXML SpreadsheetML:
+     * 1. Memastikan UTF-8 valid.
+     * 2. Membersihkan karakter kontrol biner yang dilarang XML 1.0 (\x00-\x08, \x0B, \x0C, \x0E-\x1F, \x7F).
+     * 3. Melakukan XML escaping (&, <, >, ", ') secara benar tanpa merusak karakter non-ASCII.
+     */
+    public function sanitizeXmlString($val): string
+    {
+        if ($val === null) {
+            return '';
+        }
+
+        $str = (string) $val;
+
+        if (!mb_check_encoding($str, 'UTF-8')) {
+            $str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');
+        }
+
+        // Hapus karakter kontrol ASCII terlarang dalam XML 1.0
+        $str = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $str);
+
+        return htmlspecialchars($str, ENT_XML1 | ENT_QUOTES, 'UTF-8');
     }
 
     private function getColumnLetter(int $colIndex): string

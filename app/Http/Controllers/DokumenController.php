@@ -72,16 +72,24 @@ class DokumenController extends Controller
     }
 
     /**
-     * Stream file fisik secara aman dari private storage.
+     * Stream file fisik secara aman dari private storage dengan proteksi Path Traversal.
      */
     private function streamDocument(string $path, string $downloadName): BinaryFileResponse
     {
+        // Proteksi Path Traversal Attack (mencegah karakter '..' atau absolute root path traversal)
+        if (str_contains($path, '..') || str_starts_with($path, '/') || str_starts_with($path, '\\')) {
+            abort(400, 'Format path dokumen tidak sah.');
+        }
+
+        // Sanitasi nama file download
+        $cleanDownloadName = basename($downloadName);
+
         // 1. Cek di private disk (storage/app/private/)
         $privateDisk = Storage::disk('local');
         if ($privateDisk->exists($path)) {
             $fullPath = $privateDisk->path($path);
             return response()->file($fullPath, [
-                'Content-Disposition' => 'inline; filename="' . addslashes($downloadName) . '"',
+                'Content-Disposition' => 'inline; filename="' . addslashes($cleanDownloadName) . '"',
                 'X-Content-Type-Options' => 'nosniff',
             ]);
         }
@@ -91,7 +99,7 @@ class DokumenController extends Controller
         if ($publicDisk->exists($path)) {
             $fullPath = $publicDisk->path($path);
             return response()->file($fullPath, [
-                'Content-Disposition' => 'inline; filename="' . addslashes($downloadName) . '"',
+                'Content-Disposition' => 'inline; filename="' . addslashes($cleanDownloadName) . '"',
                 'X-Content-Type-Options' => 'nosniff',
             ]);
         }

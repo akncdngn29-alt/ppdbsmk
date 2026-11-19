@@ -7,29 +7,28 @@
 <div class="space-y-6">
 
     <!-- Banner Sambutan Kepala Sekolah -->
-    <div class="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-2xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+    <div class="bg-gradient-to-r from-[#161c2d] via-[#1c142e] to-[#2b0e22] rounded-2xl p-6 sm:p-8 text-white shadow-xl border border-pink-500/20 relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-[#fa2f79]/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="relative z-10 max-w-2xl">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/30 text-emerald-200 border border-emerald-400/30 mb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#fa2f79]/15 text-[#fa2f79] border border-pink-500/30 mb-3">
                 <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
                 Panel Pengambilan Keputusan PPDB 2026/2027
             </span>
             <h2 class="text-xl sm:text-2xl font-black tracking-tight leading-tight">
                 Selamat Datang, Bapak {{ $pengaturan->nama_kepsek }}
             </h2>
-            <p class="text-xs sm:text-sm text-emerald-100/90 mt-2 leading-relaxed">
+            <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
                 Pantau perkembangan real-time penerimaan peserta didik baru, analisis distribusi asal sekolah, dan sahkan hasil seleksi kelulusan calon siswa SMK Islam Bina Khalifah Bangsa.
             </p>
             <div class="mt-4 flex flex-wrap gap-3">
-                <a href="{{ route('kepsek.kelulusan') }}" class="px-4 py-2 rounded-xl bg-white text-emerald-900 font-bold text-xs hover:bg-emerald-50 transition-colors shadow-sm flex items-center gap-2">
-                    <i data-lucide="award" class="w-4 h-4 text-emerald-600"></i> Sidang Pengesahan Kelulusan
+                <a href="{{ route('kepsek.kelulusan') }}" class="px-4 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs transition-colors shadow-lg shadow-pink-500/25 flex items-center gap-2">
+                    <i data-lucide="award" class="w-4 h-4"></i> Sidang Pengesahan Kelulusan
                 </a>
-                <a href="{{ route('kepsek.laporan') }}" class="px-4 py-2 rounded-xl bg-emerald-700/60 hover:bg-emerald-700 text-white font-bold text-xs transition-colors border border-emerald-500/30 flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-4 h-4"></i> Lihat Rekapitulasi Resmi
+                <a href="{{ route('kepsek.laporan') }}" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-colors border border-white/10 flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i> Lihat Rekapitulasi Resmi
                 </a>
             </div>
         </div>
-        <!-- Background Pattern -->
-        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/5 rounded-full pointer-events-none"></div>
     </div>
 
     <!-- 4 KPI Metrics Cards -->
@@ -38,7 +37,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Total Pendaftar</span>
-                <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 flex items-center justify-center">
+                <div class="w-9 h-9 rounded-xl bg-pink-100 text-[#fa2f79] dark:bg-pink-950/60 dark:text-pink-300 flex items-center justify-center">
                     <i data-lucide="users" class="w-5 h-5"></i>
                 </div>
             </div>
@@ -124,7 +123,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div class="flex items-center gap-2">
-                    <i data-lucide="trending-up" class="w-5 h-5 text-teal-600"></i>
+                    <i data-lucide="trending-up" class="w-5 h-5 text-[#fa2f79]"></i>
                     <h3 class="text-sm font-bold text-slate-800 dark:text-white">Tren Pendaftaran (7 Hari Terakhir)</h3>
                 </div>
             </div>
@@ -157,6 +156,11 @@
                             <div>
                                 <span class="font-bold text-slate-900 dark:text-white">{{ $j->nama_jurusan }}</span>
                                 <span class="text-slate-400 font-mono text-[11px] ml-1">({{ $j->kode_jurusan }})</span>
+                                @if(!$j->status_aktif)
+                                <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 ml-1">
+                                    Nonaktif
+                                </span>
+                                @endif
                             </div>
                             <div class="font-bold">
                                 <span class="text-emerald-600 dark:text-emerald-400">{{ $j->siswa_diterima_count }}</span>
@@ -279,11 +283,11 @@
                 datasets: [{
                     label: 'Pendaftar Baru / Hari',
                     data: trendCounts.length ? trendCounts : [0],
-                    borderColor: '#0d9488',
-                    backgroundColor: 'rgba(13, 148, 136, 0.15)',
+                    borderColor: '#fa2f79',
+                    backgroundColor: 'rgba(250, 47, 121, 0.15)',
                     tension: 0.35,
                     fill: true,
-                    pointBackgroundColor: '#0f766e',
+                    pointBackgroundColor: '#fa2f79',
                     pointRadius: 4
                 }]
             },

@@ -97,28 +97,30 @@ class AuditRepairTest extends TestCase
     public function test_maintenance_middleware_allows_admin_and_kepsek_and_blocks_students(): void
     {
         $pengaturan = PengaturanSekolah::getPengaturan();
-        $pengaturan->update(['mode_maintenance' => true]);
+        try {
+            $pengaturan->update(['mode_maintenance' => true]);
 
-        // Pengunjung umum diblokir 503
-        $this->get('/')->assertStatus(503);
+            // Pengunjung umum diblokir 503
+            $this->get('/')->assertStatus(503);
 
-        // Halaman login publik tetap terbuka agar admin bisa login
-        $this->get('/login')->assertStatus(200);
-        $this->get('/admin/login')->assertStatus(200);
+            // Halaman login publik tetap terbuka agar admin bisa login
+            $this->get('/login')->assertStatus(200);
+            $this->get('/admin/login')->assertStatus(200);
 
-        // Petugas TU dapat mengakses /admin/dashboard
-        $admin = Admin::where('role', 'tu')->first();
-        $this->actingAs($admin, 'admin');
-        $this->get('/admin/dashboard')->assertStatus(200);
+            // Petugas TU dapat mengakses /admin/dashboard
+            $admin = Admin::where('role', 'tu')->first();
+            $this->actingAs($admin, 'admin');
+            $this->get('/admin/dashboard')->assertStatus(200);
 
-        // Kepala Sekolah dapat mengakses /kepsek/dashboard (Temuan audit teratasi)
-        $kepsek = Admin::where('role', 'kepala_sekolah')->first();
-        $this->actingAs($kepsek, 'admin');
-        $this->get('/kepsek/dashboard')->assertStatus(200);
-
-        // Kembalikan ke mode normal
-        $pengaturan->update(['mode_maintenance' => false]);
-        $this->get('/')->assertStatus(200);
+            // Kepala Sekolah dapat mengakses /kepsek/dashboard (Temuan audit teratasi)
+            $kepsek = Admin::where('role', 'kepala_sekolah')->first();
+            $this->actingAs($kepsek, 'admin');
+            $this->get('/kepsek/dashboard')->assertStatus(200);
+        } finally {
+            // Kembalikan ke mode normal
+            $pengaturan->update(['mode_maintenance' => false]);
+            $this->get('/')->assertStatus(200);
+        }
     }
 
     /**
@@ -212,10 +214,13 @@ class AuditRepairTest extends TestCase
     }
 
     /**
-     * 6. Uji Webhook Midtrans: Pemrosesan Idempotent & Update Status Pembayaran.
+     * 6. Uji Webhook Midtrans: Pemrosesan Idempotent & Update Status Pembayaran dengan Signature SHA-512.
      */
     public function test_midtrans_webhook_signature_and_idempotency(): void
     {
+        $serverKey = 'SB-Mid-server-test-signature-key-123';
+        config(['services.midtrans.server_key' => $serverKey]);
+
         $pendaftar = Pendaftar::first();
         $orderId = 'TRX-TEST-MIDTRANS-' . time();
 
@@ -231,20 +236,27 @@ class AuditRepairTest extends TestCase
             'status_transaksi' => 'pending',
         ]);
 
+        $statusCode = '200';
+        $grossAmount = '100000.00';
+        $signature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
+
         $payload = [
             'order_id' => $orderId,
-            'status_code' => '200',
-            'gross_amount' => '100000.00',
+            'status_code' => $statusCode,
+            'gross_amount' => $grossAmount,
+            'signature_key' => $signature,
             'transaction_status' => 'settlement',
             'payment_type' => 'qris',
         ];
 
-        // Kirim notifikasi pertama -> Harus diproses menjadi settlement
+        // Kirim notifikasi pertama dengan signature valid -> Harus diproses menjadi settlement
         $response = $this->postJson('/api/midtrans/notification', $payload);
         $response->assertStatus(200)->assertJson(['status' => 'success']);
 
         $pembayaran->refresh();
         $this->assertEquals('settlement', $pembayaran->status_transaksi);
+        $pendaftar->refresh();
+        $this->assertEquals('Paid', $pendaftar->status_pembayaran);
 
         // Kirim notifikasi kedua (Idempotent) -> Tetap sukses tanpa menggandakan mutasi
         $response2 = $this->postJson('/api/midtrans/notification', $payload);

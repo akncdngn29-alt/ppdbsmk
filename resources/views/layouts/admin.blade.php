@@ -68,12 +68,10 @@
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-200 border-r border-slate-800 flex flex-col shrink-0 no-print transition-transform duration-300 -translate-x-full md:translate-x-0 md:static">
         <!-- Brand -->
         <div class="h-16 md:h-20 flex items-center gap-3 px-5 border-b border-slate-800 bg-slate-950/40">
-            <div class="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md shrink-0">
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
-            </div>
+            <img src="{{ asset('images/logo-sekolah.png') }}" alt="Logo SMK IB Khalifah Bangsa" class="w-9 h-9 md:w-10 md:h-10 object-contain shrink-0">
             <div class="truncate">
                 <span class="block text-sm font-bold text-white tracking-tight leading-tight">SMK IB KHALIFAH</span>
-                <span class="block text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
+                <span class="block text-[10px] font-semibold text-[#fa2f79] uppercase tracking-wider">
                     {{ $isKepsek ? 'Panel Kepala Sekolah' : 'Panel Petugas TU' }}
                 </span>
             </div>
@@ -87,24 +85,24 @@
             @if($isTU)
                 <!-- TU Menus -->
                 <div class="text-[10px] uppercase text-slate-400 font-bold px-3 pt-2 pb-1">Utama</div>
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard TU
                 </a>
-                <a href="{{ route('admin.pendaftar') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.pendaftar*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('admin.pendaftar') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.pendaftar*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="users" class="w-4 h-4"></i> Data Pendaftar
                 </a>
-                <a href="{{ route('admin.seleksi') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.seleksi*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('admin.seleksi') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.seleksi*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="clipboard-check" class="w-4 h-4"></i> Seleksi & Penilaian
                 </a>
 
                 <div class="text-[10px] uppercase text-slate-400 font-bold px-3 pt-4 pb-1">Master Data</div>
-                <a href="{{ route('admin.master.jurusan') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.master.jurusan*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('admin.master.jurusan') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.master.jurusan*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="book-open" class="w-4 h-4"></i> Master Jurusan & Kuota
                 </a>
-                <a href="{{ route('admin.master.gelombang') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.master.gelombang*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('admin.master.gelombang') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.master.gelombang*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="calendar" class="w-4 h-4"></i> Gelombang Pendaftaran
                 </a>
-                <a href="{{ route('admin.master.voucher') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.master.voucher*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('admin.master.voucher') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.master.voucher*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="ticket" class="w-4 h-4"></i> Voucher Beasiswa / Diskon
                 </a>
 
@@ -120,25 +118,25 @@
                 </a>
 
                 <div class="text-[10px] uppercase text-slate-400 font-bold px-3 pt-4 pb-1">Pengaturan CMS</div>
-                <a href="{{ route('admin.pengumuman') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.pengumuman*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('admin.pengumuman') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.pengumuman*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="megaphone" class="w-4 h-4"></i> Banner Pengumuman
                 </a>
-                <a href="{{ route('admin.pengaturan') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.pengaturan*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('admin.pengaturan') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('admin.pengaturan*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="settings" class="w-4 h-4"></i> Pengaturan Sekolah
                 </a>
             @else
                 <!-- Kepala Sekolah Menus -->
                 <div class="text-[10px] uppercase text-slate-400 font-bold px-3 pt-2 pb-1">Eksekutif</div>
-                <a href="{{ route('kepsek.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('kepsek.dashboard') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('kepsek.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('kepsek.dashboard') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Statistik Eksekutif
                 </a>
-                <a href="{{ route('kepsek.kelulusan') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('kepsek.kelulusan*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('kepsek.kelulusan') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('kepsek.kelulusan*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="award" class="w-4 h-4"></i> Kelulusan & Pengesahan SKL
                 </a>
-                <a href="{{ route('kepsek.laporan') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('kepsek.laporan*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('kepsek.laporan') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('kepsek.laporan*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="file-text" class="w-4 h-4"></i> Laporan Resmi Sekolah
                 </a>
-                <a href="{{ route('kepsek.audit_log') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('kepsek.audit_log*') ? 'bg-emerald-600 text-white font-bold' : '' }}">
+                <a href="{{ route('kepsek.audit_log') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors {{ request()->routeIs('kepsek.audit_log*') ? 'bg-[#fa2f79] text-white font-bold shadow-md shadow-pink-500/25' : '' }}">
                     <i data-lucide="activity" class="w-4 h-4"></i> Audit Trail (Log Aktivitas)
                 </a>
             @endif

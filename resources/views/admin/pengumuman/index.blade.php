@@ -94,7 +94,7 @@
                         </label>
                     </div>
 
-                    <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-colors mt-2">
+                    <button type="submit" class="w-full py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-pink-500/20 transition-colors mt-2">
                         <i data-lucide="send" class="w-4 h-4"></i> Publikasikan Pengumuman
                     </button>
                 </form>

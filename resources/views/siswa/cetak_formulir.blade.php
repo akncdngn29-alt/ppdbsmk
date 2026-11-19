@@ -15,11 +15,16 @@
 </head>
 <body class="bg-slate-100 text-slate-900 font-sans p-4 md:p-8">
 
-    <!-- Action Bar (Hidden when printing) -->
     <div class="max-w-3xl mx-auto mb-6 flex items-center justify-between no-print">
+        @if(!empty($adminMode))
+        <a href="{{ route('admin.pendaftar.detail', $pendaftar->id_pendaftar) }}" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-300">
+            &larr; Kembali ke Detail Pendaftar
+        </a>
+        @else
         <a href="{{ route('siswa.dashboard') }}" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-300">
             &larr; Kembali ke Dashboard
         </a>
+        @endif
         <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md flex items-center gap-2">
             <span>Cetak / Simpan PDF</span>
         </button>
@@ -69,7 +74,7 @@
                 </tr>
                 <tr>
                     <td class="border border-black p-2 font-bold bg-slate-50">Pilihan Jurusan 1</td>
-                    <td class="border border-black p-2 font-bold">{{ $pendaftar->jurusan1->nama_jurusan }} ({{ $pendaftar->jurusan1->kode_jurusan }})</td>
+                    <td class="border border-black p-2 font-bold">{{ $pendaftar->jurusan1 ? $pendaftar->jurusan1->nama_jurusan . ' (' . $pendaftar->jurusan1->kode_jurusan . ')' : 'Belum dipilih' }}</td>
                 </tr>
                 <tr>
                     <td class="border border-black p-2 font-bold bg-slate-50">Pilihan Jurusan 2</td>
@@ -93,68 +98,3 @@
                 </tr>
                 <tr>
                     <td class="border border-black p-2 font-bold bg-slate-50">Berat Badan / Tinggi Badan</td>
-                    <td class="border border-black p-2">{{ $pendaftar->berat_badan }} Kg / {{ $pendaftar->tinggi_badan }} Cm (Gol. Darah: {{ $pendaftar->golongan_darah }})</td>
-                </tr>
-                <tr>
-                    <td class="border border-black p-2 font-bold bg-slate-50">Ukuran Seragam & Wearpack</td>
-                    <td class="border border-black p-2">Seragam: {{ $pendaftar->ukuran_seragam }} | Wearpack: {{ $pendaftar->ukuran_wearpack }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-black p-2 font-bold bg-slate-50">Asal Sekolah (SMP/MTs)</td>
-                    <td class="border border-black p-2 font-semibold">{{ $pendaftar->asal_sekolah }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-black p-2 font-bold bg-slate-50">Alamat Asal Sekolah</td>
-                    <td class="border border-black p-2">{{ $pendaftar->alamat_sekolah ?: '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-black p-2 font-bold bg-slate-50">Nama Ayah / Pekerjaan</td>
-                    <td class="border border-black p-2">{{ $pendaftar->nama_ayah }} ({{ $pendaftar->kerja_ayah }})</td>
-                </tr>
-                <tr>
-                    <td class="border border-black p-2 font-bold bg-slate-50">Nama Ibu / Pekerjaan</td>
-                    <td class="border border-black p-2">{{ $pendaftar->nama_ibu }} ({{ $pendaftar->kerja_ibu }})</td>
-                </tr>
-                <tr>
-                    <td class="border border-black p-2 font-bold bg-slate-50">Alamat & No. HP Orang Tua</td>
-                    <td class="border border-black p-2">{{ $pendaftar->almt_ortu }} (Telp: {{ $pendaftar->hp_ortu }})</td>
-                </tr>
-                <tr>
-                    <td class="border border-black p-2 font-bold bg-slate-50">Penghasilan Orang Tua</td>
-                    <td class="border border-black p-2">{{ $pendaftar->penghasilan_ortu }} (Tanggungan: {{ $pendaftar->tanggungan_anak }} anak)</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Signatures (Sesuai Skripsi 2022 Halaman 26-27) -->
-        <div class="pt-6 grid grid-cols-2 text-center text-xs">
-            <div class="space-y-16">
-                <div>
-                    Mengetahui,<br>
-                    <strong>Orang Tua / Wali Murid</strong>
-                </div>
-                <div>
-                    ( ............................................................ )
-                </div>
-            </div>
-
-            <div class="space-y-16">
-                <div>
-                    {{ $pengaturan->kota }}, {{ $pendaftar->tgl_daftar->translatedFormat('d F Y') }}<br>
-                    <strong>Calon Siswa,</strong>
-                </div>
-                <div>
-                    <strong>( {{ strtoupper($pendaftar->nama) }} )</strong>
-                </div>
-            </div>
-        </div>
-
-        <div class="pt-4 border-t border-slate-300 text-[10px] text-slate-500 flex items-center justify-between">
-            <span>Dicetak secara elektronik dari Sistem Informasi PPDB SMK Islam Bina Khalifah Bangsa.</span>
-            <span>Waktu Cetak: {{ date('d/m/Y H:i') }}</span>
-        </div>
-    </div>
-
-</body>
-</html>
-

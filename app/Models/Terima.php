@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Terima extends Model
 {
@@ -19,11 +20,21 @@ class Terima extends Model
         'no_surat_kelulusan',
         'tgl_diterima',
         'keterangan',
+        'verification_token',
     ];
 
     protected $casts = [
         'tgl_diterima' => 'date',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Terima $terima) {
+            if (empty($terima->verification_token)) {
+                $terima->verification_token = Str::random(32);
+            }
+        });
+    }
 
     public function pendaftar()
     {

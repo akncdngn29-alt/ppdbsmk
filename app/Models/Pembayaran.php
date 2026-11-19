@@ -16,8 +16,12 @@ class Pembayaran extends Model
         'id_pendaftar',
         'id_gelombang',
         'id_voucher',
+        'jenis_pembayaran',
+        'id_admin_verifikator',
         'kode_transaksi',
         'snap_token',
+        'qr_string',
+        'qr_url',
         'nominal',
         'potongan',
         'total_bayar',
@@ -25,6 +29,7 @@ class Pembayaran extends Model
         'metode_pembayaran',
         'status_transaksi',
         'waktu_transaksi',
+        'waktu_konfirmasi_tu',
         'catatan',
     ];
 
@@ -33,7 +38,13 @@ class Pembayaran extends Model
         'potongan' => 'decimal:2',
         'total_bayar' => 'decimal:2',
         'waktu_transaksi' => 'datetime',
+        'waktu_konfirmasi_tu' => 'datetime',
     ];
+
+    public function adminVerifikator()
+    {
+        return $this->belongsTo(Admin::class, 'id_admin_verifikator', 'id_admin');
+    }
 
     public function pendaftar()
     {
@@ -50,9 +61,10 @@ class Pembayaran extends Model
         return $this->belongsTo(VoucherPendaftaran::class, 'id_voucher', 'id_voucher');
     }
 
-    public static function generateKodeTransaksi()
+    public static function generateKodeTransaksi(string $jenis = 'pendaftaran'): string
     {
-        return 'TRX-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+        $prefix = ($jenis === 'daftar_ulang') ? 'DU-PPDB-' : 'PPDB-';
+        return $prefix . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
     }
 }
 

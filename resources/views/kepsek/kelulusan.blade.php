@@ -209,7 +209,7 @@
                 <button type="button" onclick="closeDecisionModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                     Batal
                 </button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-pink-500/25 transition-colors">
                     <i data-lucide="check-check" class="w-4 h-4"></i> Simpan & Sahkan Keputusan
                 </button>
             </div>
@@ -221,7 +221,8 @@
 <script>
     function openDecisionModal(id, nama, status, j1, j2, keterangan) {
         const form = document.getElementById('decisionForm');
-        form.action = `/kepsek/kelulusan/${id}`;
+        const routeTemplate = @json(route('kepsek.kelulusan.sahkan', ['id' => '__ID__']));
+        form.action = routeTemplate.replace('__ID__', id);
         document.getElementById('modalSiswaNama').textContent = nama;
         
         const statusSelect = document.getElementById('modalStatusKelulusan');

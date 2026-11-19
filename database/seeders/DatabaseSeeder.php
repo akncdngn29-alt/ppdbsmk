@@ -22,41 +22,36 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Pengaturan Sekolah
+        // 1. Pengaturan Sekolah (Idempotent via getPengaturan)
         PengaturanSekolah::getPengaturan();
 
-        // 2. Master 4 Jurusan
-        $jurusanFarmasi = Jurusan::create([
+        // 2. Master 4 Jurusan (Idempotent via firstOrCreate)
+        $jurusanFarmasi = Jurusan::firstOrCreate(['kode_jurusan' => 'FAR'], [
             'nama_jurusan' => 'Farmasi Klinis dan Komunitas',
-            'kode_jurusan' => 'FAR',
             'kuota' => 72,
             'deskripsi' => 'Program keahlian kefarmasian klinis, peracikan obat, dan pelayanan komunitas berstandar industri kesehatan.',
         ]);
 
-        $jurusanTKJ = Jurusan::create([
+        $jurusanTKJ = Jurusan::firstOrCreate(['kode_jurusan' => 'TKJ'], [
             'nama_jurusan' => 'Teknik Komputer dan Jaringan',
-            'kode_jurusan' => 'TKJ',
             'kuota' => 72,
             'deskripsi' => 'Fokus pada infrastruktur jaringan komputer, fiber optic, server cloud, dan keamanan siber modern.',
         ]);
 
-        $jurusanTKR = Jurusan::create([
+        $jurusanTKR = Jurusan::firstOrCreate(['kode_jurusan' => 'TKR'], [
             'nama_jurusan' => 'Teknik Kendaraan Ringan',
-            'kode_jurusan' => 'TKR',
             'kuota' => 72,
             'deskripsi' => 'Mempelajari teknologi mekanik otomotif mobil, sistem EFI modern, kelistrikan, dan diagnosis kendaraan roda empat.',
         ]);
 
-        $jurusanTBSM = Jurusan::create([
+        $jurusanTBSM = Jurusan::firstOrCreate(['kode_jurusan' => 'TBSM'], [
             'nama_jurusan' => 'Teknik dan Bisnis Sepeda Motor',
-            'kode_jurusan' => 'TBSM',
             'kuota' => 72,
             'deskripsi' => 'Keahlian perbaikan, pemeliharaan sepeda motor injeksi, kelistrikan bodi, dan manajemen wirausaha bengkel.',
         ]);
 
         // 3. Master Gelombang Pendaftaran
-        $gelombang1 = Gelombang::create([
-            'nama_gelombang' => 'Gelombang 1 (Early Bird)',
+        $gelombang1 = Gelombang::firstOrCreate(['nama_gelombang' => 'Gelombang 1 (Early Bird)'], [
             'tahun_ajaran' => '2026/2027',
             'tgl_buka' => Carbon::now()->subDays(15)->format('Y-m-d'),
             'tgl_tutup' => Carbon::now()->addDays(60)->format('Y-m-d'),
@@ -64,8 +59,7 @@ class DatabaseSeeder extends Seeder
             'status_aktif' => true,
         ]);
 
-        Gelombang::create([
-            'nama_gelombang' => 'Gelombang 2 (Reguler)',
+        Gelombang::firstOrCreate(['nama_gelombang' => 'Gelombang 2 (Reguler)'], [
             'tahun_ajaran' => '2026/2027',
             'tgl_buka' => Carbon::now()->addDays(61)->format('Y-m-d'),
             'tgl_tutup' => Carbon::now()->addDays(120)->format('Y-m-d'),
@@ -74,54 +68,50 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 4. Voucher Pendaftaran
-        VoucherPendaftaran::create([
-            'kode_voucher' => 'TAHFIZJUARA',
+        VoucherPendaftaran::firstOrCreate(['kode_voucher' => 'TAHFIZJUARA'], [
             'tipe' => 'nominal',
             'nilai_potongan' => 100000.00,
             'kuota_voucher' => 50,
+            'kuota_terpakai' => 0,
             'status_aktif' => true,
         ]);
 
-        VoucherPendaftaran::create([
-            'kode_voucher' => 'DISMP25',
+        VoucherPendaftaran::firstOrCreate(['kode_voucher' => 'DISMP25'], [
             'tipe' => 'nominal',
             'nilai_potongan' => 25000.00,
             'kuota_voucher' => 100,
+            'kuota_terpakai' => 0,
             'status_aktif' => true,
         ]);
 
         // 5. Akun Administrator (TU & Kepala Sekolah)
-        $adminTU = Admin::create([
+        $adminTU = Admin::firstOrCreate(['username' => 'admin_tu'], [
             'nama_admin' => 'Budi Santoso, S.Kom',
-            'username' => 'admin_tu',
             'email' => 'admin@smkib.com',
             'password' => Hash::make('admin123'),
             'role' => 'tu',
         ]);
 
-        $kepsek = Admin::create([
+        $kepsek = Admin::firstOrCreate(['username' => 'kepsek_asliman'], [
             'nama_admin' => 'Asliman Puja Kesuma, S.Pd',
-            'username' => 'kepsek_asliman',
             'email' => 'kepsek@smkib.com',
             'password' => Hash::make('kepsek123'),
             'role' => 'kepala_sekolah',
         ]);
 
-        // 6. Akun Calon Siswa 1 (Lolos / Diterima)
-        $user1 = User::create([
+        // 6. Akun Calon Siswa 1 (Lolos / Diterima - Finalisasi & Terkunci)
+        $user1 = User::firstOrCreate(['username' => 'ahmadfauzi'], [
             'nama' => 'Ahmad Fauzi',
             'nisn' => '0078912345',
-            'username' => 'ahmadfauzi',
             'email' => 'siswa@smkib.com',
             'password' => Hash::make('siswa123'),
         ]);
 
-        $pendaftar1 = Pendaftar::create([
+        $pendaftar1 = Pendaftar::updateOrCreate(['no_pendaftaran' => 'PPDB-2026-TKJ-001'], [
             'id_user' => $user1->id_user,
             'id_gelombang' => $gelombang1->id_gelombang,
             'id_jurusan_1' => $jurusanTKJ->id_jurusan,
             'id_jurusan_2' => $jurusanTBSM->id_jurusan,
-            'no_pendaftaran' => 'PPDB-2026-TKJ-001',
             'nisn' => '0078912345',
             'nama' => 'Ahmad Fauzi',
             'tempat_lahir' => 'Kota Metro',
@@ -158,10 +148,9 @@ class DatabaseSeeder extends Seeder
             'tgl_daftar' => Carbon::now()->subDays(5),
         ]);
 
-        Pembayaran::create([
+        Pembayaran::firstOrCreate(['kode_transaksi' => 'TRX-2026-TKJ-001'], [
             'id_pendaftar' => $pendaftar1->id_pendaftar,
             'id_gelombang' => $gelombang1->id_gelombang,
-            'kode_transaksi' => 'TRX-2026-TKJ-001',
             'nominal' => 100000.00,
             'potongan' => 0.00,
             'total_bayar' => 100000.00,
@@ -172,21 +161,21 @@ class DatabaseSeeder extends Seeder
             'catatan' => 'Pembayaran lunas via QRIS Midtrans',
         ]);
 
-        PrestasiPendaftar::create([
-            'id_pendaftar' => $pendaftar1->id_pendaftar,
-            'nama_prestasi' => 'Juara 1 Musabaqah Hifdzil Qur\'an (MHQ) 3 Juz',
-            'tingkat' => 'Kabupaten/Kota',
-            'kategori' => 'Keagamaan/Tahfiz',
-            'peringkat' => 'Juara 1',
-            'tahun' => 2025,
-            'penyelenggara' => 'LPTQ Kota Metro',
-            'berkas_sertifikat' => 'demo/sertifikat_tahfiz.pdf',
-            'skor_bobot' => 30,
-            'status_verifikasi' => 'Valid',
-        ]);
+        PrestasiPendaftar::firstOrCreate(
+            ['id_pendaftar' => $pendaftar1->id_pendaftar, 'nama_prestasi' => 'Juara 1 Musabaqah Hifdzil Qur\'an (MHQ) 3 Juz'],
+            [
+                'tingkat' => 'Kabupaten/Kota',
+                'kategori' => 'Keagamaan/Tahfiz',
+                'peringkat' => 'Juara 1',
+                'tahun' => 2025,
+                'penyelenggara' => 'LPTQ Kota Metro',
+                'berkas_sertifikat' => 'demo/sertifikat_tahfiz.pdf',
+                'skor_bobot' => 30,
+                'status_verifikasi' => 'Valid',
+            ]
+        );
 
-        NilaiSeleksi::create([
-            'id_pendaftar' => $pendaftar1->id_pendaftar,
+        NilaiSeleksi::firstOrCreate(['id_pendaftar' => $pendaftar1->id_pendaftar], [
             'nilai_rapor' => 88.50,
             'nilai_wawancara' => 90.00,
             'tes_buta_warna' => 'Normal',
@@ -195,8 +184,7 @@ class DatabaseSeeder extends Seeder
             'rekomendasi_jurusan' => 'Teknik Komputer dan Jaringan',
         ]);
 
-        Terima::create([
-            'id_pendaftar' => $pendaftar1->id_pendaftar,
+        Terima::firstOrCreate(['id_pendaftar' => $pendaftar1->id_pendaftar], [
             'id_jurusan' => $jurusanTKJ->id_jurusan,
             'id_admin_pengesah' => $kepsek->id_admin,
             'no_surat_kelulusan' => '421.5/SKL-PPDB/2026/0001',
@@ -204,21 +192,19 @@ class DatabaseSeeder extends Seeder
             'keterangan' => 'Dinyatakan Lulus Seleksi Tahap 1 Program Keahlian TKJ.',
         ]);
 
-        // 7. Akun Calon Siswa 2 (Amanda Manopo - Sedang Diproses)
-        $user2 = User::create([
+        // 7. Akun Calon Siswa 2 (Amanda Manopo - Status Menunggu, is_locked = false)
+        $user2 = User::firstOrCreate(['username' => 'amandamanopo'], [
             'nama' => 'Amanda Manopo',
             'nisn' => '0078912346',
-            'username' => 'amandamanopo',
             'email' => 'amanda@smkib.com',
             'password' => Hash::make('siswa123'),
         ]);
 
-        $pendaftar2 = Pendaftar::create([
+        $pendaftar2 = Pendaftar::updateOrCreate(['no_pendaftaran' => 'PPDB-2026-FAR-002'], [
             'id_user' => $user2->id_user,
             'id_gelombang' => $gelombang1->id_gelombang,
             'id_jurusan_1' => $jurusanFarmasi->id_jurusan,
             'id_jurusan_2' => $jurusanTKJ->id_jurusan,
-            'no_pendaftaran' => 'PPDB-2026-FAR-002',
             'nisn' => '0078912346',
             'nama' => 'Amanda Manopo',
             'tempat_lahir' => 'Kota Metro',
@@ -250,14 +236,13 @@ class DatabaseSeeder extends Seeder
             'status_verifikasi' => 'Menunggu',
             'status_kelulusan' => 'Diproses',
             'status_daftar_ulang' => 'Belum',
-            'is_locked' => true,
+            'is_locked' => false, // Perbaikan: akun contoh yang berstatus Menunggu memiliki is_locked = false
             'tgl_daftar' => Carbon::now()->subDays(2),
         ]);
 
-        Pembayaran::create([
+        Pembayaran::firstOrCreate(['kode_transaksi' => 'TRX-2026-FAR-002'], [
             'id_pendaftar' => $pendaftar2->id_pendaftar,
             'id_gelombang' => $gelombang1->id_gelombang,
-            'kode_transaksi' => 'TRX-2026-FAR-002',
             'nominal' => 100000.00,
             'potongan' => 0.00,
             'total_bayar' => 100000.00,
@@ -269,9 +254,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 8. Pengumuman Awal
-        Pengumuman::create([
+        Pengumuman::firstOrCreate(['judul' => 'Penerimaan Peserta Didik Baru (PPDB) T.A 2026/2027 Resmi Dibuka!'], [
             'id_admin' => $adminTU->id_admin,
-            'judul' => 'Penerimaan Peserta Didik Baru (PPDB) T.A 2026/2027 Resmi Dibuka!',
             'isi_pengumuman' => 'Selamat datang di Sistem Informasi PPDB Online SMK Islam Bina Khalifah Bangsa Kota Metro. Silakan buat akun menggunakan NISN dan lengkapi data formulir.',
             'tipe' => 'info',
             'tampil_di_banner' => true,

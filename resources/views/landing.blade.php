@@ -4,361 +4,672 @@
 
 @section('content')
 
-<!-- Hero Section -->
-<section class="relative overflow-hidden bg-gradient-to-b from-emerald-900 via-slate-900 to-slate-900 text-white py-16 md:py-28">
-    <!-- Background Islamic geometric / glow decoration -->
-    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]"></div>
-    <div class="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
-
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <!-- Left Text -->
-            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold tracking-wide uppercase">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Pendaftaran T.A 2026/2027 Telah Dibuka
-                </div>
-
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                    Wujudkan Generasi <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Islami, Terampil,</span> & Siap Kerja.
+    <!-- ========================================================================= -->
+    <!-- HERO SECTION (PERSIS GAMBAR REFERENSI: TAMPILAN BERANDA UTAMA)            -->
+    <!-- ========================================================================= -->
+    <section class="hero-campus-um pt-8 md:pt-12 pb-14 md:pb-20 text-white border-b border-navy-800">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div class="max-w-2xl lg:max-w-2xl xl:max-w-3xl space-y-5 text-left">
+                
+                <!-- Headline Persis Gambar Referensi (4 Baris Utuh, '& Siap' Tidak Terpotong) -->
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black tracking-tight leading-[1.12]">
+                    <span class="text-white">PPDB </span><span class="text-[#fa2f79]">2026/2027</span><br>
+                    <span class="text-white">Wujudkan Generasi</span><br>
+                    <span class="text-[#fa2f79]">Islam, Terampilan,</span> <span class="text-white whitespace-nowrap">& Siap</span><br>
+                    <span class="text-white">Kerja.</span>
                 </h1>
 
-                <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                    Selamat datang di Portal Resmi Penerimaan Peserta Didik Baru (PPDB) <strong class="text-white">SMK Islam Bina Khalifah Bangsa</strong> Kota Metro, Lampung. Pilihan terbaik pendidikan vokasi berlandaskan Al-Qur'an dan teknologi industri modern.
+                <!-- Deskripsi Sambutan (3 Baris Proporsional) -->
+                <p class="text-xs sm:text-sm md:text-base text-slate-200 font-normal leading-relaxed max-w-xl">
+                    Selamat datang di Portal Resmi Penerimaan Peserta Didik Baru (PPDB) SMK Islam Bina Khalifah Bangsa Kota Metro, Lampung. Pilihan terbaik pendidikan vokasi berlandaskan Al-Qur'an dan teknologi industri modern.
                 </p>
 
-                <!-- Gelombang Countdown Box -->
-                @if($gelombangAktif)
-                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md max-w-lg mx-auto lg:mx-0">
-                    <div class="flex items-center justify-between text-xs text-slate-300 mb-2">
-                        <span class="font-semibold text-emerald-400 flex items-center gap-1.5">
-                            <i data-lucide="clock" class="w-4 h-4"></i> {{ $gelombangAktif->nama_gelombang }}
+                <!-- Gelombang Countdown Box (Persis Desain Floating Glass Card Referensi) -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-[#161c2d]/75 border border-white/10 backdrop-blur-md max-w-lg shadow-2xl space-y-3">
+                    <div class="flex items-center justify-between text-xs sm:text-sm">
+                        <span class="font-medium text-[#fa2f79] flex items-center gap-1.5">
+                            <i data-lucide="clock" class="w-4 h-4 text-[#fa2f79]"></i>
+                            <span>{{ $gelombangAktif->nama_gelombang ?? 'Gelombang 1 (Early Bird)' }}</span>
                         </span>
-                        <span>Berakhir: <strong>{{ $gelombangAktif->tgl_tutup->translatedFormat('d F Y') }}</strong></span>
+                        <span class="text-slate-200 text-xs sm:text-sm">Berakhir : <strong class="text-white font-semibold">{{ $gelombangAktif ? $gelombangAktif->tgl_tutup->translatedFormat('d F Y') : '02 januari 2027' }}</strong></span>
                     </div>
-                    <div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer" data-target="{{ $gelombangAktif->tgl_tutup->format('Y-m-d 23:59:59') }}">
-                        <div class="bg-black/30 rounded-xl p-2 border border-white/5">
-                            <div class="text-xl md:text-2xl font-extrabold text-white" id="cd-days">00</div>
-                            <div class="text-[10px] text-slate-400 uppercase">Hari</div>
+
+                    <div class="grid grid-cols-4 gap-2 sm:gap-3 text-center" id="countdown-timer" data-target="{{ $gelombangAktif ? $gelombangAktif->tgl_tutup->format('Y-m-d 23:59:59') : '2027-01-02 23:59:59' }}">
+                        <div class="bg-[#0c1222]/85 rounded-xl py-3 px-2 border border-white/5 shadow-inner">
+                            <div class="text-2xl sm:text-3xl font-black text-white leading-tight" id="cd-days">50</div>
+                            <div class="text-[10px] sm:text-[11px] font-bold text-white uppercase tracking-wider mt-1">HARI</div>
                         </div>
-                        <div class="bg-black/30 rounded-xl p-2 border border-white/5">
-                            <div class="text-xl md:text-2xl font-extrabold text-white" id="cd-hours">00</div>
-                            <div class="text-[10px] text-slate-400 uppercase">Jam</div>
+                        <div class="bg-[#0c1222]/85 rounded-xl py-3 px-2 border border-white/5 shadow-inner">
+                            <div class="text-2xl sm:text-3xl font-black text-white leading-tight" id="cd-hours">4</div>
+                            <div class="text-[10px] sm:text-[11px] font-bold text-white uppercase tracking-wider mt-1">JAM</div>
                         </div>
-                        <div class="bg-black/30 rounded-xl p-2 border border-white/5">
-                            <div class="text-xl md:text-2xl font-extrabold text-white" id="cd-mins">00</div>
-                            <div class="text-[10px] text-slate-400 uppercase">Menit</div>
+                        <div class="bg-[#0c1222]/85 rounded-xl py-3 px-2 border border-white/5 shadow-inner">
+                            <div class="text-2xl sm:text-3xl font-black text-white leading-tight" id="cd-mins">11</div>
+                            <div class="text-[10px] sm:text-[11px] font-bold text-white uppercase tracking-wider mt-1">MENIT</div>
                         </div>
-                        <div class="bg-black/30 rounded-xl p-2 border border-white/5">
-                            <div class="text-xl md:text-2xl font-extrabold text-emerald-400" id="cd-secs">00</div>
-                            <div class="text-[10px] text-slate-400 uppercase">Detik</div>
+                        <div class="bg-[#0c1222]/85 rounded-xl py-3 px-2 border border-white/5 shadow-inner">
+                            <div class="text-2xl sm:text-3xl font-black text-white leading-tight" id="cd-secs">11</div>
+                            <div class="text-[10px] sm:text-[11px] font-bold text-white uppercase tracking-wider mt-1">DETIK</div>
                         </div>
                     </div>
-                    <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between">
-                        <span>Biaya Formulir: <strong class="text-white">Rp {{ number_format($gelombangAktif->biaya_pendaftaran, 0, ',', '.') }}</strong></span>
-                        <span class="text-emerald-400 font-medium">Tersedia Beasiswa Tahfiz</span>
+
+                    <div class="text-xs sm:text-sm text-slate-200 font-normal pt-0.5">
+                        Biaya Formulir : <strong class="text-white font-bold">Rp {{ $gelombangAktif ? number_format($gelombangAktif->biaya_pendaftaran, 0, ',', '.') : '100.000' }}</strong>
                     </div>
                 </div>
-                @endif
 
-                <!-- CTAs -->
-                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                    <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm sm:text-base shadow-lg shadow-emerald-500/30 hover:scale-105 transition-all text-center flex items-center justify-center gap-2">
+                <!-- CTAs (Tombol Aksi: Solid Pink & Translucent Outline Sesuai Gambar) -->
+                <div class="flex flex-wrap items-center gap-3 sm:gap-4 pt-1">
+                    <a href="{{ route('register') }}" class="px-7 py-3.5 rounded-2xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-sm sm:text-base shadow-lg shadow-pink-500/25 transition-all text-center flex items-center justify-center gap-2">
                         <i data-lucide="user-plus" class="w-5 h-5"></i>
                         <span>Daftar Sekarang</span>
                     </a>
-                    <a href="#cek-kelulusan" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold text-sm sm:text-base backdrop-blur-md transition-all text-center flex items-center justify-center gap-2">
-                        <i data-lucide="search" class="w-5 h-5 text-emerald-400"></i>
+                    <a href="#cek-kelulusan" class="px-6 py-3.5 rounded-2xl bg-[#161c2d]/75 hover:bg-white/10 text-white font-semibold text-sm sm:text-base border border-white/20 transition-all text-center flex items-center justify-center gap-2 backdrop-blur-md">
+                        <i data-lucide="search" class="w-5 h-5 text-white"></i>
                         <span>Cek Status Kelulusan</span>
                     </a>
                 </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PROFIL SEKOLAH SECTION (PERSIS GAMBAR REFERENSI DENGAN FOTO & GRADASI)    -->
+    <!-- ========================================================================= -->
+    <section id="profil" class="py-16 md:py-20 text-white border-b border-navy-800" style="background-image: linear-gradient(90deg, rgba(8, 12, 28, 0.94) 0%, rgba(22, 14, 40, 0.88) 32%, rgba(120, 20, 80, 0.78) 68%, rgba(230, 25, 125, 0.72) 100%), url('{{ asset('images/bg-profil-sekolah.jpg') }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            
+            <!-- Section Header (Pill Putih + Judul Dwiwarna SMK Islam Pink) -->
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <div class="inline-block bg-[#f8bbd0] text-slate-900 px-7 py-2 rounded-full font-bold text-sm sm:text-base shadow-lg mb-2">
+                    Profil Sekolah
+                </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+                    SMK Islam <span class="text-[#fa2f79]">Bina Khalifah Bangsa</span>
+                </h2>
+                <p class="text-xs sm:text-sm md:text-base text-slate-200 font-normal">
+                    Berakhlak Mulia, Kompeten, dan Siap Menghadapi Masa Depan.
+                </p>
             </div>
 
-            <!-- Right Graphic / Highlights -->
-            <div class="lg:col-span-5 space-y-4">
-                <div class="relative bg-gradient-to-tr from-slate-800 to-slate-800/80 p-6 md:p-8 rounded-3xl border border-slate-700 shadow-2xl backdrop-blur-xl">
-                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i> Keunggulan SMK IB Khalifah Bangsa
-                    </h3>
-                    <div class="space-y-3.5">
-                        <div class="flex items-start gap-3 p-3 rounded-2xl bg-white/5 border border-white/5">
-                            <div class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
-                                <i data-lucide="book-check" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-white">Integrasi Kurikulum Pesantren & Industri</h4>
-                                <p class="text-xs text-slate-300">Pendidikan vokasi berstandar DU/DI diiringi hafalan Al-Qur'an (Tahfiz) dan kajian adab.</p>
-                            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+                
+                <!-- Kolom Kiri: 3 Kartu Mandiri (Tentang Sekolah, Visi Sekolah, Misi Sekolah) -->
+                <div class="lg:col-span-6 space-y-6">
+                    
+                    <!-- Kartu 1: Tentang Sekolah -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+                        <div class="card-header-badge !py-3 !px-5">
+                            <span class="font-black text-base sm:text-lg text-white">Tentang Sekolah</span>
+                            <div class="pink-accent-slash"></div>
                         </div>
-
-                        <div class="flex items-start gap-3 p-3 rounded-2xl bg-white/5 border border-white/5">
-                            <div class="p-2 rounded-xl bg-sky-500/20 text-sky-400 shrink-0">
-                                <i data-lucide="briefcase" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-white">4 Jurusan Siap Kerja & Wirausaha</h4>
-                                <p class="text-xs text-slate-300">Laboratorium Farmasi mandiri, Lab Jaringan Komputer, serta Bengkel Mobil & Motor standar pabrikan.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-3 p-3 rounded-2xl bg-white/5 border border-white/5">
-                            <div class="p-2 rounded-xl bg-amber-500/20 text-amber-400 shrink-0">
-                                <i data-lucide="award" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-white">Jalur Prestasi & Keringanan Biaya</h4>
-                                <p class="text-xs text-slate-300">Apresiasi bagi calon siswa penghafal Al-Qur'an (Tahfiz), juara seni musik tradisional, dan atlet bela diri.</p>
+                        <div class="p-5 sm:p-6">
+                            <div class="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
+                                <div class="w-full sm:w-48 shrink-0 text-center">
+                                    <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100">
+                                        <img src="{{ asset('images/gedung-pink-campus.jpg') }}" alt="Gedung sekolah" class="w-full h-32 object-cover object-center">
+                                    </div>
+                                    <div class="mt-2 text-sm font-extrabold text-slate-900">Gedung sekolah</div>
+                                </div>
+                                <div class="text-xs sm:text-[13px] text-slate-800 leading-relaxed space-y-2.5">
+                                    <p>
+                                        <strong class="font-black text-slate-900">SMK Islam Bina Khalifah Bangsa</strong> adalah lembaga pendidikan menengah kejuruan yang berkomitmen mencetak generasi muda berakhlak mulia, berilmu pengetahuan, dan terampil di bidangnya.
+                                    </p>
+                                    <p>
+                                        Dengan dukungan tenaga pendidik profesional serta fasilitas modern, kami mempersiapkan siswa untuk siap kerja maupun melanjutkan kuliah.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Quick Stats -->
-                    <div class="grid grid-cols-2 gap-3 mt-6 pt-6 border-t border-slate-700 text-center">
-                        <div class="bg-black/20 p-3 rounded-2xl">
-                            <div class="text-2xl font-black text-emerald-400">{{ $totalPendaftar }}</div>
-                            <div class="text-[11px] text-slate-400 font-medium">Total Pendaftar</div>
+                    <!-- Kartu 2: Visi Sekolah -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+                        <div class="card-header-badge !py-3 !px-5">
+                            <span class="font-black text-base sm:text-lg text-white">Visi Sekolah</span>
+                            <div class="pink-accent-slash"></div>
                         </div>
-                        <div class="bg-black/20 p-3 rounded-2xl">
-                            <div class="text-2xl font-black text-teal-400">4 Jurusan</div>
-                            <div class="text-[11px] text-slate-400 font-medium">Program Keahlian</div>
+                        <div class="p-5 sm:p-6 text-xs sm:text-sm text-slate-800 font-normal leading-relaxed">
+                            "Menjadi Sekolah Menengah Kejuruan Islam yang Unggul, Berkarakter, Berdaya Saing, dan Berjiwa Islami."
+                        </div>
+                    </div>
+
+                    <!-- Kartu 3: Tentang Sekolah (Misi) -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+                        <div class="card-header-badge !py-3 !px-5">
+                            <span class="font-black text-base sm:text-lg text-white">Tentang Sekolah</span>
+                            <div class="pink-accent-slash"></div>
+                        </div>
+                        <div class="p-5 sm:p-6 text-xs sm:text-[13px] text-slate-800">
+                            <ul class="space-y-2 list-disc list-inside leading-relaxed">
+                                <li>Menyelenggarakan pendidikan berkualitas berlandaskan nilai Islam.</li>
+                                <li>Membekali peserta didik dengan keterampilan siap kerja.</li>
+                                <li>Menanamkan akhlak mulia dan kedisiplinan dalam kehidupan sehari-hari.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Kolom Kanan: 2 Kartu Mandiri (Identitas Sekolah & Keunggulan) -->
+                <div class="lg:col-span-6 space-y-6">
+                    
+                    <!-- Kartu 1: Identitas Sekolah (Teks Tebal & Besar Persis Gambar) -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+                        <div class="card-header-badge !py-3 !px-5">
+                            <span class="font-black text-base sm:text-lg text-white">Identitas Sekolah</span>
+                            <div class="pink-accent-slash"></div>
+                        </div>
+                        <div class="p-6 space-y-3.5 text-sm sm:text-base">
+                            <div class="flex items-start">
+                                <span class="w-36 sm:w-44 font-black text-slate-900 shrink-0">Nama Sekolah</span>
+                                <span class="font-black text-slate-900 mr-2">:</span>
+                                <span class="font-normal text-slate-900">SMK Islam Bina Khalifah Bangsa</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="w-36 sm:w-44 font-black text-slate-900 shrink-0">NPSN Resmi</span>
+                                <span class="font-black text-slate-900 mr-2">:</span>
+                                <span class="font-normal text-slate-900">70012345 / 69773555</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="w-36 sm:w-44 font-black text-slate-900 shrink-0">Status</span>
+                                <span class="font-black text-slate-900 mr-2">:</span>
+                                <span class="font-normal text-slate-900">Swasta</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="w-36 sm:w-44 font-black text-slate-900 shrink-0">Akreditasi</span>
+                                <span class="font-black text-slate-900 mr-2">:</span>
+                                <span class="font-normal text-slate-900">Terakreditasi</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="w-36 sm:w-44 font-black text-slate-900 shrink-0">Email</span>
+                                <span class="font-black text-slate-900 mr-2">:</span>
+                                <span class="font-normal text-slate-900">info@smkib.com</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="w-36 sm:w-44 font-black text-slate-900 shrink-0">Alamat</span>
+                                <span class="font-black text-slate-900 mr-2">:</span>
+                                <span class="font-normal text-slate-900 leading-snug">Jl. Pattimura No. 24 / Sukarno Hatta, Ganjar Asri, Metro Barat</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kartu 2: Keunggulan (Persis Gambar) -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+                        <div class="card-header-badge !py-3 !px-5">
+                            <span class="font-black text-base sm:text-lg text-white">Keunggulan</span>
+                            <div class="pink-accent-slash"></div>
+                        </div>
+                        <div class="p-6">
+                            <ul class="space-y-4 text-xs sm:text-sm text-slate-800">
+                                <li class="flex items-start gap-2.5">
+                                    <span class="text-slate-900 font-bold text-base leading-none mt-0.5">•</span>
+                                    <div>
+                                        <strong class="font-black text-slate-900 block text-xs sm:text-sm">Integrasi Kurikulum Pesantren & Industri</strong>
+                                        <span class="text-slate-600 text-xs leading-relaxed block mt-0.5">Pendidikan vokasi berstandar DU/DI diiringi hafalan Al-Qur'an (Tahfiz) dan kajian adab.</span>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <span class="text-slate-900 font-bold text-base leading-none mt-0.5">•</span>
+                                    <div>
+                                        <strong class="font-black text-slate-900 block text-xs sm:text-sm">4 Jurusan Siap Kerja & Wirausaha</strong>
+                                        <span class="text-slate-600 text-xs leading-relaxed block mt-0.5">Laboratorium Farmasi mandiri, Lab Jaringan Komputer, serta Bengkel Mobil & Motor standar pabrikan.</span>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <span class="text-slate-900 font-bold text-base leading-none mt-0.5">•</span>
+                                    <div>
+                                        <strong class="font-black text-slate-900 block text-xs sm:text-sm">Jalur Prestasi & Keringanan</strong>
+                                        <span class="text-slate-600 text-xs leading-relaxed block mt-0.5">BiayaApresiasi bagi calon siswa penghafal Al-Qur'an (Tahfiz), juara seni musik tradisional, dan atlet bela diri.</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PROGRAM KEAHLIAN SECTION (PERSIS GAMBAR REFERENSI DENGAN FOTO & KARTU PUTIH) -->
+    <!-- ========================================================================= -->
+    <section id="jurusan" class="py-16 md:py-20 text-white border-b border-navy-800" style="background-image: linear-gradient(90deg, rgba(8, 12, 28, 0.94) 0%, rgba(22, 14, 40, 0.88) 32%, rgba(120, 20, 80, 0.78) 68%, rgba(230, 25, 125, 0.72) 100%), url('{{ asset('images/bg-profil-sekolah.jpg') }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            
+            <!-- Section Header (Pill Pink Lembut + Judul Dwiwarna) -->
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <div class="inline-block bg-[#f8bbd0] text-slate-900 px-7 py-2 rounded-full font-bold text-sm sm:text-base shadow-lg mb-2">
+                    Kompetensi Keahlian Unggulan
+                </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+                    Pilihan <span class="text-[#fa2f79]">4 Program Keahlian SMK</span>
+                </h2>
+                <p class="text-xs sm:text-sm md:text-base text-slate-200 font-normal">
+                    Dirancang khusus untuk memenuhi kebutuhan dunia usaha dan dunia industri (DUDI)
+                </p>
+            </div>
+
+            <!-- Grid 4 Kartu Jurusan Putih Elegan -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+                
+                <!-- Jurusan 1: Farmasi -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20 flex flex-col justify-between">
+                    <div class="card-header-badge !py-3 !px-5">
+                        <span class="font-black text-base sm:text-lg text-white">KODE: FJR</span>
+                        <div class="pink-accent-slash"></div>
+                    </div>
+                    <div class="p-6 flex flex-col justify-between flex-grow">
+                        <div class="space-y-3">
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 leading-snug">Farmasi Klinis & Komunitas</h3>
+                            <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed">
+                                Mempersiapkan siswa menjadi tenaga profesional di bidang farmasi klinis dan apotek obat.
+                            </p>
+                        </div>
+                        <div class="pt-5 border-t border-slate-100 flex items-center justify-between mt-6">
+                            <span class="font-bold text-slate-900 text-xs sm:text-sm">Kuota:</span>
+                            <span class="px-3.5 py-1 rounded-full bg-[#fa2f79] text-white font-black text-xs sm:text-sm shadow-md">72 Siswa</span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- Program Keahlian Section -->
-<section id="jurusan" class="py-16 md:py-24 bg-white dark:bg-slate-900 transition-colors">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider">Kompetensi Keahlian Unggulan</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Pilihan 4 Program Keahlian SMK</h2>
-            <p class="text-sm md:text-base text-slate-600 dark:text-slate-400">Dirancang khusus untuk memenuhi kebutuhan dunia usaha dan dunia industri (DU/DI) dengan kuota 72 siswa per jurusan.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach($jurusan as $j)
-            <div class="group relative rounded-3xl p-6 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-emerald-500/50 hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
-                <div class="space-y-4">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr 
-                        @if($j->kode_jurusan === 'FAR') from-emerald-600 to-teal-400 
-                        @elseif($j->kode_jurusan === 'TKJ') from-blue-600 to-cyan-400 
-                        @elseif($j->kode_jurusan === 'TKR') from-amber-600 to-yellow-400 
-                        @else from-rose-600 to-orange-400 @endif
-                        flex items-center justify-center text-white shadow-lg shadow-black/10 group-hover:scale-110 transition-transform">
-                        @if($j->kode_jurusan === 'FAR') <i data-lucide="pill" class="w-7 h-7"></i>
-                        @elseif($j->kode_jurusan === 'TKJ') <i data-lucide="network" class="w-7 h-7"></i>
-                        @elseif($j->kode_jurusan === 'TKR') <i data-lucide="car" class="w-7 h-7"></i>
-                        @else <i data-lucide="wrench" class="w-7 h-7"></i> @endif
+                <!-- Jurusan 2: TKJ -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20 flex flex-col justify-between">
+                    <div class="card-header-badge !py-3 !px-5">
+                        <span class="font-black text-base sm:text-lg text-white">KODE: TKJ</span>
+                        <div class="pink-accent-slash"></div>
                     </div>
-                    <div>
-                        <div class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">Kode: {{ $j->kode_jurusan }}</div>
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{{ $j->nama_jurusan }}</h3>
+                    <div class="p-6 flex flex-col justify-between flex-grow">
+                        <div class="space-y-3">
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 leading-snug">Teknik Komputer & Jaringan</h3>
+                            <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed">
+                                Fokus pada teknologi informasi, jaringan komputer, server, dan pengelolaan sistem IT.
+                            </p>
+                        </div>
+                        <div class="pt-5 border-t border-slate-100 flex items-center justify-between mt-6">
+                            <span class="font-bold text-slate-900 text-xs sm:text-sm">Kuota:</span>
+                            <span class="px-3.5 py-1 rounded-full bg-[#fa2f79] text-white font-black text-xs sm:text-sm shadow-md">72 Siswa</span>
+                        </div>
                     </div>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{{ $j->deskripsi }}</p>
                 </div>
 
-                <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
-                    <span class="text-slate-500 dark:text-slate-400">Kapasitas Kuota:</span>
-                    <span class="font-extrabold text-slate-900 dark:text-white px-2.5 py-1 bg-white dark:bg-slate-700 rounded-lg shadow-sm">{{ $j->kuota }} Siswa</span>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<!-- Ekstrakurikuler Section -->
-<section id="ekskul" class="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 transition-colors border-y border-slate-200 dark:border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider">Pengembangan Bakat & Karakter</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">7 Ekstrakurikuler Unggulan</h2>
-            <p class="text-sm md:text-base text-slate-600 dark:text-slate-400">Menumbuhkan kecerdasan spiritual, kedisiplinan fisik, kepemimpinan, dan kecintaan pada warisan budaya daerah Lampung.</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($ekskul as $e)
-            <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow flex items-start gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="{{ $e['icon'] }}" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <h4 class="text-base font-bold text-slate-900 dark:text-white mb-1">{{ $e['nama'] }}</h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{{ $e['desc'] }}</p>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<!-- Alur Pendaftaran Section -->
-<section id="alur" class="py-16 md:py-24 bg-white dark:bg-slate-900 transition-colors">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider">Langkah Mudah Mendaftar</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Alur 6 Tahap PPDB Online</h2>
-            <p class="text-sm md:text-base text-slate-600 dark:text-slate-400">Seluruh proses transparan, terintegrasi, dan dapat dipantau dari smartphone Anda kapan saja.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 relative">
-            @php
-                $steps = [
-                    ['no' => '1', 'title' => 'Buat Akun', 'desc' => 'Daftar dengan NISN 10 digit, Username, dan Email aktif.'],
-                    ['no' => '2', 'title' => 'Isi Formulir', 'desc' => 'Lengkapi biodata diri, pilihan jurusan 1 & 2, ukuran seragam & asal sekolah.'],
-                    ['no' => '3', 'title' => 'Pembayaran', 'desc' => 'Bayar via QRIS/VA Midtrans atau bayar tunai di Loket TU.'],
-                    ['no' => '4', 'title' => 'Upload Berkas', 'desc' => 'Unggah scan Ijazah, KK, Akta, Pas Foto, dan Sertifikat Prestasi.'],
-                    ['no' => '5', 'title' => 'Tes & Seleksi', 'desc' => 'Cetak Kartu Ujian dan ikuti tes wawancara & tes buta warna.'],
-                    ['no' => '6', 'title' => 'Daftar Ulang', 'desc' => 'Unduh SKL resmi Kepala Sekolah dan konfirmasi masuk.'],
-                ];
-            @endphp
-
-            @foreach($steps as $s)
-            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center relative group hover:border-emerald-500 transition-all">
-                <div class="w-10 h-10 rounded-full bg-emerald-600 text-white font-extrabold flex items-center justify-center mx-auto mb-3 text-sm shadow-md shadow-emerald-600/30">
-                    {{ $s['no'] }}
-                </div>
-                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">{{ $s['title'] }}</h4>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">{{ $s['desc'] }}</p>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<!-- Cek Status Kelulusan Cepat Section (Widget Publik Tanpa Login) -->
-<section id="cek-kelulusan" class="py-16 md:py-24 bg-gradient-to-br from-emerald-900 via-slate-900 to-slate-950 text-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
-        <div class="space-y-3">
-            <span class="text-emerald-400 font-bold text-xs uppercase tracking-wider">Layanan Publik Cepat</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold">Cek Status Hasil Seleksi PPDB</h2>
-            <p class="text-sm md:text-base text-slate-300 max-w-xl mx-auto">Masukkan 10 digit NISN atau Nomor Pendaftaran Anda untuk melihat hasil penetapan kelulusan resmi tanpa perlu login ke sistem.</p>
-        </div>
-
-        <!-- Form Lookup -->
-        <div class="p-6 md:p-8 rounded-3xl bg-white/10 border border-white/20 backdrop-blur-xl shadow-2xl max-w-2xl mx-auto">
-            <form id="form-cek-kelulusan" class="space-y-4">
-                @csrf
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <div class="relative flex-1">
-                        <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                        <input type="text" id="input-nisn" name="nisn" required placeholder="Contoh: 0078912345 atau PPDB-2026-TKJ-001" class="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-900/80 border border-slate-700 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-emerald-500">
+                <!-- Jurusan 3: TKR -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20 flex flex-col justify-between">
+                    <div class="card-header-badge !py-3 !px-5">
+                        <span class="font-black text-base sm:text-lg text-white">KODE: TKR</span>
+                        <div class="pink-accent-slash"></div>
                     </div>
-                    <button type="submit" id="btn-submit-cek" class="px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2 shrink-0">
-                        <i data-lucide="search-check" class="w-4 h-4"></i>
-                        <span>Cek Status</span>
-                    </button>
+                    <div class="p-6 flex flex-col justify-between flex-grow">
+                        <div class="space-y-3">
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 leading-snug">Teknik Kendaraan Ringan</h3>
+                            <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed">
+                                Membekali siswa dengan keterampilan perawatan dan perbaikan kendaraan ringan mobil modern.
+                            </p>
+                        </div>
+                        <div class="pt-5 border-t border-slate-100 flex items-center justify-between mt-6">
+                            <span class="font-bold text-slate-900 text-xs sm:text-sm">Kuota:</span>
+                            <span class="px-3.5 py-1 rounded-full bg-[#fa2f79] text-white font-black text-xs sm:text-sm shadow-md">72 Siswa</span>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-[11px] text-slate-400 text-left">Gunakan nomor NISN Anda yang terdaftar pada saat registrasi awal.</p>
-            </form>
 
-            <!-- Result Box (Hidden initially) -->
-            <div id="hasil-cek-box" class="hidden mt-6 pt-6 border-t border-white/15 text-left animate-fade-in">
-                <div id="hasil-konten"></div>
+                <!-- Jurusan 4: TBSM -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-2xl border border-white/20 flex flex-col justify-between">
+                    <div class="card-header-badge !py-3 !px-5">
+                        <span class="font-black text-base sm:text-lg text-white">KODE: TBSM</span>
+                        <div class="pink-accent-slash"></div>
+                    </div>
+                    <div class="p-6 flex flex-col justify-between flex-grow">
+                        <div class="space-y-3">
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 leading-snug">Teknik Bisnis Sepeda Motor</h3>
+                            <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed">
+                                Menyiapkan siswa di bidang teknik sepeda motor standar pabrik dan wirausaha bengkel otomotif.
+                            </p>
+                        </div>
+                        <div class="pt-5 border-t border-slate-100 flex items-center justify-between mt-6">
+                            <span class="font-bold text-slate-900 text-xs sm:text-sm">Kuota:</span>
+                            <span class="px-3.5 py-1 rounded-full bg-[#fa2f79] text-white font-black text-xs sm:text-sm shadow-md">72 Siswa</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- FAQ Section -->
-<section class="py-16 md:py-24 bg-white dark:bg-slate-900 transition-colors">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16 space-y-3">
-            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider">Pertanyaan Umum</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Tanya Jawab (FAQ) PPDB</h2>
-            <p class="text-sm md:text-base text-slate-600 dark:text-slate-400">Jawaban seputar pendaftaran, syarat berkas, dan sistem seleksi di SMK Islam Bina Khalifah Bangsa.</p>
-        </div>
-
-        <div class="space-y-4">
-            <details class="group p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                <summary class="font-bold text-sm md:text-base text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
-                    <span>Apakah pendaftaran PPDB ini dilakukan secara full online?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform"></i>
-                </summary>
-                <p class="mt-3 text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Ya, pembuatan akun, pengisian formulir, unggah berkas, dan pengecekan kelulusan 100% online. Namun bagi calon siswa dan orang tua yang ingin membayar tunai atau membutuhkan bantuan pendaftaran, dapat hadir langsung ke Loket TU di sekolah.
-                </p>
-            </details>
-
-            <details class="group p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                <summary class="font-bold text-sm md:text-base text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
-                    <span>Bagaimana jika jurusan pilihan pertama saya sudah penuh?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform"></i>
-                </summary>
-                <p class="mt-3 text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Sistem kami memiliki fitur limpahan kuota cerdas. Jika kuota 72 siswa pada Pilihan 1 telah terpenuhi, panitia secara otomatis akan mempertimbangkan Anda untuk diterima di Jurusan Pilihan 2 yang telah Anda tentukan.
-                </p>
-            </details>
-
-            <details class="group p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                <summary class="font-bold text-sm md:text-base text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
-                    <span>Apa saja tes seleksi yang diadakan di SMK Islam Bina Khalifah Bangsa?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform"></i>
-                </summary>
-                <p class="mt-3 text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Tes seleksi mencakup Tes Wawancara Minat Bakat & Keagamaan, serta Tes Buta Warna (khususnya untuk Farmasi, TKJ, TKR, dan TBSM guna menjamin keselamatan kerja praktik).
-                </p>
-            </details>
-
-            <details class="group p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                <summary class="font-bold text-sm md:text-base text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
-                    <span>Apakah ada beasiswa khusus untuk Tahfiz Al-Qur'an?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform"></i>
-                </summary>
-                <p class="mt-3 text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Tentu ada! Calon siswa dengan hafalan minimal 3 Juz berhak mendapatkan potongan biaya pendaftaran dengan memasukkan kode voucher <strong>TAHFIZJUARA</strong> saat checkout dan mengunggah sertifikat/syahadah tahfiz pada formulir Jalur Prestasi.
-                </p>
-            </details>
-        </div>
-    </div>
-</section>
-
-<!-- Lokasi & Peta Section -->
-<section class="py-16 bg-slate-50 dark:bg-slate-950 transition-colors border-t border-slate-200 dark:border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div class="space-y-4">
-                <span class="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider">Lokasi Kampus Sekolah</span>
-                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">Kunjungi {{ $pengaturan->nama_sekolah }}</h2>
-                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Terletak strategis di Kota Metro, Lampung. Memiliki lingkungan belajar yang asri, sarana ibadah luas, dan fasilitas praktik bengkel serta laboratorium kefarmasian yang lengkap.
-                </p>
-                <div class="space-y-2 text-xs text-slate-700 dark:text-slate-300">
-                    <p class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-emerald-500 shrink-0"></i> {{ $pengaturan->alamat }}</p>
-                    <p class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-emerald-500 shrink-0"></i> Pelayanan Loket TU PPDB: Senin - Sabtu, Pukul 08.00 - 15.00 WIB</p>
-                    <p class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-emerald-500 shrink-0"></i> Call Center / WhatsApp: {{ $pengaturan->no_telp }}</p>
+    <!-- ========================================================================= -->
+    <!-- EKSTRAKURIKULER SECTION (PERSIS GAMBAR REFERENSI DENGAN FOTO & KARTU TRANSPARAN) -->
+    <!-- ========================================================================= -->
+    <section id="ekskul" class="py-16 md:py-20 text-white border-b border-navy-800" style="background-image: linear-gradient(90deg, rgba(8, 12, 28, 0.94) 0%, rgba(22, 14, 40, 0.88) 32%, rgba(120, 20, 80, 0.78) 68%, rgba(230, 25, 125, 0.72) 100%), url('{{ asset('images/bg-profil-sekolah.jpg') }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            
+            <!-- Section Header (Pill Pink Lembut + Judul Dwiwarna) -->
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <div class="inline-block bg-[#f8bbd0] text-slate-900 px-7 py-2 rounded-full font-bold text-sm sm:text-base shadow-lg mb-2">
+                    Pengembangan Bakat & Karakter
                 </div>
-                <div class="pt-2">
-                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($pengaturan->nama_sekolah . ' ' . $pengaturan->alamat) }}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs shadow-md hover:opacity-90 transition-opacity">
-                        <i data-lucide="navigation" class="w-4 h-4 text-emerald-500"></i> Buka Petunjuk Rute Google Maps
-                    </a>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+                    6 Ekstrakurikuler <span class="text-[#fa2f79]">Unggulan</span>
+                </h2>
+                <p class="text-xs sm:text-sm md:text-base text-slate-200 font-normal max-w-2xl mx-auto leading-relaxed">
+                    Menumbuhkan kecerdasan,ampilitu,kemandirian,dan kepemimpinan, serta kecintaan pada wawasan budaya dan lingkungan.
+                </p>
+            </div>
+
+            <!-- Grid 6 Kartu Ekskul Elegan Transparan Tanpa Ikon -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Ekskul 1 -->
+                <div class="p-6 rounded-2xl bg-[#0d1630]/85 backdrop-blur-md border border-white/10 shadow-xl transition-all hover:border-[#fa2f79]/50 flex flex-col justify-center">
+                    <h3 class="text-base sm:text-lg font-black text-white mb-2 leading-snug">Tilawatil Al-Qur'an</h3>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        Meningkatkan kemampuan membaca tajwid Al-Qur'an.
+                    </p>
+                </div>
+
+                <!-- Ekskul 2 -->
+                <div class="p-6 rounded-2xl bg-[#0d1630]/85 backdrop-blur-md border border-white/10 shadow-xl transition-all hover:border-[#fa2f79]/50 flex flex-col justify-center">
+                    <h3 class="text-base sm:text-lg font-black text-white mb-2 leading-snug">Tahfidzul Qur'an</h3>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        Program unggulan hafalan dan pemahaman ayat.
+                    </p>
+                </div>
+
+                <!-- Ekskul 3 -->
+                <div class="p-6 rounded-2xl bg-[#0d1630]/85 backdrop-blur-md border border-white/10 shadow-xl transition-all hover:border-[#fa2f79]/50 flex flex-col justify-center">
+                    <h3 class="text-base sm:text-lg font-black text-white mb-2 leading-snug">Pramuka (Gugus SMK IB)</h3>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        Menanamkan disiplin, kemandirian, dan kerja sama.
+                    </p>
+                </div>
+
+                <!-- Ekskul 4 -->
+                <div class="p-6 rounded-2xl bg-[#0d1630]/85 backdrop-blur-md border border-white/10 shadow-xl transition-all hover:border-[#fa2f79]/50 flex flex-col justify-center">
+                    <h3 class="text-base sm:text-lg font-black text-white mb-2 leading-snug">Paskibra</h3>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        Kedisiplinan, baris-berbaris, dan jiwa nasionalisme.
+                    </p>
+                </div>
+
+                <!-- Ekskul 5 -->
+                <div class="p-6 rounded-2xl bg-[#0d1630]/85 backdrop-blur-md border border-white/10 shadow-xl transition-all hover:border-[#fa2f79]/50 flex flex-col justify-center">
+                    <h3 class="text-base sm:text-lg font-black text-white mb-2 leading-snug">Karate</h3>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        Melatih fisik, mental, dan teknik bela diri.
+                    </p>
+                </div>
+
+                <!-- Ekskul 6 -->
+                <div class="p-6 rounded-2xl bg-[#0d1630]/85 backdrop-blur-md border border-white/10 shadow-xl transition-all hover:border-[#fa2f79]/50 flex flex-col justify-center">
+                    <h3 class="text-base sm:text-lg font-black text-white mb-2 leading-snug">Gamelan Karawitan</h3>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        Melestarikan budaya daerah melalui seni gamelan.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- ALUR 6 TAHAP PPDB SECTION (PERSIS GAMBAR REFERENSI DENGAN FOTO & CONTAINER GLASS) -->
+    <!-- ========================================================================= -->
+    <section id="alur" class="py-16 md:py-20 text-white border-b border-navy-800" style="background-image: linear-gradient(90deg, rgba(8, 12, 28, 0.94) 0%, rgba(22, 14, 40, 0.88) 32%, rgba(120, 20, 80, 0.78) 68%, rgba(230, 25, 125, 0.72) 100%), url('{{ asset('images/bg-profil-sekolah.jpg') }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            
+            <!-- Section Header (Pill Pink Lembut + Judul Dwiwarna) -->
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <div class="inline-block bg-[#f8bbd0] text-slate-900 px-7 py-2 rounded-full font-bold text-sm sm:text-base shadow-lg mb-2">
+                    Panduan Pendaftaran
+                </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+                    Alur 6 Tahap <span class="text-[#fa2f79]">PPDB Online</span>
+                </h2>
+                <p class="text-xs sm:text-sm md:text-base text-slate-200 font-normal max-w-2xl mx-auto leading-relaxed">
+                    Ikuti langkah-langkah berikut untuk melakukan pendaftaran secara online dengan mudah dan benar.
+                </p>
+            </div>
+
+            <!-- Wadah Besar Navy Glass Container Memayungi 6 Kartu Putih -->
+            <div class="p-6 sm:p-8 rounded-3xl bg-[#0c1838]/80 backdrop-blur-md border border-white/10 shadow-2xl">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5 text-center">
+                    
+                    <!-- Tahap 1 -->
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white text-center shadow-lg border border-slate-100 flex flex-col justify-start h-full">
+                        <div class="w-12 h-12 rounded-full bg-[#fa2f79] text-white font-black text-lg flex items-center justify-center mx-auto mb-4 shadow-md">
+                            1
+                        </div>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-2 leading-snug">Buat Akun</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-normal">Daftar dengan NISN 10 digit, Username, dan Email aktif.</p>
+                    </div>
+
+                    <!-- Tahap 2 -->
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white text-center shadow-lg border border-slate-100 flex flex-col justify-start h-full">
+                        <div class="w-12 h-12 rounded-full bg-[#fa2f79] text-white font-black text-lg flex items-center justify-center mx-auto mb-4 shadow-md">
+                            2
+                        </div>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-2 leading-snug">Isi Formulir</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-normal">Lengkapi biodata diri, pilihan jurusan 1 & 2, ukuran seragam & asal sekolah.</p>
+                    </div>
+
+                    <!-- Tahap 3 -->
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white text-center shadow-lg border border-slate-100 flex flex-col justify-start h-full">
+                        <div class="w-12 h-12 rounded-full bg-[#fa2f79] text-white font-black text-lg flex items-center justify-center mx-auto mb-4 shadow-md">
+                            3
+                        </div>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-2 leading-snug">Pembayaran</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-normal">Bayar via QRIS/VA Midtrans atau bayar tunai di Loket TU.</p>
+                    </div>
+
+                    <!-- Tahap 4 -->
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white text-center shadow-lg border border-slate-100 flex flex-col justify-start h-full">
+                        <div class="w-12 h-12 rounded-full bg-[#fa2f79] text-white font-black text-lg flex items-center justify-center mx-auto mb-4 shadow-md">
+                            4
+                        </div>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-2 leading-snug">Upload Berkas</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-normal">Unggah scan Ijazah, KK, Akta, Pas Foto, dan Sertifikat Prestasi.</p>
+                    </div>
+
+                    <!-- Tahap 5 -->
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white text-center shadow-lg border border-slate-100 flex flex-col justify-start h-full">
+                        <div class="w-12 h-12 rounded-full bg-[#fa2f79] text-white font-black text-lg flex items-center justify-center mx-auto mb-4 shadow-md">
+                            5
+                        </div>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-2 leading-snug">Tes & Seleksi</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-normal">Cetak Kartu Ujian dan ikuti tes wawancara & tes buta warna.</p>
+                    </div>
+
+                    <!-- Tahap 6 -->
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white text-center shadow-lg border border-slate-100 flex flex-col justify-start h-full">
+                        <div class="w-12 h-12 rounded-full bg-[#fa2f79] text-white font-black text-lg flex items-center justify-center mx-auto mb-4 shadow-md">
+                            6
+                        </div>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-2 leading-snug">Daftar Ulang</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-normal">Unduh SKL resmi Kepala Sekolah dan konfirmasi masuk.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- CEK KELULUSAN SECTION (PERSIS GAMBAR REFERENSI DENGAN FOTO & CONTAINER GLASS) -->
+    <!-- ========================================================================= -->
+    <section id="cek-kelulusan" class="py-16 md:py-20 text-white border-b border-navy-800" style="background-image: linear-gradient(90deg, rgba(8, 12, 28, 0.94) 0%, rgba(22, 14, 40, 0.88) 32%, rgba(120, 20, 80, 0.78) 68%, rgba(230, 25, 125, 0.72) 100%), url('{{ asset('images/bg-profil-sekolah.jpg') }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            
+            <!-- Section Header (Pill Pink Lembut + Judul Dwiwarna) -->
+            <div class="text-center max-w-5xl mx-auto mb-10 space-y-2">
+                <div class="inline-block bg-[#f8bbd0] text-slate-900 px-7 py-2 rounded-full font-bold text-sm sm:text-base shadow-lg mb-2">
+                    Pantau Hasil Seleksi
+                </div>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] xl:text-5xl font-black text-white tracking-tight leading-tight">
+                    Cek Status Hasil Seleksi <span class="whitespace-nowrap text-[#fa2f79]">PPDB Online</span>
+                </h2>
+                <p class="text-xs sm:text-sm md:text-base text-slate-200 font-normal max-w-2xl mx-auto leading-relaxed">
+                    Masukan kode pendaftaran Anda unttuk mengetahui hasil seleksi PPDB di SMK Islam Bina Khalifah Bangsa
+                </p>
+            </div>
+
+            <!-- Wadah Besar Navy Glass Container Memayungi Search Form -->
+            <div class="max-w-4xl mx-auto p-6 sm:p-10 rounded-3xl bg-[#0c1838]/85 backdrop-blur-md border border-white/10 shadow-2xl">
+                <form id="form-cek-kelulusan" class="w-full">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                        
+                        <!-- Kolom Input Kapsul Putih dengan Ikon Kaca Pembesar di Kiri -->
+                        <div class="relative flex-grow flex items-center bg-white rounded-full px-5 py-1.5 shadow-md border border-slate-100">
+                            <i data-lucide="search" class="w-6 h-6 text-slate-800 shrink-0 mr-3"></i>
+                            <input type="text" id="input-nisn" name="nisn" required placeholder="Contoh; 202611060001 atau NISN Anda" class="w-full py-2.5 bg-transparent text-slate-900 text-sm sm:text-base font-semibold focus:outline-none placeholder:text-slate-500">
+                        </div>
+
+                        <!-- Tombol Cek Status Pink -->
+                        <button type="submit" id="btn-submit-cek" class="px-8 py-3.5 rounded-full bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shrink-0 shadow-lg transition-all">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                            <span>Cek Status</span>
+                        </button>
+                    </div>
+
+                    <!-- Pill Catatan Petunjuk di Bawah Input -->
+                    <div class="mt-4 flex justify-start">
+                        <div class="inline-flex items-center gap-2 bg-white/95 text-sky-800 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full shadow-sm">
+                            <i data-lucide="info" class="w-4 h-4 text-sky-600 shrink-0"></i>
+                            <span>Pastikan Anda memasukkan kode pendaftaran dengan benar.</span>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Result Box -->
+                <div id="hasil-cek-box" class="hidden mt-6 text-left w-full">
+                    <div id="hasil-konten"></div>
                 </div>
             </div>
 
-            <!-- Maps Embed Frame dengan Pin Lokasi Spesifik -->
-            <div class="relative rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl h-72 lg:h-96 bg-slate-200 dark:bg-slate-800">
-                <iframe 
-                    title="Peta Lokasi {{ $pengaturan->nama_sekolah }}"
-                    class="w-full h-full border-0"
-                    loading="lazy" 
-                    allowfullscreen 
-                    src="https://maps.google.com/maps?q={{ urlencode($pengaturan->nama_sekolah . ', ' . $pengaturan->alamat) }}&t=&z=17&ie=UTF8&iwloc=B&output=embed">
-                </iframe>
-                <!-- Floating Pin Badge Indikator Kampus -->
-                <div class="absolute top-4 left-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm px-3.5 py-2 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center gap-2.5 pointer-events-none">
-                    <span class="relative flex h-2.5 w-2.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
-                    </span>
-                    <span class="text-xs font-bold text-slate-800 dark:text-white">{{ $pengaturan->nama_sekolah }}</span>
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TANYA JAWAB (FAQ) SECTION (PERSIS GAMBAR REFERENSI DENGAN FOTO & BAR ARROW) -->
+    <!-- ========================================================================= -->
+    <section id="faq" class="py-16 md:py-20 text-white border-b border-navy-800" style="background-image: linear-gradient(90deg, rgba(8, 12, 28, 0.94) 0%, rgba(22, 14, 40, 0.88) 32%, rgba(120, 20, 80, 0.78) 68%, rgba(230, 25, 125, 0.72) 100%), url('{{ asset('images/bg-profil-sekolah.jpg') }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            
+            <!-- Section Header (Pill Pink Lembut + Judul Dwiwarna) -->
+            <div class="text-center max-w-4xl mx-auto mb-10 space-y-2">
+                <div class="inline-block bg-[#f8bbd0] text-slate-900 px-7 py-2 rounded-full font-black text-sm sm:text-base tracking-wider shadow-lg mb-2">
+                    PERTANYAAN UMUM
                 </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+                    Tanya Jawab (FAQ) <span class="whitespace-nowrap text-[#fa2f79]">PPDB Online</span>
+                </h2>
+                <p class="text-xs sm:text-sm md:text-base text-slate-200 font-normal max-w-2xl mx-auto leading-relaxed">
+                    Jawaban atas pertanyaan yang sering di tanyakan seputar pendaftaran PPDB di SMK Bina Khalifah Bangsa
+                </p>
+            </div>
+
+            <!-- List Bar FAQ Lebar Navy Elegan dengan Panah Arrow Down Putih -->
+            <div class="max-w-4xl mx-auto space-y-4">
+                
+                <!-- FAQ 1 -->
+                <div class="px-6 py-4 rounded-2xl bg-[#0c1838]/90 backdrop-blur-md border border-white/10 shadow-lg flex items-center justify-between cursor-pointer hover:border-[#fa2f79]/50 transition-all">
+                    <span class="text-xs sm:text-sm md:text-base font-bold text-white">Apakah pendaftran PPDB ini dilakukan secara online?</span>
+                    <i data-lucide="arrow-down" class="w-5 h-5 text-white shrink-0 ml-4 stroke-[2.5]"></i>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="px-6 py-4 rounded-2xl bg-[#0c1838]/90 backdrop-blur-md border border-white/10 shadow-lg flex items-center justify-between cursor-pointer hover:border-[#fa2f79]/50 transition-all">
+                    <span class="text-xs sm:text-sm md:text-base font-bold text-white">Bagaimana jika jurusan pilihan pertama saya penuh?</span>
+                    <i data-lucide="arrow-down" class="w-5 h-5 text-white shrink-0 ml-4 stroke-[2.5]"></i>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="px-6 py-4 rounded-2xl bg-[#0c1838]/90 backdrop-blur-md border border-white/10 shadow-lg flex items-center justify-between cursor-pointer hover:border-[#fa2f79]/50 transition-all">
+                    <span class="text-xs sm:text-sm md:text-base font-bold text-white">Apa saja tes seleksi yang diadakan di SMK Islam Bina Khalifah Bangsa?</span>
+                    <i data-lucide="arrow-down" class="w-5 h-5 text-white shrink-0 ml-4 stroke-[2.5]"></i>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="px-6 py-4 rounded-2xl bg-[#0c1838]/90 backdrop-blur-md border border-white/10 shadow-lg flex items-center justify-between cursor-pointer hover:border-[#fa2f79]/50 transition-all">
+                    <span class="text-xs sm:text-sm md:text-base font-bold text-white">Apakah ada beasiswa khusus untuk Tahfiz-Qur'an?</span>
+                    <i data-lucide="arrow-down" class="w-5 h-5 text-white shrink-0 ml-4 stroke-[2.5]"></i>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- LOKASI SEKOLAH (PERSIS GAMBAR REFERENSI DENGAN GRADIENT & GOOGLE MAPS)    -->
+    <!-- ========================================================================= -->
+    <section class="py-16 md:py-20 text-white border-b border-navy-800" style="background: linear-gradient(135deg, #100b26 0%, #290c37 32%, #6e1452 70%, #9e1460 100%);">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                
+                <!-- Kolom Kiri: Info & Kontak -->
+                <div class="lg:col-span-6 space-y-5">
+                    
+                    <!-- Badge Pill Soft Pink -->
+                    <div class="inline-flex items-center gap-2 bg-[#f8bbd0] text-slate-900 px-6 py-2 rounded-full font-black text-xs sm:text-sm tracking-wider shadow-lg">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-slate-900 shrink-0"></i>
+                        <span>LOKASI SEKOLAH</span>
+                    </div>
+
+                    <!-- Judul Dwiwarna -->
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+                        Kunjungi SMK Islam<br>
+                        <span class="text-[#fa2f79]">Bina Khalifah Bangsa</span>
+                    </h2>
+
+                    <!-- Paragraf Deskripsi -->
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-xl">
+                        Terletak strategis di Kota Metro, Lampung. Memiliki lingkungan belajar yang asri, sarana ibadah luas, dan fasilitas praktik bersetandar untuk kenyamanan belajar siswa
+                    </p>
+
+                    <!-- Daftar Kontak dengan Lingkaran Pink Solid -->
+                    <div class="space-y-3.5 text-xs sm:text-sm text-white pt-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-7 h-7 rounded-full bg-[#fa2f79] text-white flex items-center justify-center shrink-0 shadow-sm">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                            </div>
+                            <span class="font-normal text-slate-100">Jl. Pattimura No.24, Ganjar Asri, Kec. Metro Barat,Kota Metro Lampung 34125</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-7 h-7 rounded-full bg-[#fa2f79] text-white flex items-center justify-center shrink-0 shadow-sm">
+                                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                            </div>
+                            <span class="font-normal text-slate-100">Pelayanan loket PPDB Senin-Sabtu 08.00-15.00 WIB</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-7 h-7 rounded-full bg-[#fa2f79] text-white flex items-center justify-center shrink-0 shadow-sm">
+                                <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                            </div>
+                            <span class="font-normal text-slate-100">CALL Center / WhatsApp; 0821-7890-1234</span>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Kapsul Putih Buka Google Maps -->
+                    <div class="pt-2">
+                        <a href="https://maps.google.com/?q=SMK+IB+KHALIFAH+BANGSA+METRO" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white text-slate-900 font-bold text-xs sm:text-sm shadow-xl hover:shadow-2xl hover:bg-slate-50 transition-all">
+                            <i data-lucide="navigation" class="w-4 h-4 text-[#fa2f79] fill-[#fa2f79]"></i>
+                            <span>Buka Google Maps</span>
+                            <span class="text-slate-400 font-bold text-base">&gt;</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Kolom Kanan: Peta Google Maps Asli (Menampilkan Pin & Nama Resmi Bawaan Google) -->
+                <div class="lg:col-span-6 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 h-[340px] sm:h-[380px] bg-slate-900">
+                    <iframe src="https://maps.google.com/maps?q=SMK+IB+KHALIFAH+BANGSA+METRO&amp;t=m&amp;z=17&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 @endsection
 
@@ -367,7 +678,8 @@
     // Countdown Timer Logic
     const timerContainer = document.getElementById('countdown-timer');
     if (timerContainer) {
-        const targetDate = new Date(timerContainer.getAttribute('data-target')).getTime();
+        const targetAttr = timerContainer.getAttribute('data-target');
+        const targetDate = new Date(targetAttr.replace(/-/g, '/')).getTime();
 
         const updateTimer = () => {
             const now = new Date().getTime();
@@ -379,15 +691,15 @@
                 const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-                document.getElementById('cd-days').innerText = String(days).padStart(2, '0');
-                document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
-                document.getElementById('cd-mins').innerText = String(minutes).padStart(2, '0');
-                document.getElementById('cd-secs').innerText = String(seconds).padStart(2, '0');
-            } else {
-                document.getElementById('cd-days').innerText = '00';
-                document.getElementById('cd-hours').innerText = '00';
-                document.getElementById('cd-mins').innerText = '00';
-                document.getElementById('cd-secs').innerText = '00';
+                const elD = document.getElementById('cd-days');
+                const elH = document.getElementById('cd-hours');
+                const elM = document.getElementById('cd-mins');
+                const elS = document.getElementById('cd-secs');
+
+                if (elD) elD.innerText = String(days).padStart(2, '0');
+                if (elH) elH.innerText = String(hours).padStart(2, '0');
+                if (elM) elM.innerText = String(minutes).padStart(2, '0');
+                if (elS) elS.innerText = String(seconds).padStart(2, '0');
             }
         };
 
@@ -395,7 +707,7 @@
         setInterval(updateTimer, 1000);
     }
 
-    // Cek Kelulusan AJAX
+    // Cek Kelulusan AJAX Logic
     const formCek = document.getElementById('form-cek-kelulusan');
     const resultBox = document.getElementById('hasil-cek-box');
     const resultContent = document.getElementById('hasil-konten');
@@ -426,66 +738,61 @@
 
                 if (res.success) {
                     const d = res.data;
-                    let badgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
-                    let statusIcon = 'clock';
+                    let badgeClass = 'bg-amber-100 text-amber-800 border-amber-300';
                     let statusMsg = 'Sedang Dalam Proses Seleksi / Penilaian.';
 
                     if (d.status_kelulusan === 'Diterima') {
-                        badgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
-                        statusIcon = 'check-circle-2';
+                        badgeClass = 'bg-emerald-100 text-emerald-800 border-emerald-300';
                         statusMsg = `Selamat! Anda Diterima di Jurusan <strong>${d.jurusan_diterima}</strong>.`;
                     } else if (d.status_kelulusan === 'Cadangan') {
-                        badgeClass = 'bg-sky-500/20 text-sky-300 border-sky-500/40';
-                        statusIcon = 'help-circle';
+                        badgeClass = 'bg-sky-100 text-sky-800 border-sky-300';
                         statusMsg = 'Anda Masuk dalam Daftar Cadangan / Waiting List.';
                     } else if (d.status_kelulusan === 'Tidak Lolos') {
-                        badgeClass = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
-                        statusIcon = 'x-circle';
+                        badgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
                         statusMsg = 'Mohon Maaf, Anda Belum Lolos Seleksi Tahun Ini.';
                     }
 
                     resultContent.innerHTML = `
-                        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+                        <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
                             <div class="flex items-center justify-between flex-wrap gap-2">
-                                <span class="px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${badgeClass} flex items-center gap-1.5">
-                                    <i data-lucide="${statusIcon}" class="w-4 h-4"></i> ${d.status_kelulusan}
+                                <span class="px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${badgeClass}">
+                                    ${d.status_kelulusan}
                                 </span>
-                                <span class="text-xs text-slate-400 font-mono">${d.no_pendaftaran}</span>
+                                <span class="text-xs text-slate-500 font-mono">${d.no_pendaftaran}</span>
                             </div>
                             <div>
-                                <h4 class="text-base font-bold text-white">${d.nama}</h4>
-                                <p class="text-xs text-slate-300">NISN: ${d.nisn} | Asal Sekolah: ${d.asal_sekolah}</p>
+                                <h4 class="text-base font-bold text-navy-950">${d.nama}</h4>
+                                <p class="text-xs text-slate-600">NISN: ${d.nisn} | Asal Sekolah: ${d.asal_sekolah}</p>
                             </div>
-                            <div class="p-3 rounded-xl bg-black/30 border border-white/5 text-xs text-slate-200">
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
                                 ${statusMsg}
-                                ${d.no_skl ? `<div class="mt-1.5 pt-1.5 border-t border-white/10 text-[11px] text-emerald-400">No. SKL: ${d.no_skl}</div>` : ''}
+                                ${d.no_skl ? `<div class="mt-1.5 pt-1.5 border-t border-slate-200 text-[11px] text-emerald-700 font-medium">No. SKL: ${d.no_skl}</div>` : ''}
                             </div>
                             <div class="pt-1 text-center">
-                                <a href="{{ route('login') }}" class="text-xs text-emerald-400 hover:underline">Login ke Akun Siswa untuk Mengunduh Lembar SKL & Panduan Daftar Ulang &rarr;</a>
+                                <a href="{{ route('login') }}" class="text-xs text-brand-pink hover:underline font-semibold">Login ke Akun Siswa untuk Mengunduh Lembar SKL & Panduan Daftar Ulang &rarr;</a>
                             </div>
                         </div>
                     `;
                 } else {
                     resultContent.innerHTML = `
-                        <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-3">
-                            <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 text-rose-400"></i>
+                        <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-3">
+                            <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 text-rose-500"></i>
                             <div>${res.message}</div>
                         </div>
                     `;
                 }
             } catch (err) {
                 resultContent.innerHTML = `
-                    <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
+                    <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
                         Terjadi kesalahan saat memeriksa data. Silakan coba lagi.
                     </div>
                 `;
             } finally {
                 btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `<i data-lucide="search-check" class="w-4 h-4"></i><span>Cek Status</span>`;
+                btnSubmit.innerHTML = `<i data-lucide="search" class="w-4 h-4"></i><span>Cek Status</span>`;
                 lucide.createIcons();
             }
         });
     }
 </script>
 @endpush
-

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartu Peserta Tes Seleksi - {{ $pendaftar->nama }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <style>
         @media print {
             .no-print { display: none !important; }
@@ -16,9 +17,15 @@
 <body class="bg-slate-100 text-slate-900 font-sans p-4 md:p-8">
 
     <div class="max-w-2xl mx-auto mb-6 flex items-center justify-between no-print">
+        @if(!empty($adminMode))
+        <a href="{{ route('admin.pendaftar.detail', $pendaftar->id_pendaftar) }}" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-300">
+            &larr; Kembali ke Detail Pendaftar
+        </a>
+        @else
         <a href="{{ route('siswa.dashboard') }}" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-300">
             &larr; Kembali ke Dashboard
         </a>
+        @endif
         <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">
             Cetak Kartu Ujian (PDF)
         </button>
@@ -57,7 +64,7 @@
                     </tr>
                     <tr>
                         <td class="font-bold py-1">Pilihan Jurusan 1</td>
-                        <td class="font-bold">: {{ $pendaftar->jurusan1->nama_jurusan }}</td>
+                        <td class="font-bold">: {{ $pendaftar->jurusan1 ? $pendaftar->jurusan1->nama_jurusan : '-' }}</td>
                     </tr>
                     <tr>
                         <td class="font-bold py-1">Pilihan Jurusan 2</td>
@@ -85,47 +92,9 @@
                         $pasfoto = $pendaftar->berkas->where('jenis_berkas', 'pasfoto')->first();
                     @endphp
                     @if($pasfoto)
-                    <img src="{{ asset('storage/' . $pasfoto->path_file) }}" alt="Pas Foto" class="w-full h-full object-cover rounded">
+                    <img src="{{ route('dokumen.berkas', $pasfoto->id_berkas) }}" alt="Pas Foto" class="w-full h-full object-cover rounded">
                     @else
                     <span class="text-[10px] text-slate-400 font-bold uppercase">Pas Foto 3x4 Resmi</span>
                     @endif
                 </div>
                 <div class="w-20 h-20 border border-black p-1 bg-white text-center flex flex-col items-center justify-center">
-                    <!-- QR Simulation -->
-                    <div class="w-16 h-16 bg-slate-900 p-1 flex items-center justify-center text-white text-[8px] font-mono leading-none break-all text-center">
-                        QR VALID<br>{{ substr($pendaftar->no_pendaftaran, -7) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Schedule & Rules -->
-        <div class="p-3 bg-slate-50 border border-black rounded-lg space-y-1.5 text-[11px]">
-            <strong class="block text-xs uppercase underline">Jadwal & Lokasi Tes Seleksi Masuk:</strong>
-            <p>1. <strong>Materi Ujian:</strong> Tes Wawancara Minat Bakat, Tes Baca Al-Qur'an (Tahfiz), dan Tes Buta Warna.</p>
-            <p>2. <strong>Waktu & Tempat:</strong> Gedung Kampus SMK Islam Bina Khalifah Bangsa, Ruang Laboratorium 1.</p>
-            <p>3. <strong>Tata Tertib:</strong> Wajib membawa cetakan Kartu Ujian ini, memakai seragam SMP asal rapi & bersepatu, serta hadir 15 menit sebelum tes dimulai.</p>
-        </div>
-
-        <!-- Signature -->
-        <div class="pt-2 flex justify-between items-end text-center">
-            <div class="space-y-12">
-                <div>Tanda Tangan Calon Siswa,</div>
-                <div class="font-bold">( {{ strtoupper($pendaftar->nama) }} )</div>
-            </div>
-
-            <div class="space-y-12">
-                <div>
-                    Kota Metro, {{ date('d F Y') }}<br>
-                    <strong>Ketua Panitia PPDB,</strong>
-                </div>
-                <div class="font-bold underline">
-                    Budi Santoso, S.Kom
-                </div>
-            </div>
-        </div>
-    </div>
-
-</body>
-</html>
-

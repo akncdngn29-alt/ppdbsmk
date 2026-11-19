@@ -3,27 +3,72 @@
 @section('title', 'Formulir Pendaftaran Siswa Baru')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="space-y-6">
 
         <!-- Page Header -->
         <div class="flex items-center justify-between flex-wrap gap-4">
             <div>
-                <a href="{{ route('siswa.dashboard') }}" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 mb-1">
+                <a href="{{ route('siswa.dashboard') }}" class="text-xs font-semibold text-[#fa2f79] hover:underline flex items-center gap-1 mb-1">
                     <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Kembali ke Dashboard
                 </a>
                 <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Formulir Pendaftaran Siswa Baru</h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400">Lengkapi data pribadi, pilihan jurusan, asal sekolah, dan orang tua/wali dengan benar.</p>
             </div>
 
-            @if($pendaftar && !$pendaftar->is_locked)
-            <form action="{{ route('siswa.finalisasi') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin data sudah benar? Setelah difinalisasi, formulir akan terkunci dan tidak dapat diubah lagi.');">
-                @csrf
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
-                    <i data-lucide="lock" class="w-4 h-4"></i> Finalisasi & Kunci Data
-                </button>
-            </form>
-            @endif
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold 
+                    @if($pendaftar && $pendaftar->is_locked) bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700
+                    @elseif($pendaftar) bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-700
+                    @else bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-300 dark:border-slate-700 @endif">
+                    <i data-lucide="{{ $pendaftar && $pendaftar->is_locked ? 'lock' : 'file-edit' }}" class="w-3.5 h-3.5"></i>
+                    Status: {{ $pendaftar ? ($pendaftar->is_locked ? 'Difinalisasi (Terkunci)' : 'Draft Tersimpan') : 'Draft Baru' }}
+                </span>
+            </div>
         </div>
+
+        @if(session('success'))
+        <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-3">
+            <i data-lucide="check-circle" class="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400"></i>
+            <div>{{ session('success') }}</div>
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-3">
+            <i data-lucide="alert-circle" class="w-5 h-5 shrink-0 text-rose-600"></i>
+            <div>{{ session('error') }}</div>
+        </div>
+        @endif
+
+        @if(session('info'))
+        <div class="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs flex items-center gap-3">
+            <i data-lucide="info" class="w-5 h-5 shrink-0 text-blue-600"></i>
+            <div>{{ session('info') }}</div>
+        </div>
+        @endif
+
+        @if($errors->any())
+        <div class="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs space-y-2">
+            <div class="flex items-center gap-2 font-bold text-sm">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i>
+                <span>Terdapat Kolom yang Belum Lengkap / Format Tidak Sesuai:</span>
+            </div>
+            <ul class="list-disc list-inside space-y-1 pl-1">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        @if(!$pendaftar || !$pendaftar->is_locked)
+        <div class="p-4 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-sky-800 dark:text-sky-300 text-xs flex items-center gap-3">
+            <i data-lucide="info" class="w-5 h-5 shrink-0 text-sky-600"></i>
+            <div>
+                <strong>Pengisian Bertahap Didukung:</strong> Anda dapat menyimpan biodata sebagai <strong>Draft</strong> kapan saja dengan tombol <em>Simpan Draft</em> meskipun belum semua kolom terisi. Setelah seluruh persyaratan lengkap bertanda bintang (<span class="text-rose-500">*</span>), tekan tombol <strong>Finalisasi Formulir</strong> untuk mengunci data Anda.
+            </div>
+        </div>
+        @endif
 
         @if($pendaftar && $pendaftar->is_locked)
         <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs flex items-center gap-3">
@@ -289,13 +334,18 @@
 
             <!-- Submit Button Bar -->
             @if(!$pendaftar || !$pendaftar->is_locked)
-            <div class="flex items-center justify-end gap-3 pt-2">
-                <a href="{{ route('siswa.dashboard') }}" class="px-5 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    Batal
+            <div class="flex items-center justify-between flex-wrap gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <a href="{{ route('siswa.dashboard') }}" class="px-5 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Dashboard
                 </a>
-                <button type="submit" class="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/30 transition-all flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Data Formulir
-                </button>
+                <div class="flex items-center gap-3">
+                    <button type="submit" name="action" value="draft" formnovalidate class="px-6 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 font-bold text-sm shadow-sm transition-all flex items-center gap-2">
+                        <i data-lucide="save" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i> Simpan Draft
+                    </button>
+                    <button type="submit" name="action" value="finalisasi" onclick="return confirm('Apakah Anda yakin seluruh data formulir sudah lengkap dan benar? Setelah difinalisasi, formulir akan terkunci dan tidak dapat diubah lagi tanpa persetujuan Admin TU.');" class="px-7 py-3.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-sm shadow-md shadow-pink-500/25 transition-all flex items-center gap-2">
+                        <i data-lucide="lock" class="w-4 h-4"></i> Finalisasi Formulir
+                    </button>
+                </div>
             </div>
             @endif
         </form>

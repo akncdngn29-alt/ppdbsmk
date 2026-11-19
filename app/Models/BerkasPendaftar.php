@@ -30,5 +30,31 @@ class BerkasPendaftar extends Model
     {
         return route('dokumen.berkas', $this->id_berkas);
     }
+
+    public function isTerverifikasi(): bool
+    {
+        return in_array($this->status_berkas, ['Valid', 'Terverifikasi']);
+    }
+
+    public function isPerluPerbaikan(): bool
+    {
+        return in_array($this->status_berkas, ['Tidak Valid', 'Perlu Perbaikan']);
+    }
+
+    public function isMenunggu(): bool
+    {
+        return $this->status_berkas === 'Menunggu';
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        if ($this->isTerverifikasi()) {
+            return 'Terverifikasi';
+        }
+        if ($this->isPerluPerbaikan()) {
+            return 'Perlu Perbaikan';
+        }
+        return 'Menunggu Verifikasi';
+    }
 }
 

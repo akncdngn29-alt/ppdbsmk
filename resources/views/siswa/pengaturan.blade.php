@@ -3,7 +3,7 @@
 @section('title', 'Pengaturan Akun')
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-6">
+<div class="space-y-6">
 
         <!-- Page Header -->
         <div>
@@ -81,7 +81,7 @@
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-end">
-                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-emerald-600/30 transition-all">
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-pink-500/25 transition-all">
                         <i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan Akun
                     </button>
                 </div>

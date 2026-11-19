@@ -73,9 +73,9 @@ class PPDBRouteTest extends TestCase
         // Test a newly registered user who hasn't locked the form yet
         $newUser = User::create([
             'nama' => 'Siswa Baru Belum Kunci',
-            'nisn' => '0099887766',
-            'username' => 'siswabaru',
-            'email' => 'siswabaru@test.com',
+            'nisn' => '00' . mt_rand(10000000, 99999999),
+            'username' => 'siswabaru_' . uniqid(),
+            'email' => 'siswabaru_' . uniqid() . '@test.com',
             'password' => Hash::make('password123'),
         ]);
 

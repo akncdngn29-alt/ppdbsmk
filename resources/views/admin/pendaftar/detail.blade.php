@@ -25,6 +25,16 @@
                 <i data-lucide="message-circle" class="w-4 h-4"></i> Chat WhatsApp Siswa
             </a>
 
+            <!-- Buka Kunci Formulir (SPEC Bab 426) -->
+            @if($pendaftar->is_locked)
+            <form action="{{ route('admin.pendaftar.unlock', $pendaftar->id_pendaftar) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membuka kunci formulir biodata {{ $pendaftar->nama }}? Calon siswa akan dapat mengedit kembali biodatanya.');" class="inline">
+                @csrf
+                <button type="submit" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all">
+                    <i data-lucide="unlock" class="w-4 h-4"></i> Buka Kunci Formulir
+                </button>
+            </form>
+            @endif
+
             <!-- If cash payment pending -->
             @if($pendaftar->status_pembayaran !== 'Paid')
             <form action="{{ route('admin.pendaftar.bayar_tunai', $pendaftar->id_pendaftar) }}" method="POST" onsubmit="return confirm('Konfirmasi bahwa siswa telah membayar tunai di loket TU?');">
@@ -52,7 +62,7 @@
                     </div>
                     <div class="text-right">
                         <span class="text-[10px] text-slate-400 block uppercase">Pilihan 1</span>
-                        <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">{{ $pendaftar->jurusan1->nama_jurusan }}</span>
+                        <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">{{ $pendaftar->jurusan1 ? $pendaftar->jurusan1->nama_jurusan : 'Belum dipilih' }}</span>
                         @if($pendaftar->jurusan2)
                         <span class="text-[11px] text-slate-400 block">Pil 2: {{ $pendaftar->jurusan2->nama_jurusan }}</span>
                         @endif
@@ -115,10 +125,12 @@
                         <div class="flex items-center justify-between">
                             <span class="font-bold text-xs uppercase text-slate-800 dark:text-white">{{ $b->jenis_berkas }}</span>
                             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold 
-                                @if($b->status_berkas === 'Valid') bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
-                                @elseif($b->status_berkas === 'Tidak Valid') bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300
+                                @if(in_array($b->status_berkas, ['Valid', 'Terverifikasi'])) bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300
+                                @elseif(in_array($b->status_berkas, ['Tidak Valid', 'Perlu Perbaikan'])) bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300
                                 @else bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 @endif">
-                                {{ $b->status_berkas }}
+                                @if(in_array($b->status_berkas, ['Valid', 'Terverifikasi'])) Terverifikasi
+                                @elseif(in_array($b->status_berkas, ['Tidak Valid', 'Perlu Perbaikan'])) Perlu Perbaikan
+                                @else Menunggu Verifikasi @endif
                             </span>
                         </div>
 
@@ -155,13 +167,13 @@
                         <!-- Single Berkas Verification Form -->
                         <form action="{{ route('admin.berkas.verifikasi', $b->id_berkas) }}" method="POST" class="flex items-center gap-2 text-xs pt-1">
                             @csrf
-                            <select name="status_berkas" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
-                                <option value="Valid" {{ $b->status_berkas === 'Valid' ? 'selected' : '' }}>Tandai Valid</option>
-                                <option value="Tidak Valid" {{ $b->status_berkas === 'Tidak Valid' ? 'selected' : '' }}>Tidak Valid</option>
-                                <option value="Menunggu" {{ $b->status_berkas === 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
+                            <select name="status_berkas" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold">
+                                <option value="Valid" {{ in_array($b->status_berkas, ['Valid', 'Terverifikasi']) ? 'selected' : '' }}>Terverifikasi (Valid)</option>
+                                <option value="Perlu Perbaikan" {{ in_array($b->status_berkas, ['Tidak Valid', 'Perlu Perbaikan']) ? 'selected' : '' }}>Perlu Perbaikan / Ditolak</option>
+                                <option value="Menunggu" {{ $b->status_berkas === 'Menunggu' ? 'selected' : '' }}>Menunggu Verifikasi</option>
                             </select>
-                            <input type="text" name="catatan" value="{{ $b->catatan }}" placeholder="Alasan jika ditolak..." class="flex-1 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
-                            <button type="submit" class="px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-700 text-white font-bold text-xs hover:bg-slate-800">
+                            <input type="text" name="catatan" value="{{ $b->catatan }}" placeholder="Alasan penolakan / perbaikan (dapat dibaca siswa)..." class="flex-1 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+                            <button type="submit" class="px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-700 text-white font-bold text-xs hover:bg-slate-800 transition-colors">
                                 Simpan
                             </button>
                         </form>
@@ -195,6 +207,73 @@
         <!-- Col 3: Actions & Overall Verification -->
         <div class="space-y-6">
 
+            <!-- Card Informasi Pembayaran & Voucher -->
+            <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="receipt" class="w-4 h-4 text-emerald-600"></i>
+                        Status Pembayaran
+                    </h3>
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold {{ $pendaftar->status_pembayaran === 'Paid' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' }}">
+                        {{ $pendaftar->status_pembayaran === 'Paid' ? 'Lunas' : 'Belum Lunas' }}
+                    </span>
+                </div>
+
+                @if($pendaftar->pembayaran)
+                <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs space-y-2">
+                    <div class="flex items-center justify-between text-slate-500">
+                        <span>Kode Transaksi:</span>
+                        <strong class="font-mono text-slate-900 dark:text-white">{{ $pendaftar->pembayaran->kode_transaksi }}</strong>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-500">
+                        <span>Biaya Awal:</span>
+                        <span class="font-mono">Rp {{ number_format($pendaftar->pembayaran->nominal, 0, ',', '.') }}</span>
+                    </div>
+                    @if($pendaftar->pembayaran->potongan > 0)
+                    <div class="flex items-center justify-between text-emerald-600 font-semibold">
+                        <span>Voucher ({{ $pendaftar->pembayaran->voucher ? $pendaftar->pembayaran->voucher->kode_voucher : 'Diskon' }}):</span>
+                        <span class="font-mono">- Rp {{ number_format($pendaftar->pembayaran->potongan, 0, ',', '.') }}</span>
+                    </div>
+                    @endif
+                    <div class="pt-1.5 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between font-bold text-slate-900 dark:text-white">
+                        <span>Total Tagihan:</span>
+                        <span class="text-sm font-mono text-emerald-600 dark:text-emerald-400">Rp {{ number_format($pendaftar->pembayaran->total_bayar, 0, ',', '.') }}</span>
+                    </div>
+                </div>
+                @else
+                <p class="text-xs text-slate-400">Calon siswa belum membuat tagihan pembayaran.</p>
+                @endif
+            </div>
+
+            <!-- Card Status & Buka Kunci Formulir (SPEC_PPDB.md Bab 426) -->
+            <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Status Formulir Biodata</h3>
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold {{ $pendaftar->is_locked ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' }}">
+                        {{ $pendaftar->is_locked ? 'Terkunci (Final)' : 'Terbuka (Bisa Diedit)' }}
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500">
+                    {{ $pendaftar->is_locked 
+                        ? 'Formulir saat ini berstatus Read-Only karena telah difinalisasi oleh siswa. Buka kunci jika siswa mengajukan permohonan revisi data.' 
+                        : 'Formulir berstatus terbuka. Calon siswa dapat memperbarui data diri, data orang tua, dan pilihan jurusan di dashboard siswa.' }}
+                </p>
+
+                @if($pendaftar->is_locked)
+                <form action="{{ route('admin.pendaftar.unlock', $pendaftar->id_pendaftar) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membuka kunci formulir biodata {{ $pendaftar->nama }}? Calon siswa akan dapat mengedit kembali biodatanya.');">
+                    @csrf
+                    <button type="submit" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="unlock" class="w-4 h-4"></i> Buka Kunci Formulir
+                    </button>
+                </form>
+                @else
+                <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                    <span>Formulir dapat diedit oleh calon siswa.</span>
+                </div>
+                @endif
+            </div>
+
             <!-- Overall Verification Form -->
             <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
                 <h3 class="text-base font-bold text-slate-900 dark:text-white">Keputusan Verifikasi Berkas</h3>
@@ -216,7 +295,7 @@
                         <textarea name="catatan_verifikasi" rows="3" placeholder="Contoh: Foto KK terpotong, mohon unggah ulang lembar KK yang utuh." class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">{{ $pendaftar->catatan_verifikasi }}</textarea>
                     </div>
 
-                    <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all">
+                    <button type="submit" class="w-full py-2.5 rounded-xl bg-[#fa2f79] hover:bg-[#e11d48] text-white font-bold text-xs shadow-md shadow-pink-500/25 transition-all">
                         Perbarui Status Verifikasi
                     </button>
                 </form>
@@ -226,16 +305,16 @@
             <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
                 <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Cetak Dokumen Pendaftar</h3>
                 <div class="space-y-2">
-                    <a href="{{ route('siswa.cetak.formulir') }}?admin_view=1" target="_blank" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold hover:bg-slate-100 flex items-center justify-between">
+                    <a href="{{ route('admin.cetak.formulir', $pendaftar->id_pendaftar) }}" target="_blank" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold hover:bg-slate-100 flex items-center justify-between">
                         <span>Lembar Formulir Pendaftaran</span>
                         <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
                     </a>
-                    <a href="{{ route('siswa.cetak.kartu_ujian') }}?admin_view=1" target="_blank" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold hover:bg-slate-100 flex items-center justify-between">
+                    <a href="{{ route('admin.cetak.kartu_ujian', $pendaftar->id_pendaftar) }}" target="_blank" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold hover:bg-slate-100 flex items-center justify-between">
                         <span>Kartu Peserta Ujian</span>
                         <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
                     </a>
                     @if($pendaftar->terima)
-                    <a href="{{ route('siswa.cetak.skl') }}?admin_view=1" target="_blank" class="w-full p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100 flex items-center justify-between">
+                    <a href="{{ route('admin.cetak.skl', $pendaftar->id_pendaftar) }}" target="_blank" class="w-full p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100 flex items-center justify-between">
                         <span>Surat Keterangan Lulus (SKL)</span>
                         <i data-lucide="external-link" class="w-4 h-4 text-emerald-500"></i>
                     </a>

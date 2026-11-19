@@ -34,6 +34,11 @@ class Gelombang extends Model
         return $this->hasMany(Pendaftar::class, 'id_gelombang', 'id_gelombang');
     }
 
+    public function pembayaran()
+    {
+        return $this->hasMany(Pembayaran::class, 'id_gelombang', 'id_gelombang');
+    }
+
     public function isOpen(): bool
     {
         $today = Carbon::today();
