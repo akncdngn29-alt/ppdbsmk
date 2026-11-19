@@ -25,3 +25,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+ppdb_smk.sql
+ppdb_smktidb.sql
+ppdb_smk_tidb.sql
+*.sql

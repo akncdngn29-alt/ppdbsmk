@@ -34,20 +34,82 @@ Mengecualikan file dan folder yang tidak perlu diupload ke Vercel (seperti `node
 
 ---
 
-## 🗄️ Langkah 1: Siapkan Database Cloud Eksternal
+## 🗄️ Langkah 1: Siapkan & Ekspor-Impor Database Cloud Eksternal
 
-Karena SQLite lokal tidak bisa digunakan di Vercel, siapkan database cloud gratis/freemium terlebih dahulu:
+Karena Vercel bersifat **Serverless** (tidak memiliki server database lokal yang menyala terus-menerus), Anda membutuhkan **Database Cloud Eksternal** yang dapat diakses secara online selama 24 jam.
 
-### Pilihan Penyedia Database Gratis:
-- **MySQL:**
-  - [Aiven](https://aiven.io/) (Free tier MySQL)
-  - [TiDB Cloud](https://tidbcloud.com/) (Kompatibel MySQL, gratis)
-  - [Clever Cloud](https://www.clever-cloud.com/)
-- **PostgreSQL:**
-  - [Supabase](https://supabase.com/) (Sangat direkomendasikan, gratis & cepat)
-  - [Neon.tech](https://neon.tech/) (Serverless Postgres)
+---
 
-> Catat kredensial database Anda: **Host**, **Port**, **Database Name**, **Username**, dan **Password**.
+### A. Panduan Lengkap Ekspor Database dari phpMyAdmin (Bahasa Indonesia)
+
+Jika Anda saat ini mengembangkan aplikasi di lokal menggunakan XAMPP/Laragon dan databasenya ada di phpMyAdmin, ikuti langkah berikut:
+
+1. **Buka phpMyAdmin**:
+   - Buka browser Anda dan akses `http://localhost/phpmyadmin`.
+2. **Pilih Database Proyek**:
+   - Pada panel sebelah kiri, cari dan **klik nama database Anda** (contoh: `ppdb_smk`).
+   - > ⚠️ **Penting**: Pastikan Anda sudah mengklik nama database, bukan sedang berada di halaman beranda / server global phpMyAdmin.
+3. **Buka Menu Ekspor**:
+   - Pada bilah menu di bagian atas, klik tab **"Ekspor"**.
+4. **Pilih Metode Ekspor**:
+   - **Pilihan 1: Metode Cepat (Paling Sederhana)**:
+     - Pilih opsi radio button: **"Cepat - hanya tampilkan opsi minimal"**.
+     - Pastikan **Format** adalah **"SQL"**.
+     - Klik tombol **"Ekspor"** (atau **"Kirim"**).
+   - **Pilihan 2: Metode Kustom (Sangat Direkomendasikan)**:
+     - Pilih **"Kustom - tampilkan semua opsi yang mungkin"**.
+     - **Tabel**: Pastikan semua tabel terpilih (**"Pilih Semua"**).
+     - **Keluaran**: Pilih **"Simpan keluaran ke berkas"** (karakter: `utf-8`).
+     - **Opsi pembuatan objek**: Centang opsi **`Tambahkan pernyataan DROP TABLE / TRIGGER`** (tujuannya agar jika Anda mengimpor ulang, tabel lama otomatis dihapus bersih tanpa error *"table already exists"*).
+     - Gulir ke paling bawah dan klik tombol **"Ekspor"** (atau **"Kirim"**).
+5. File database berekstensi `.sql` (contoh: `ppdb_smk.sql`) akan otomatis terunduh ke folder **Downloads** komputer Anda.
+
+---
+
+### B. Membuat Database Cloud Gratis
+
+Daftar layanan database cloud MySQL gratis yang sangat kompatibel dengan Laravel di Vercel:
+
+1. **[TiDB Cloud](https://tidbcloud.com/)** *(Paling Direkomendasikan & Kuota Besar)*:
+   - Gratis (Free Serverless Tier hingga 25 GB).
+   - 100% kompatibel dengan MySQL.
+   - Dilengkapi **Web SQL Editor** bawaan untuk eksekusi file `.sql` langsung di browser tanpa install aplikasi tambahan.
+2. **[Aiven for MySQL](https://aiven.io/)**:
+   - Free tier MySQL cloud yang stabil dan handal.
+3. **[Clever Cloud](https://www.clever-cloud.com/)**:
+   - Menyediakan addon MySQL gratis (maksimal 20MB, cocok untuk uji coba/skripsi).
+
+> 📝 **Catat Kredensial Database Cloud Anda**:
+> Setelah membuat cluster/database baru di penyedia di atas, catat informasi berikut:
+> - **Host**: (Contoh: `gateway01.ap-southeast-1.prod.aws.tidbcloud.com` atau `mysql-xxx.aivencloud.com`)
+> - **Port**: (Biasanya `4000` di TiDB, atau `3306` / `25060` di Aiven)
+> - **Database**: (Nama database yang Anda buat, misal `ppdb_smk` atau `defaultdb`)
+> - **User**: (Username, misal `root` atau `avnadmin`)
+> - **Password**: (Password yang diberikan atau Anda atur)
+
+---
+
+### C. Memasukkan (Impor) File SQL ke Database Cloud
+
+Ada 2 cara praktis untuk mengimpor file `ppdb_smk.sql` ke database cloud Anda:
+
+#### Cara 1: Menggunakan Web SQL Editor (Jika Menggunakan TiDB Cloud)
+1. Buka dashboard TiDB Cloud cluster Anda.
+2. Klik tab **"Chat2Query"** atau **"SQL Editor"**.
+3. Buka file `ppdb_smk.sql` yang ada di folder Downloads menggunakan Notepad atau VS Code.
+4. Salin seluruh isinya (`Ctrl + A` lalu `Ctrl + C`).
+5. Tempel (`Ctrl + V`) ke dalam editor TiDB Cloud, lalu klik tombol **"Run"**. Seluruh struktur tabel dan data langsung terbuat di cloud.
+
+#### Cara 2: Menggunakan Software GUI (HeidiSQL / DBeaver)
+1. Buka **HeidiSQL** (bawaan Laragon) atau **DBeaver**.
+2. Buat koneksi baru (**Session New**):
+   - Masukkan **Host/IP**, **User**, **Password**, dan **Port** dari database cloud Anda.
+   - Klik **Open / Connect**.
+3. Klik kanan pada nama database Anda di cloud $\rightarrow$ pilih **Load SQL file...** (Muat file SQL).
+4. Pilih file `ppdb_smk.sql` dari folder Downloads Anda.
+5. Klik tombol **Execute / Jalankan SQL** (`F9`).
+
+---
 
 ---
 
